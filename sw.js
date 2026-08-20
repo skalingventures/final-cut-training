@@ -1,8 +1,9 @@
-const CACHE = "final-cut-v1";
+const CACHE = "final-cut-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
+  "./core.js",
   "./app.js",
   "./program.js",
   "./manifest.webmanifest",
@@ -14,7 +15,9 @@ const ASSETS = [
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE).then(cache =>
+      Promise.allSettled(ASSETS.map(url => cache.add(url)))
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -26,12 +29,33 @@ self.addEventListener("activate", event => {
   );
 });
 
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+});
+
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+  const dest = event.request.destination;
+  const networkFirst = dest === "document" || dest === "script" || dest === "" ||
+    /index\.html|app\.js|core\.js|program\.js$/.test(url.pathname);
+  if (networkFirst) {
+    event.respondWith(
+      fetch(event.request).then(res => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        }
+        return res;
+      }).catch(() => caches.match(event.request).then(c => c || caches.match("./index.html")))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then(cached => {
       const fetched = fetch(event.request).then(res => {
-        if (res && res.ok && new URL(event.request.url).origin === self.location.origin) {
+        if (res && res.ok) {
           const copy = res.clone();
           caches.open(CACHE).then(cache => cache.put(event.request, copy));
         }

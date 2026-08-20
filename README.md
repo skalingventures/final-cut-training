@@ -1,32 +1,49 @@
 # Final Cut — Block 01
 
-Personal six-week home-gym program for Skaling Ventures. Strength, daily mobility, tissue work, and 10-minute burnouts.
+Personal six-week home-gym program. Strength, daily mobility, tissue work, and 10-minute burnouts.
 
 **Live:** https://skalingventures.github.io/final-cut-training/
 
-## How to use it
+This is a **one-phone app**. The log lives in that browser’s `localStorage`. There is no account and no cloud sync.
 
-1. Set the **block start Monday**. The Today button then opens the correct week and day.
-2. Pick readiness before you train. Green runs the full session. Average keeps strength and scales the burnout. Red cuts the burnout and swaps the heavy hinge.
-3. Work top to bottom: tissue → mobility → strength → burnout → downshift.
-4. Log load, actual reps, and RPE on the main lifts. Charts use logged reps when present.
+## Daily use
 
-Nothing you log is uploaded. Sets, loads, bodyweight, and notes stay in this browser's `localStorage`. Copy the Backup JSON if you want the same log on another phone or after clearing site data.
+1. First open: confirm the **block start Monday**, then Start the block. Later visits open today’s session.
+2. Set readiness for *this* session. Green / Average / Red and the soreness flags stay on that day only.
+3. Work top to bottom. Log load, actual reps, and RPE. Hide finished tissue/mobility if you want a shorter screen.
+4. Finish session when you are done. Export a backup weekly.
 
-## Update the site
+## Backup and recovery
 
-This is a static GitHub Pages site from the `main` branch.
+- **Export file** saves a JSON you can put in Files or iCloud.
+- Copy/paste remains a fallback.
+- Restore asks before it replaces the current log and can be undone from the toast.
+- If the saved log is corrupt, the raw text is left in Backup so you can copy it out. Do not reload until you have it.
+
+Clearing site data, switching browsers, or using a private window will look like an empty log. Export before you do any of those.
+
+Logs are keyed by training week and day, not calendar date. Changing the block start does not move existing entries.
+
+## Updates
+
+The service worker loads a fresh `index.html` / `app.js` / `program.js` when you are online. If a new version is waiting, tap **Update now**. Offline, the last cached copy still opens.
 
 ```bash
 cd ~/Desktop/Cursor/final-cut-training
-# edit files
-git add -A
-git commit -m "Update Final Cut"
-git push origin main
+git add -A && git commit -m "Update Final Cut" && git push origin main
 ```
 
-Pages usually refreshes within a minute. If an old version sticks, bump the `CACHE` constant in `sw.js` so the service worker fetches a fresh copy.
+After a deploy, bump is automatic via `CACHE` in `sw.js` when that file changes.
+
+## Tests
+
+```bash
+node test/core.test.js
+python3 validate.py
+```
+
+GitHub Actions runs both on push to `main`.
 
 ## Privacy
 
-The repository is public and contains only the program and the app. Training logs never leave the device unless you export them. Do not commit a filled Backup JSON.
+The repository is public and holds only the program and the app. Training data never leaves the device unless you export it. Do not commit a filled backup JSON.

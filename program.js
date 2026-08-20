@@ -23,6 +23,12 @@ window.PROGRAM = {
     { id: "amber", lab: "Average", note: "Full strength, moderate burnout. Cut a round or drop load before you cut form." },
     { id: "red", lab: "Red", note: "Strength only, or take this as a recovery day. Burnout is off. Heavy hinge is off." }
   ],
+  flags: [
+    { id: "achilles", lab: "Achilles cranky" },
+    { id: "back", lab: "Back cooked" },
+    { id: "shoulder", lab: "Shoulder pinchy" },
+    { id: "motivation", lab: "Motivation low" }
+  ],
 
   days: [
     {
@@ -57,7 +63,8 @@ window.PROGRAM = {
       burn: {
         nm: "Hinge + Pull Engine", fmt: "10-minute AMRAP", hard: true,
         items: ["Kettlebell swings × 15", "Push-ups × 12", "Goblet squats × 10", "Pull-ups × 3–4"],
-        adj: "If knees feel heavily worked, swap goblet squats for 40 sec farmer carry or march."
+        adj: "If knees feel heavily worked, swap goblet squats for 40 sec farmer carry or march.",
+        achilles: "If Achilles is cranky, keep swings and carries. Swap goblet squats for a farmer march."
       },
       down: "2–5 min breathing or easy walk."
     },
@@ -92,7 +99,8 @@ window.PROGRAM = {
       burn: {
         nm: "DB Fight Gone Mini", fmt: "40 sec work / 20 sec transition × 10 min", hard: true,
         items: ["1 · DB thrusters", "2 · Renegade rows or plank DB drag", "3 · Burpees or sprawls", "4 · Farmer march", "5 · Easy walk, nasal breathing", "6–10 · Repeat the sequence"],
-        adj: "Load lighter than ego wants. Fast, clean, athletic."
+        adj: "Load lighter than ego wants. Fast, clean, athletic.",
+        achilles: "If Achilles is cranky, swap burpees/sprawls for farmer march or swings."
       },
       down: "2–5 min breathing or easy walk."
     },

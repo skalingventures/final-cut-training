@@ -1,303 +1,170 @@
 (() => {
+  const C = window.FinalCutCore;
   const P = window.PROGRAM;
-  const KEY = "final-cut:v2";
   const WEEKDAYS = P.calendar;
 
-  const defaultState = () => ({
-    week: 1,
-    day: 1,
-    ready: "green",
-    metric: "e1rm",
-    start: defaultMonday(),
-    flags: {},
-    overrides: {}
-  });
-
-  const emptyLog = () => ({
-    checks: {},
-    loads: {},
-    reps: {},
-    rpe: {},
-    bw: {},
-    burn: {},
-    choice: {}
-  });
-
-  let S = defaultState();
-  let LOG = emptyLog();
+  let S = C.defaultState();
+  let LOG = C.emptyLog();
+  let SESSIONS = {};
   let saveTimer = null;
   let persistOk = true;
-  let persistMsg = "";
+  let undo = null;
+  let backupDirty = false;
+  let lastGoodRaw = null;
 
-  function defaultMonday() {
-    const d = new Date();
-    const day = d.getDay();
-    const diff = day === 0 ? -6 : 1 - day;
-    d.setDate(d.getDate() + diff);
-    return iso(d);
+  function sess() {
+    const k = C.wd(S.week, S.day);
+    SESSIONS[k] = C.defaultSession(SESSIONS[k]);
+    return SESSIONS[k];
   }
 
-  function iso(d) {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${y}-${m}-${day}`;
-  }
-
-  function parseISO(s) {
-    if (!s || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
-    const d = new Date(s + "T00:00:00");
-    return Number.isNaN(d.getTime()) ? null : d;
-  }
-
-  function suggested() {
-    const start = parseISO(S.start);
-    if (!start) return { week: S.week, day: S.day, unknown: true };
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const diff = Math.round((now - start) / 86400000);
-    if (diff < 0) return { week: 1, day: 1, before: true };
-    if (diff >= 42) return { week: 6, day: 7, after: true };
-    return { week: Math.floor(diff / 7) + 1, day: (diff % 7) + 1 };
-  }
-
-  function isTodayView() {
-    const t = suggested();
-    return t.week === S.week && t.day === S.day && !t.unknown;
-  }
-
-  function wd(w = S.week, d = S.day) { return `w${w}d${d}`; }
-  function loadKey(id, w = S.week, d = S.day) { return `w${w}d${d}:${id}`; }
-  function heatVar(h) { return `var(--${h})`; }
-  function dayObj() { return P.days[S.day - 1]; }
-  function weekObj() { return P.weeks[S.week - 1]; }
-  function liftById(id) { return (dayObj().lifts || []).find(l => l.id === id); }
-
-  function clampState(next) {
-    const s = { ...defaultState(), ...(next || {}) };
-    s.week = Math.min(6, Math.max(1, +s.week || 1));
-    s.day = Math.min(7, Math.max(1, +s.day || 1));
-    if (!["green", "amber", "red"].includes(s.ready)) s.ready = "green";
-    if (!["e1rm", "tonnage", "load"].includes(s.metric)) s.metric = "e1rm";
-    if (!parseISO(s.start)) s.start = defaultMonday();
-    if (!s.flags || typeof s.flags !== "object") s.flags = {};
-    if (!s.overrides || typeof s.overrides !== "object") s.overrides = {};
-    return s;
-  }
-
-  function cleanMap(obj) {
-    if (!obj || typeof obj !== "object" || Array.isArray(obj)) return {};
-    return obj;
-  }
-
-  function payload() {
-    return JSON.stringify({
-      v: 2,
+  function payloadObj() {
+    return {
+      v: C.VERSION,
       state: S,
+      sessions: SESSIONS,
       checks: LOG.checks,
       loads: LOG.loads,
       reps: LOG.reps,
       rpe: LOG.rpe,
       bw: LOG.bw,
       burn: LOG.burn,
-      choice: LOG.choice
-    });
-  }
-
-  function applyPayload(data) {
-    if (!data || typeof data !== "object") throw new Error("empty");
-    S = clampState(data.state);
-    LOG = {
-      checks: cleanMap(data.checks),
-      loads: cleanMap(data.loads),
-      reps: cleanMap(data.reps),
-      rpe: cleanMap(data.rpe),
-      bw: cleanMap(data.bw),
-      burn: cleanMap(data.burn),
-      choice: cleanMap(data.choice)
+      choice: LOG.choice,
+      subs: LOG.subs
     };
   }
 
-  function readStore() {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch (e) {
-      throw new Error("Saved log is unreadable on this device.");
-    }
+  function payload() { return JSON.stringify(payloadObj()); }
+
+  function applyMigrated(data) {
+    const m = C.migrate(data);
+    S = m.state;
+    SESSIONS = m.sessions;
+    LOG = {
+      checks: m.checks, loads: m.loads, reps: m.reps, rpe: m.rpe,
+      bw: m.bw, burn: m.burn, choice: m.choice, subs: m.subs
+    };
+  }
+
+  function snapshot() {
+    try { lastGoodRaw = payload(); localStorage.setItem(C.SNAP_KEY, lastGoodRaw); } catch (e) { /* ignore */ }
   }
 
   function writeStore(text) {
-    localStorage.setItem(KEY, text);
+    localStorage.setItem(C.KEY, text);
+    try { localStorage.removeItem("final-cut:v2"); } catch (e) { /* ignore */ }
   }
 
   function flagSave(ok, msg) {
     persistOk = ok;
-    persistMsg = msg || "";
     const el = document.getElementById("savestate");
     const live = document.getElementById("save-live");
+    const chip = document.getElementById("save-chip");
     if (!ok) {
       el.className = "save-banner show";
-      el.dataset.ok = "false";
-      el.innerHTML = `<b>Not saving on this device.</b> ${esc(msg)}. Use Backup before you close the tab.`;
+      el.innerHTML = `<b>Not saving on this device.</b> ${esc(msg)}. Export a backup before you close.`;
       document.getElementById("backup-wrap").open = true;
       if (live) live.textContent = "Training log is not saving.";
+      if (chip) chip.textContent = "Not saving";
     } else {
       el.className = "save-banner";
-      el.dataset.ok = "true";
       el.innerHTML = "";
       if (live) live.textContent = "Training log saved on this device.";
+      if (chip) chip.textContent = S.lastSaved ? "Saved " + relTime(S.lastSaved) : "Saved locally";
     }
+  }
+
+  function saveNow() {
+    clearTimeout(saveTimer);
+    saveTimer = null;
+    try {
+      S.lastSaved = new Date().toISOString();
+      const text = payload();
+      writeStore(text);
+      snapshot();
+      flagSave(true);
+    } catch (e) {
+      flagSave(false, e && e.message ? e.message : "storage unavailable");
+    }
+    syncBackup();
+    updateStatus();
   }
 
   function save() {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      try {
-        writeStore(payload());
-        flagSave(true);
-      } catch (e) {
-        flagSave(false, e && e.message ? e.message : "storage unavailable");
-      }
-      syncBackup();
-    }, 250);
+    saveTimer = setTimeout(saveNow, 250);
   }
 
+  function flush() { if (saveTimer) saveNow(); }
+
   function load() {
-    let first = false;
+    let raw = null;
+    try { raw = localStorage.getItem(C.KEY) || localStorage.getItem("final-cut:v2"); } catch (e) {
+      flagSave(false, "This browser will not keep data.");
+      showSetup(true);
+      render();
+      return;
+    }
+    if (!raw) {
+      showSetup(true);
+      render();
+      return;
+    }
     try {
-      const data = readStore();
-      if (data) applyPayload(data);
-      else first = true;
+      const data = JSON.parse(raw);
+      C.validatePayload(data);
+      applyMigrated(data);
       flagSave(true);
     } catch (e) {
-      S = defaultState();
-      LOG = emptyLog();
-      first = true;
-      flagSave(false, e.message || "Saved log was corrupt and was not loaded.");
+      const box = document.getElementById("backup-json");
+      if (box) box.value = raw;
+      document.getElementById("backup-wrap").open = true;
+      flagSave(false, e.message || "Saved log was corrupt. Copy the text in Backup before resetting.");
+      showSetup(!S.setupDone);
+      render();
+      return;
     }
-    if (first) {
-      const t = suggested();
+    if (!S.setupDone) showSetup(true);
+    else {
+      showSetup(false);
+      const t = C.suggested(S.start);
       S.week = t.week;
       S.day = t.day;
     }
     render();
   }
 
-  function num(v) {
-    if (v == null || v === "") return null;
-    const m = String(v).match(/\d+(\.\d+)?/g);
-    return m ? Math.max(...m.map(Number)) : null;
-  }
-
   function esc(s) {
     return String(s == null ? "" : s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  function chk(id, i) {
-    const k = LOG.checks[wd()];
-    return !!(k && k[id] && k[id][i]);
+  function relTime(iso) {
+    if (!iso) return "—";
+    const t = Date.parse(iso);
+    if (!t) return "—";
+    const m = Math.round((Date.now() - t) / 60000);
+    if (m < 1) return "just now";
+    if (m < 60) return m + "m ago";
+    const h = Math.round(m / 60);
+    if (h < 24) return h + "h ago";
+    return Math.round(h / 24) + "d ago";
   }
+
+  function chk(id, i) { return C.chk(LOG.checks, S.week, S.day, id, i); }
 
   function setChk(id, i, on) {
-    const k = wd();
+    const k = C.wd(S.week, S.day);
     LOG.checks[k] = LOG.checks[k] || {};
     LOG.checks[k][id] = LOG.checks[k][id] || [];
     LOG.checks[k][id][i] = !!on;
   }
 
-  function nSets(l) {
-    if (l.prog) return P.sets[S.week];
-    return l.sets || 1;
-  }
-
-  function sessionItems() {
-    const D = dayObj();
-    const items = [];
-    if (D.tissue) D.tissue.items.forEach((_, i) => items.push(["tissue", i]));
-    if (D.mob) D.mob.forEach((_, i) => items.push(["mob", i]));
-    (D.lifts || []).forEach(l => {
-      if (D.exclusive) items.push([l.id, 0]);
-      else if (!(S.ready === "red" && l.swapRed && !S.overrides[l.id])) {
-        for (let i = 0; i < nSets(l); i++) items.push([l.id, i]);
-      }
-    });
-    if (D.burn && S.ready !== "red") {
-      items.push(D.burn.optional && chk("burnskip", 0) ? ["burnskip", 0] : ["burn", 0]);
-    } else if (D.burn && S.ready === "red") items.push(["walk", 0]);
-    if (D.down) items.push(["down", 0]);
-    return items;
-  }
-
-  function progress() {
-    const items = sessionItems();
-    if (!items.length) return { done: 0, total: 0, pct: 0 };
-    const done = items.filter(([id, i]) => chk(id, i)).length;
-    return { done, total: items.length, pct: Math.round((done / items.length) * 100) };
-  }
-
-  function bwFor(w) {
-    const own = num(LOG.bw[w]);
-    if (own != null) return { v: own, exact: true };
-    for (let i = w - 1; i >= 1; i--) {
-      const v = num(LOG.bw[i]);
-      if (v != null) return { v, exact: false, from: i };
-    }
-    for (let i = w + 1; i <= 6; i++) {
-      const v = num(LOG.bw[i]);
-      if (v != null) return { v, exact: false, from: i };
-    }
-    return null;
-  }
-
-  function lastLine(l) {
-    const prior = [];
-    for (let w = 1; w < S.week; w++) {
-      const v = (LOG.loads[loadKey(l.id, w, S.day)] || "").trim();
-      if (!v) continue;
-      const total = l.prog ? P.sets[w] : (l.sets || 1);
-      const arr = (LOG.checks[`w${w}d${S.day}`] || {})[l.id] || [];
-      const done = arr.slice(0, total).filter(Boolean).length;
-      const reps = (LOG.reps[loadKey(l.id, w, S.day)] || "").trim();
-      const rpe = (LOG.rpe[loadKey(l.id, w, S.day)] || "").trim();
-      const scheme = l.prog ? `${P.weeks[w - 1].main} @ ${P.weeks[w - 1].rpe}` : (l.rx || "");
-      prior.push({ w, v, done, total, reps, rpe, scheme });
-    }
-    if (!prior.length) return `<div class="last" data-last="${esc(l.id)}">No prior weeks logged for this movement.</div>`;
-    const recent = prior[prior.length - 1];
-    const nowScheme = l.prog ? `${weekObj().main} @ ${weekObj().rpe}` : (l.rx || "");
-    const shifted = recent.scheme && nowScheme && recent.scheme !== nowScheme;
-    return `<div class="last" data-last="${esc(l.id)}">
-      ${prior.map(p => `<span class="wk ${p.done >= p.total ? "clean" : (p.done ? "part" : "")}" title="Week ${p.w}">
-        <em>W${p.w}</em>${esc(p.v)}${p.reps ? ` × ${esc(p.reps)}` : ""}${p.rpe ? ` @ ${esc(p.rpe)}` : ""}</span>`).join("")}
-      <button class="carry" data-carry="${esc(l.id)}" data-val="${esc(recent.v)}">use ${esc(recent.v)}</button>
-      ${shifted ? `<span class="shift">W${recent.w} was ${esc(recent.scheme)} — today is ${esc(nowScheme)}</span>` : ""}
-    </div>`;
-  }
-
-  function updateProgress() {
-    const { pct } = progress();
-    const circ = 2 * Math.PI * 15;
-    const fill = document.getElementById("prog-fill");
-    const label = document.getElementById("prog-pct");
-    if (fill) fill.setAttribute("stroke-dasharray", `${(pct / 100) * circ} ${circ}`);
-    if (label) label.textContent = `${pct}`;
-    const today = document.getElementById("today-btn");
-    if (today) today.hidden = isTodayView();
-    const stickyWeek = document.getElementById("sticky-week");
-    if (stickyWeek) stickyWeek.textContent = `W${S.week} · ${WEEKDAYS[S.day - 1]}`;
-  }
-
-  function updateToggle(btn) {
-    if (!btn) return;
-    const on = chk(btn.dataset.id, +btn.dataset.i);
-    btn.setAttribute("aria-pressed", on ? "true" : "false");
-  }
+  function heatVar(h) { return `var(--${h})`; }
+  function dayObj() { return P.days[S.day - 1]; }
+  function weekObj() { return P.weeks[S.week - 1]; }
+  function liftById(id) { return (dayObj().lifts || []).find(l => l.id === id); }
 
   function mountain() {
     return `<svg class="brand-mark" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -308,10 +175,119 @@
     </svg>`;
   }
 
+  function showSetup(on) {
+    document.getElementById("setup").hidden = !on;
+    document.getElementById("app").hidden = on;
+    if (on) {
+      document.getElementById("setup-start").value = S.start;
+      document.getElementById("setup-mark").innerHTML = mountain();
+    }
+  }
+
+  function toast(msg, undoFn) {
+    const el = document.getElementById("toast");
+    undo = undoFn || null;
+    el.hidden = false;
+    el.innerHTML = undo
+      ? `${esc(msg)} <button type="button" class="toast-undo" id="toast-undo">Undo</button>`
+      : esc(msg);
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { el.hidden = true; undo = null; }, 5000);
+  }
+
+  function updateProgress() {
+    const se = sess();
+    const p = C.progress(dayObj(), S.week, se, LOG, P);
+    const circ = 2 * Math.PI * 15;
+    const fill = document.getElementById("prog-fill");
+    const label = document.getElementById("prog-pct");
+    const ring = document.getElementById("prog-ring");
+    const shown = p.state === "idle" ? "—" : (p.state === "done" ? "✓" : String(p.pct));
+    if (fill) fill.setAttribute("stroke-dasharray", `${((p.state === "done" ? 100 : p.pct) / 100) * circ} ${circ}`);
+    if (label) label.textContent = shown;
+    if (ring) ring.setAttribute("aria-label", p.state === "done" ? "Session complete" : p.state === "active" ? `Session ${p.pct} percent` : "Session not started");
+    const today = document.getElementById("today-btn");
+    const t = C.suggested(S.start);
+    if (today) today.hidden = t.week === S.week && t.day === S.day && !t.unknown && S.setupDone;
+    document.getElementById("sticky-week").textContent = `W${S.week} · ${WEEKDAYS[S.day - 1]}`;
+    const chip = document.getElementById("sticky-ready");
+    chip.textContent = se.ready ? se.ready : "Ready?";
+    chip.dataset.r = se.ready || "";
+    const recap = document.getElementById("finish-recap");
+    const btn = document.getElementById("finish-btn");
+    if (se.finished) {
+      recap.hidden = false;
+      recap.textContent = finishCopy(p);
+      btn.textContent = "Session finished";
+    } else {
+      recap.hidden = true;
+      btn.textContent = "Finish session";
+    }
+  }
+
+  function finishCopy(p) {
+    const nxt = nextSession();
+    return `Done · ${p.done}/${p.total} checks. Next: ${nxt}.`;
+  }
+
+  function nextSession() {
+    if (S.day < 7) return `W${S.week} ${WEEKDAYS[S.day]}`;
+    if (S.week < 6) return `W${S.week + 1} Mon`;
+    return "Block complete";
+  }
+
+  function updateStatus() {
+    const line = document.getElementById("status-line");
+    if (!line) return;
+    const bits = [];
+    bits.push("Saved " + relTime(S.lastSaved));
+    bits.push("Exported " + relTime(S.lastExported));
+    try {
+      if (matchMedia("(display-mode: standalone)").matches) bits.push("Home screen");
+    } catch (e) { /* ignore */ }
+    line.textContent = bits.join(" · ");
+    const chip = document.getElementById("save-chip");
+    if (persistOk && chip) chip.textContent = S.lastSaved ? "Saved " + relTime(S.lastSaved) : "Saved locally";
+  }
+
+  function prescription() {
+    const se = sess();
+    const D = dayObj();
+    const W = weekObj();
+    if (!se.ready) return "";
+    const bits = [];
+    if (se.ready === "green") bits.push("Full session + full burnout.");
+    if (se.ready === "amber") bits.push("Full strength. Moderate / scaled burnout.");
+    if (se.ready === "red") bits.push("Strength only. Heavy hinge off. Burnout cut or easy 60–70%.");
+    if (se.flags.back) bits.push("Back: swap deadlift for RDL or goblet.");
+    if (se.flags.shoulder) bits.push("Shoulder: skip dips, use push-ups or DB press.");
+    if (se.flags.achilles) bits.push("Achilles: keep strength, drop jumps/burpees, favor carries and swings.");
+    if (se.flags.motivation) bits.push("Motivation low: start strength, cut burnout if needed.");
+    if (W.n === 6 && D.n <= 5 && !D.exclusive) bits.push("Deload week — accessories reduced 30–40%.");
+    return bits.join(" ");
+  }
+
+  function lastLine(l) {
+    const prior = C.priorLift(l, S.week, S.day, LOG, P);
+    if (!prior.length) return `<div class="last" data-last="${esc(l.id)}">No prior weeks logged.</div>`;
+    const recent = prior[prior.length - 1];
+    const nowScheme = l.prog ? `${weekObj().main} @ ${weekObj().rpe}` : (l.rx || "");
+    const shifted = recent.scheme && nowScheme && recent.scheme !== nowScheme;
+    const warnCarry = !recent.clean;
+    return `<div class="last" data-last="${esc(l.id)}">
+      ${prior.map(p => `<span class="wk ${p.clean ? "clean" : (p.done ? "part" : "")}">
+        <em>W${p.w}</em>${esc(p.v)}${p.reps ? ` × ${esc(p.reps)}` : ""}${p.rpe ? ` @ ${esc(p.rpe)}` : ""}</span>`).join("")}
+      <button class="carry" data-carry="${esc(l.id)}" data-val="${esc(recent.v)}" data-partial="${warnCarry ? "1" : "0"}">use ${esc(recent.v)}</button>
+      ${warnCarry ? `<span class="shift">W${recent.w} was incomplete — confirm before carrying.</span>` : ""}
+      ${shifted ? `<span class="shift">W${recent.w} was ${esc(recent.scheme)} — today is ${esc(nowScheme)}</span>` : ""}
+    </div>`;
+  }
+
   function renderChrome() {
     const W = weekObj();
     const D = dayObj();
-    const t = suggested();
+    const t = C.suggested(S.start);
+    const se = sess();
     document.documentElement.style.setProperty("--seg", heatVar(D.heat));
     document.getElementById("wk-lab").textContent = `Week ${W.n} of 6`;
     document.getElementById("intent").textContent = W.intent;
@@ -323,50 +299,61 @@
       `<button type="button" class="day${t.week === S.week && t.day === d.n && !t.unknown ? " is-today" : ""}" data-d="${d.n}" aria-pressed="${d.n === S.day}" style="--seg:${heatVar(d.heat)}">
          <span class="dot"></span><span class="wd">${WEEKDAYS[d.n - 1]}</span><span class="n">${d.n}</span></button>`).join("");
     document.getElementById("ready").innerHTML = P.ready.map(r =>
-      `<button type="button" class="rbtn" data-r="${r.id}" aria-pressed="${r.id === S.ready}">${r.lab}</button>`).join("");
-    document.getElementById("ready-note").textContent = P.ready.find(r => r.id === S.ready).note;
+      `<button type="button" class="rbtn" data-r="${r.id}" aria-pressed="${r.id === se.ready}">${r.lab}</button>`).join("");
+    document.getElementById("ready-note").textContent = se.ready ? P.ready.find(r => r.id === se.ready).note : "Not set for this session yet.";
     document.getElementById("start-in").value = S.start;
     document.getElementById("bw-in").value = LOG.bw[S.week] || "";
     document.getElementById("bw-wk").textContent = S.week;
-    const bwf = bwFor(S.week);
-    document.getElementById("bw-note").textContent =
-      !bwf ? "needed for pull-up and chin-up strength math"
-      : (bwf.exact ? "" : `carried from W${bwf.from} — ${bwf.v}`);
-    document.getElementById("flags").innerHTML = [
-      ["achilles", "Achilles cranky"],
-      ["back", "Back cooked"],
-      ["shoulder", "Shoulder pinchy"]
-    ].map(([id, lab]) =>
-      `<button type="button" class="flag" data-flag="${id}" aria-pressed="${S.flags[id] ? "true" : "false"}">${lab}</button>`
+    const own = C.num(LOG.bw[S.week]);
+    let bwNote = "needed for pull-up and chin-up strength math";
+    if (own != null) bwNote = "";
+    else {
+      for (let i = S.week - 1; i >= 1; i--) {
+        const v = C.num(LOG.bw[i]);
+        if (v != null) { bwNote = `carried from W${i} — ${v}`; break; }
+      }
+    }
+    document.getElementById("bw-note").textContent = bwNote;
+    document.getElementById("flags").innerHTML = (P.flags || []).map(f =>
+      `<button type="button" class="flag" data-flag="${f.id}" aria-pressed="${se.flags[f.id] ? "true" : "false"}">${f.lab}</button>`
     ).join("");
     const startNote = document.getElementById("start-note");
     if (t.before) startNote.textContent = "Block has not started — Today opens Week 1, Day 1.";
     else if (t.after) startNote.textContent = "Block window has passed — Today opens Week 6, Day 7.";
-    else startNote.textContent = `Today is Week ${t.week}, ${WEEKDAYS[t.day - 1]}.`;
+    else startNote.textContent = `Today is Week ${t.week}, ${WEEKDAYS[t.day - 1]}. Logs stay on week/day numbers if you change this date.`;
+    const rx = document.getElementById("rx-card");
+    const text = prescription();
+    rx.hidden = !text;
+    rx.textContent = text;
+    document.getElementById("app-ver").textContent = "v" + C.APP_VERSION;
   }
 
-  function sec(title, dose, inner) {
-    return `<section class="sec"><div class="sec-h"><h3>${esc(title)}</h3>${dose ? `<span class="dose">${esc(dose)}</span>` : ""}</div>${inner}</section>`;
+  function sec(title, dose, inner, foldId, done) {
+    const se = sess();
+    const collapsed = foldId && se.collapsed[foldId] && done;
+    return `<section class="sec${collapsed ? " is-collapsed" : ""}" data-sec="${foldId || ""}">
+      <div class="sec-h">
+        <h3>${esc(title)}</h3>
+        <span class="dose">${dose ? esc(dose) : ""}${foldId ? ` <button type="button" class="fold" data-fold="${esc(foldId)}">${collapsed ? "Show" : "Hide"}</button>` : ""}</span>
+      </div>
+      <div class="sec-body">${inner}</div>
+    </section>`;
   }
 
-  function liftBlocked(l) {
-    if (S.ready === "red" && l.swapRed && !S.overrides[l.id]) return true;
-    if (S.flags.back && l.swapRed && !S.overrides[l.id]) return true;
+  function sectionDone(kind) {
+    const D = dayObj();
+    if (kind === "tissue" && D.tissue) return D.tissue.items.every((_, i) => chk("tissue", i));
+    if (kind === "mob" && D.mob) return D.mob.every((_, i) => chk("mob", i));
     return false;
-  }
-
-  function liftSwapNote(l) {
-    if (S.ready === "red" && l.swapRed) return l.swapRed;
-    if (S.flags.back && l.swapRed) return l.swapRed;
-    if (S.flags.shoulder && l.swapPinch) return l.swapPinch;
-    return "";
   }
 
   function renderSession() {
     const W = weekObj();
     const D = dayObj();
-    const red = S.ready === "red";
-    const amber = S.ready === "amber";
+    const se = sess();
+    const red = se.ready === "red";
+    const amber = se.ready === "amber";
+    const rpeMax = C.rpeTarget(W);
     let h = `<div class="s-head">
       <div class="s-tag">Day ${D.n} · ${D.weekday} · ${D.tag}</div>
       <h2 class="s-title">${esc(D.theme)}</h2>
@@ -386,7 +373,7 @@
               <div class="why">${esc(t.cue)}</div>
             </div>
           </div>`).join("")}
-        ${D.tissue.note ? `<div class="guard"><span>${esc(D.tissue.note)}</span></div>` : ""}`);
+        ${D.tissue.note ? `<div class="guard"><span>${esc(D.tissue.note)}</span></div>` : ""}`, "tissue", sectionDone("tissue"));
     }
 
     if (D.mob && D.mob.length) {
@@ -396,13 +383,13 @@
           <button type="button" class="box" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(nm)}"></button>
           <div class="body"><div class="nm">${esc(nm)}</div>${why ? `<div class="why">${esc(why)}</div>` : ""}</div>
         </div>`;
-      }).join(""));
+      }).join(""), "mob", sectionDone("mob"));
     }
 
     const strengthTitle = D.restTitle || "Strength";
     const strengthDose = (D.n === 3 || D.n >= 6) ? "" : (red ? "strength only" : "30–40 min");
     if (D.exclusive) {
-      const chosen = LOG.choice[wd()] || "";
+      const chosen = LOG.choice[C.wd(S.week, S.day)] || "";
       h += sec(strengthTitle, "choose one", D.lifts.map(l => `
         <div class="line">
           <button type="button" class="box" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0" aria-pressed="${chosen === l.id}" aria-label="${esc(l.nm)}"></button>
@@ -415,27 +402,41 @@
         </div>`).join(""));
     } else {
       h += sec(strengthTitle, strengthDose, D.lifts.map(l => {
-        const blocked = liftBlocked(l);
-        const swap = liftSwapNote(l);
+        const blocked = C.liftBlocked(l, se);
+        const swap = C.liftSwapNote(l, se);
+        const ov = se.overrides[l.id] || {};
         const rx = l.prog ? `${W.main} <em>@ ${W.rpe}</em>` : esc(l.rx || "");
         const prescribed = l.prog ? P.progReps[S.week] : "";
-        return `<div class="line ${blocked ? "strike killed" : ""}" data-lift="${esc(l.id)}">
+        const loggedRpe = C.num(LOG.rpe[C.loadKey(l.id, S.week, S.day)]);
+        const rpeWarn = l.prog && rpeMax != null && loggedRpe != null && loggedRpe > rpeMax + 0.5;
+        const n = C.nSets(l, S.week, P);
+        const accNote = !l.prog && W.n >= 2 && n > 1 ? W.acc : "";
+        return `<div class="line ${blocked ? "killed" : ""}" data-lift="${esc(l.id)}">
           <div class="body">
             <div class="nm">${esc(l.nm)}</div>
-            <div class="rx">${rx}</div>
+            <div class="rx">${rx}${W.n === 6 && !l.prog && (l.sets || 1) > 1 ? ` <em>· deload ${n} sets</em>` : ""}</div>
             ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
-            ${swap ? `<div class="guard"><span>${esc(swap)}</span></div>` : ""}
+            ${swap && blocked ? `<div class="guard"><span>${esc(swap)}</span></div>` : ""}
+            ${swap && !blocked ? `<div class="note">Substitution active: ${esc((LOG.subs[C.loadKey(l.id, S.week, S.day)] || ov.as || swap))}</div>` : ""}
             ${l.guard ? `<div class="guard"><span>${esc(l.guard)}</span></div>` : ""}
-            ${amber && !l.prog && l.sets > 2 ? `<div class="note">${esc(W.acc)}.</div>` : ""}
-            ${blocked ? `<button type="button" class="override" data-override="${esc(l.id)}" aria-pressed="${S.overrides[l.id] ? "true" : "false"}">Log the swap / override</button>` : ""}
-            ${l.load && !blocked ? lastLine(l) : ""}
-            ${blocked ? "" : `<div class="sets">
-              ${Array.from({ length: nSets(l) }, (_, i) =>
-                `<button type="button" class="set" data-id="${esc(l.id)}" data-i="${i}" aria-pressed="${chk(l.id, i)}" aria-label="Set ${i + 1}">${i + 1}</button>`
-              ).join("")}
-              ${l.load ? `<input class="log-in wide" data-load="${esc(l.id)}" value="${esc(LOG.loads[loadKey(l.id)] || "")}" placeholder="${l.bw ? "+ added" : "load"}" inputmode="text" aria-label="Load for ${esc(l.nm)}">` : ""}
-              ${l.prog || l.load ? `<input class="log-in" data-reps="${esc(l.id)}" value="${esc(LOG.reps[loadKey(l.id)] || "")}" placeholder="${prescribed ? prescribed + " r" : "reps"}" inputmode="decimal" aria-label="Reps for ${esc(l.nm)}">` : ""}
-              ${l.prog ? `<input class="log-in rpe-in" data-rpe="${esc(l.id)}" value="${esc(LOG.rpe[loadKey(l.id)] || "")}" placeholder="RPE" inputmode="decimal" aria-label="RPE for ${esc(l.nm)}">` : ""}
+            ${accNote ? `<div class="note">${esc(accNote)}.</div>` : ""}
+            ${blocked ? `<div class="swap-row">
+              <input class="log-in wide" data-sub="${esc(l.id)}" value="${esc(LOG.subs[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="Did instead (RDL, goblet…)" aria-label="Substitution for ${esc(l.nm)}">
+              <button type="button" class="override" data-override="${esc(l.id)}" aria-pressed="${ov.on ? "true" : "false"}">Log the swap</button>
+            </div>` : ""}
+            ${!blocked && l.load ? lastLine(l) : ""}
+            ${blocked ? "" : `<div class="log-grid">
+              <div class="sets">
+                ${Array.from({ length: n }, (_, i) =>
+                  `<button type="button" class="set" data-id="${esc(l.id)}" data-i="${i}" aria-pressed="${chk(l.id, i)}" aria-label="Set ${i + 1}">${i + 1}</button>`
+                ).join("")}
+              </div>
+              <div class="log-fields">
+                ${l.load ? `<label class="ll">Load<input class="log-in wide" data-load="${esc(l.id)}" value="${esc(LOG.loads[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="${l.bw ? "+ added" : "lb"}" inputmode="text"></label>` : ""}
+                ${l.prog || l.load ? `<label class="ll">Reps<input class="log-in" data-reps="${esc(l.id)}" value="${esc(LOG.reps[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="${prescribed || "reps"}" inputmode="decimal"></label>` : ""}
+                ${l.prog ? `<label class="ll">RPE<input class="log-in rpe-in" data-rpe="${esc(l.id)}" value="${esc(LOG.rpe[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="${rpeMax || "RPE"}" inputmode="decimal"></label>` : ""}
+              </div>
+              ${rpeWarn ? `<div class="guard"><span>Logged RPE is above this week's target. Keep it if it was clean — otherwise drop load.</span></div>` : ""}
             </div>`}
           </div>
         </div>`;
@@ -444,25 +445,38 @@
 
     if (D.burn) {
       if (red) {
-        h += sec("Burnout", "cut", `<div class="cut"><b>No burnout today.</b> Red readiness. If you want a little air, do a 10-minute easy incline walk instead.</div>
+        const b = LOG.burn[C.wd(S.week, S.day)] || {};
+        h += sec("Burnout", "cut or easy", `<div class="cut"><b>Hard burnout is off.</b> Walk, or run a 60–70% easy version.</div>
           <div class="line">
-            <button type="button" class="box" data-id="walk" data-i="0" aria-pressed="${chk("walk", 0)}" aria-label="Easy walk instead"></button>
-            <div class="body"><div class="nm">10-minute easy incline walk</div><div class="why">Optional downshift. Does not count as a hard burnout.</div></div>
+            <button type="button" class="box" data-id="walk" data-i="0" aria-pressed="${chk("walk", 0)}" aria-label="Easy walk"></button>
+            <div class="body"><div class="nm">10-minute easy incline walk</div><div class="why">Does not count as a hard burnout.</div></div>
+          </div>
+          <div class="line">
+            <button type="button" class="box" data-id="burneasy" data-i="0" aria-pressed="${chk("burneasy", 0)}" aria-label="Easy burnout"></button>
+            <div class="body">
+              <div class="nm">Easy burnout · 60–70%</div>
+              <div class="why">Same movements, slower and lighter. Distinct from a hard effort.</div>
+              <div class="log-fields">
+                <label class="ll">Note<input class="log-in wide" data-burn="note" value="${esc(b.note || "")}" placeholder="what you did"></label>
+              </div>
+            </div>
           </div>`);
       } else {
-        const b = LOG.burn[wd()] || {};
-        const pct = amber ? "moderate effort" : `at ${W.burn}`;
-        const achillesNote = S.flags.achilles && D.burn.achilles ? `<div class="guard"><span>${esc(D.burn.achilles)}</span></div>` : "";
+        const b = LOG.burn[C.wd(S.week, S.day)] || {};
+        const pct = amber ? "moderate / scaled" : `at ${W.burn}`;
+        const bench = W.n === 5 && D.burn.hard ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
+        const achillesNote = se.flags.achilles && D.burn.achilles ? `<div class="guard"><span>${esc(D.burn.achilles)}</span></div>` : "";
+        const motNote = se.flags.motivation ? `<div class="guard"><span>Motivation is low — skipping the burnout is allowed.</span></div>` : "";
         h += sec(`Burnout${D.burn.optional ? " — optional" : ""}`, `${D.burn.fmt.split(" ")[0]} · ${pct}`,
           `<div class="line"><div class="body">
-            <div class="nm">${esc(D.burn.nm)}</div>
+            <div class="nm">${esc(D.burn.nm)}${W.n === 5 && D.burn.hard ? " · benchmark" : ""}</div>
             <div class="rx">${esc(D.burn.fmt)}</div>
             <div class="note">${D.burn.items.map(esc).join("<br>")}</div>
             <div class="guard"><span>${esc(D.burn.adj)}</span></div>
-            ${achillesNote}
+            ${achillesNote}${motNote}${bench}
             <div class="sets">
               <button type="button" class="set" data-id="burn" data-i="0" aria-pressed="${chk("burn", 0)}" aria-label="Burnout done" style="width:auto;padding:0 14px">done</button>
-              ${D.burn.optional ? `<button type="button" class="set" data-id="burnskip" data-i="0" aria-pressed="${chk("burnskip", 0)}" aria-label="Skip optional burnout" style="width:auto;padding:0 14px">skip</button>` : ""}
+              ${D.burn.optional || se.flags.motivation ? `<button type="button" class="set" data-id="burnskip" data-i="0" aria-pressed="${chk("burnskip", 0)}" aria-label="Skip burnout" style="width:auto;padding:0 14px">skip</button>` : ""}
             </div>
             <div class="burn-log">
               <div class="field"><label for="burn-rounds">Rounds / score</label><input id="burn-rounds" data-burn="rounds" value="${esc(b.rounds || "")}" placeholder="e.g. 4+8"></div>
@@ -474,7 +488,7 @@
               <div class="field"><label for="burn-scaled">Scaled?</label>
                 <select id="burn-scaled" data-burn="scaled">
                   <option value="" ${!b.scaled ? "selected" : ""}>As written</option>
-                  <option value="yes" ${b.scaled === "yes" ? "selected" : ""}>Scaled</option>
+                  <option value="yes" ${b.scaled === "yes" || (amber && !b.scaled && b.scaled !== "") ? "selected" : ""}>Scaled</option>
                 </select>
               </div>
               <div class="field"><label for="burn-note">Note</label><input id="burn-note" data-burn="note" value="${esc(b.note || "")}" placeholder="load, swap, feel"></div>
@@ -497,134 +511,96 @@
   }
 
   const METRICS = {
-    e1rm: { lab: "Est 1RM", note: "Uses the reps you logged, or the prescribed scheme if reps are blank. Load × (1 + reps ÷ 30).", fmt: v => Math.round(v) },
-    tonnage: { lab: "Tonnage", note: "Load × logged (or prescribed) reps × sets completed. Volume falls as the block peaks — that is by design.", fmt: v => v >= 1000 ? (v / 1000).toFixed(1) + "k" : Math.round(v) },
+    e1rm: { lab: "Est 1RM", note: "Only weeks with logged reps. Load × (1 + reps ÷ 30).", fmt: v => Math.round(v) },
+    tonnage: { lab: "Tonnage", note: "Only weeks with logged reps. Load × reps × sets completed.", fmt: v => v >= 1000 ? (v / 1000).toFixed(1) + "k" : Math.round(v) },
     load: { lab: "Load", note: "The number you put on the bar, unadjusted.", fmt: v => Math.round(v) }
   };
 
-  function repSpec(l, w) {
-    const logged = num(LOG.reps[loadKey(l.id, w, l.day)]);
-    if (l.prog) return { reps: logged != null ? logged : P.progReps[w], sets: P.sets[w], timed: false, logged: logged != null };
-    const rx = l.rx || "";
-    if (/sec|min/i.test(rx) && !/×/.test(rx)) return { reps: null, sets: l.sets || 1, timed: true };
-    if (/sec/i.test(rx)) return { reps: null, sets: l.sets || 1, timed: true };
-    if (logged != null) return { reps: logged, sets: l.sets || 1, timed: false, logged: true };
-    const part = rx.includes("×") ? rx.split("×")[1] : rx;
-    const nums = (part.match(/\d+/g) || []).map(Number);
-    if (!nums.length) return { reps: null, sets: l.sets || 1, timed: true };
-    return { reps: nums.length > 1 ? (nums[0] + nums[1]) / 2 : nums[0], sets: l.sets || 1, timed: false };
-  }
-
-  function metricValue(mode, n, spec, setsDone) {
-    if (n == null) return null;
-    if (mode === "load") return n;
-    if (spec.timed || spec.reps == null) return null;
-    if (mode === "e1rm") return n * (1 + spec.reps / 30);
-    return n * spec.reps * (setsDone || spec.sets);
-  }
-
-  function weekSummary() {
-    let sessions = 0;
-    let hard = 0;
-    let optional = 0;
-    P.days.forEach(d => {
-      const items = [];
-      (d.lifts || []).forEach(l => items.push(l.id));
-      if (d.mob && d.mob.length) items.push("mob");
-      if (d.tissue) items.push("tissue");
-      const k = LOG.checks[`w${S.week}d${d.n}`] || {};
-      const any = items.some(id => (k[id] || []).some(Boolean)) || k.burn && k.burn[0] || k.down && k.down[0];
-      if (any) sessions++;
-      if (d.burn && !d.burn.optional && k.burn && k.burn[0]) hard++;
-      if (d.burn && d.burn.optional && k.burn && k.burn[0]) optional++;
-    });
-    return { sessions, hard, optional };
+  function bwFor(w) {
+    const own = C.num(LOG.bw[w]);
+    if (own != null) return { v: own, exact: true };
+    for (let i = w - 1; i >= 1; i--) {
+      const v = C.num(LOG.bw[i]);
+      if (v != null) return { v: v, exact: false, from: i };
+    }
+    return null;
   }
 
   function renderHistory() {
     const mode = S.metric || "e1rm";
     const M = METRICS[mode];
-    const sum = weekSummary();
+    const sum = C.weekSummary(S.week, LOG, P, SESSIONS);
     document.getElementById("week-sum").innerHTML = `
-      <div class="dash-cell"><div class="label">Week ${S.week} sessions touched</div><div class="value">${sum.sessions} / 7</div></div>
-      <div class="dash-cell"><div class="label">Burnouts vs 3 + 1</div><div class="value">${sum.hard} hard · ${sum.optional} optional</div></div>`;
+      <div class="dash-cell"><div class="label">Week ${S.week} started / complete</div><div class="value">${sum.started} / ${sum.completed}</div></div>
+      <div class="dash-cell"><div class="label">Burnouts · Z4/5</div><div class="value">${sum.hard} hard · ${sum.optional} opt · ${sum.scaled} scaled · ${sum.z45} Z4/5</div></div>`;
     document.getElementById("metrics").innerHTML = Object.keys(METRICS).map(k =>
       `<button type="button" class="mbtn" data-m="${k}" aria-pressed="${k === mode}">${METRICS[k].lab}</button>`
     ).join("");
     document.getElementById("hist-key").innerHTML =
       `<span class="mnote" style="display:block">${M.note}</span>
-       <i style="background:var(--ok)"></i>all sets completed &nbsp;
-       <i style="background:var(--warn)"></i>sets missed &nbsp;
-       <i style="background:var(--muted)"></i>no sets logged`;
+       <i style="background:var(--ok)"></i>logged reps &amp; sets &nbsp;
+       <i style="background:var(--warn)"></i>load only &nbsp;
+       <i style="background:var(--muted)"></i>empty`;
 
-    const tracked = P.days.flatMap(d => (d.lifts || []).filter(l => l.load).map(l => ({ ...l, day: d.n, heat: d.heat })));
+    const tracked = P.days.flatMap(d => (d.lifts || []).filter(l => l.load).map(l => Object.assign({}, l, { day: d.n })));
     const rows = tracked.map(l => {
       const series = P.weeks.map(w => {
-        const raw = (LOG.loads[loadKey(l.id, w.n, l.day)] || "").trim();
-        const spec = repSpec(l, w.n);
-        const arr = (LOG.checks[`w${w.n}d${l.day}`] || {})[l.id] || [];
+        const raw = (LOG.loads[C.loadKey(l.id, w.n, l.day)] || "").trim();
+        const spec = C.repSpec(l, w.n, l.day, LOG, P);
+        const arr = (LOG.checks[C.wd(w.n, l.day)] || {})[l.id] || [];
         const done = arr.slice(0, spec.sets).filter(Boolean).length;
-        const added = num(raw);
+        const added = C.num(raw);
         const bw = l.bw ? bwFor(w.n) : null;
         const eff = l.bw ? (bw ? bw.v + (added || 0) : null) : added;
-        return { w: w.n, raw, n: eff, spec, done, total: spec.sets, v: metricValue(mode, eff, spec, done) };
+        const v = mode === "load" ? C.metricValue(mode, eff, spec, done) : (spec.logged ? C.metricValue(mode, eff, spec, done) : null);
+        return { w: w.n, raw: raw, n: eff, spec: spec, done: done, total: spec.sets, v: v };
       });
       const bwMissing = l.bw && !bwFor(S.week) && series.some(s => s.raw);
-      return { l, series, any: series.some(s => s.raw), timed: series[0].spec.timed, bwMissing };
+      return { l: l, series: series, any: series.some(s => s.raw), timed: series[0].spec.timed, bwMissing: bwMissing };
     }).filter(r => r.any);
 
     const el = document.getElementById("hist");
     if (!rows.length) {
-      el.innerHTML = `<p class="hist-empty">Nothing logged yet. Enter a load on any main lift and it starts plotting here — one row per lift, one bar per week.</p>`;
+      el.innerHTML = `<p class="hist-empty">Nothing logged yet. Enter a load on any main lift and it starts plotting here.</p>`;
       return;
     }
-
     el.innerHTML = rows.map(({ l, series, timed, bwMissing }) => {
       const plotted = timed && mode !== "load";
       const vals = series.filter(s => s.v != null);
       if (bwMissing) {
-        return `<div class="lift timed">
-          <div class="lift-h"><span class="ln">${esc(l.nm)}</span><span class="dl"><i>needs bodyweight</i></span></div>
-          <div class="timed-note">Enter your bodyweight up top — these reps move body + added weight.</div></div>`;
+        return `<div class="lift timed"><div class="lift-h"><span class="ln">${esc(l.nm)}</span><span class="dl"><i>needs bodyweight</i></span></div>
+          <div class="timed-note">Enter bodyweight in Setup — these reps move body + added weight.</div></div>`;
       }
-      const max = Math.max(...vals.map(s => s.v), 1);
+      const max = Math.max.apply(null, vals.map(s => s.v).concat([1]));
       const first = vals[0], last = vals[vals.length - 1];
       let delta = "";
       if (vals.length > 1 && first.v !== last.v) {
         const d = last.v - first.v;
         delta = ` <b style="color:${d > 0 ? "var(--ok)" : "var(--muted)"}">${d > 0 ? "+" : ""}${M.fmt(d)}</b>`;
-      } else if (vals.length === 1) {
-        delta = ` <i>first entry</i>`;
-      }
-      const head = plotted
-        ? `<span class="dl"><i>time-based</i></span>`
-        : `<span class="dl">${first ? M.fmt(first.v) : "—"} → ${last ? M.fmt(last.v) : "—"}${delta}</span>`;
-      if (plotted) {
-        return `<div class="lift timed">
-          <div class="lift-h"><span class="ln">${esc(l.nm)}</span>${head}</div>
-          <div class="timed-note">Carries are held for time, not reps — switch to Load to see the weight.</div></div>`;
-      }
+      } else if (vals.length === 1) delta = ` <i>first entry</i>`;
+      if (plotted) return `<div class="lift timed"><div class="lift-h"><span class="ln">${esc(l.nm)}</span><span class="dl"><i>time-based</i></span></div>
+        <div class="timed-note">Carries are held for time — switch to Load to see the weight.</div></div>`;
       const plot = series.map(s => {
         if (s.v == null) return `<div class="col empty"><div class="bar2"></div></div>`;
         const ht = Math.round(6 + (s.v / max) * 38);
-        const c = s.done === 0 ? "var(--muted)" : (s.done >= s.total ? "var(--ok)" : "var(--warn)");
-        return `<div class="col ${s.w === 6 ? "deload" : ""}" title="Week ${s.w}">
-          <div class="bar2" style="height:${ht}px;--bc:${c}"></div></div>`;
+        const c = !s.spec.logged && mode !== "load" ? "var(--warn)" : (s.done >= s.total ? "var(--ok)" : "var(--warn)");
+        return `<div class="col ${s.w === 6 ? "deload" : ""}"><div class="bar2" style="height:${ht}px;--bc:${c}"></div></div>`;
       }).join("");
       const axis = series.map(s =>
         `<span class="${s.w === S.week ? "now" : ""}">${s.v != null ? `<b>${M.fmt(s.v)}</b>` : "<b>·</b>"}W${s.w}</span>`
       ).join("");
       return `<div class="lift">
-        <div class="lift-h"><span class="ln">${esc(l.nm)}${l.bw ? ` <span class="bwtag">+ bodyweight</span>` : ""}</span>${head}</div>
-        <div class="plot">${plot}</div>
-        <div class="axis">${axis}</div>
-      </div>`;
+        <div class="lift-h"><span class="ln">${esc(l.nm)}${l.bw ? ` <span class="bwtag">+ bodyweight</span>` : ""}</span>
+          <span class="dl">${first ? M.fmt(first.v) : "—"} → ${last ? M.fmt(last.v) : "—"}${delta}</span></div>
+        <div class="plot">${plot}</div><div class="axis">${axis}</div></div>`;
     }).join("");
   }
 
   function syncBackup() {
     const t = document.getElementById("backup-json");
-    if (t && document.activeElement !== t) t.value = payload();
+    if (!t) return;
+    if (document.activeElement === t || backupDirty) return;
+    t.value = payload();
   }
 
   function render() {
@@ -633,45 +609,47 @@
     updateProgress();
     renderHistory();
     syncBackup();
+    updateStatus();
   }
 
   function goToday() {
-    const t = suggested();
+    const t = C.suggested(S.start);
     S.week = t.week;
     S.day = t.day;
     save();
     render();
-    document.getElementById("main-content").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    document.getElementById("main-content").scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start"
+    });
   }
 
   function toggle(id, i, btn) {
     const D = dayObj();
     if (D.exclusive && liftById(id)) {
-      const key = wd();
+      const key = C.wd(S.week, S.day);
       const already = LOG.choice[key] === id && chk(id, 0);
-      D.lifts.forEach(l => {
-        setChk(l.id, 0, false);
-      });
-      if (!already) {
-        LOG.choice[key] = id;
-        setChk(id, 0, true);
-      } else {
-        delete LOG.choice[key];
-      }
+      D.lifts.forEach(l => setChk(l.id, 0, false));
+      if (!already) { LOG.choice[key] = id; setChk(id, 0, true); }
+      else delete LOG.choice[key];
       save();
       renderSession();
       updateProgress();
       return;
     }
     if (id === "burn" && !chk("burn", 0)) setChk("burnskip", 0, false);
-    if (id === "burnskip" && !chk("burnskip", 0)) setChk("burn", 0, false);
+    if (id === "burnskip" && !chk("burnskip", 0)) {
+      const prev = { burn: chk("burn", 0) };
+      setChk("burn", 0, false);
+      toast("Burnout skipped.", () => { setChk("burnskip", 0, false); if (prev.burn) setChk("burn", 0, true); save(); render(); });
+    }
     setChk(id, i, !chk(id, i));
     save();
-    if (btn && !D.exclusive) {
-      updateToggle(btn);
+    if (btn && document.getElementById("session").contains(btn)) {
+      btn.setAttribute("aria-pressed", chk(id, i) ? "true" : "false");
       if (id === "burn" || id === "burnskip") {
         const other = document.querySelector(`[data-id="${id === "burn" ? "burnskip" : "burn"}"]`);
-        if (other) updateToggle(other);
+        if (other) other.setAttribute("aria-pressed", chk(other.dataset.id, 0) ? "true" : "false");
       }
       updateProgress();
       renderHistory();
@@ -681,68 +659,141 @@
     }
   }
 
+  function exportFile() {
+    const text = payload();
+    const name = `final-cut-backup-${C.iso(new Date())}.json`;
+    const blob = new Blob([text], { type: "application/json" });
+    const file = new File([blob], name, { type: "application/json" });
+    const done = () => {
+      S.lastExported = new Date().toISOString();
+      saveNow();
+      document.getElementById("bk-msg").className = "bk-msg ok";
+      document.getElementById("bk-msg").textContent = "Exported.";
+    };
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: "Final Cut backup" }).then(done).catch(() => downloadBlob(blob, name, done));
+    } else downloadBlob(blob, name, done);
+  }
+
+  function downloadBlob(blob, name, done) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    done();
+  }
+
+  function restoreFromBox() {
+    const t = document.getElementById("backup-json");
+    const m = document.getElementById("bk-msg");
+    let data;
+    try { data = JSON.parse(t.value); C.validatePayload(data); } catch (err) {
+      m.className = "bk-msg err";
+      m.textContent = err.message || "That isn't valid log data.";
+      return;
+    }
+    if (!confirm("Replace the log on this phone with the pasted backup?")) return;
+    const prev = payloadObj();
+    try {
+      snapshot();
+      applyMigrated(data);
+      backupDirty = false;
+      m.className = "bk-msg ok";
+      m.textContent = "Restored.";
+      saveNow();
+      render();
+      toast("Backup restored.", () => { applyMigrated(prev); saveNow(); render(); });
+    } catch (err) {
+      m.className = "bk-msg err";
+      m.textContent = err.message || "Restore failed.";
+    }
+  }
+
   document.getElementById("mark").innerHTML = mountain();
 
   document.addEventListener("click", e => {
-    const today = e.target.closest("#today-btn");
-    if (today) { goToday(); return; }
-
-    const bkc = e.target.closest("#bk-copy");
-    if (bkc) {
+    if (e.target.closest("#toast-undo") && undo) { const fn = undo; undo = null; document.getElementById("toast").hidden = true; fn(); return; }
+    if (e.target.closest("#setup-go")) {
+      S.start = document.getElementById("setup-start").value || S.start;
+      S.setupDone = true;
+      const t = C.suggested(S.start);
+      S.week = t.week; S.day = t.day;
+      showSetup(false);
+      saveNow();
+      render();
+      return;
+    }
+    if (e.target.closest("#today-btn")) { goToday(); return; }
+    if (e.target.closest("#finish-btn")) {
+      const se = sess();
+      const prev = se.finished;
+      se.finished = !se.finished;
+      save();
+      updateProgress();
+      toast(se.finished ? "Session marked finished." : "Session reopened.", () => { se.finished = prev; save(); updateProgress(); });
+      return;
+    }
+    if (e.target.closest("#bk-export")) { exportFile(); return; }
+    if (e.target.closest("#bk-copy")) {
       const t = document.getElementById("backup-json");
       const m = document.getElementById("bk-msg");
       t.value = payload();
       t.select();
       const done = () => { m.className = "bk-msg ok"; m.textContent = "Copied."; };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(t.value).then(done, () => {
-          m.className = "bk-msg"; m.textContent = "Select the text above and copy manually.";
-        });
-      } else {
-        try { document.execCommand("copy"); done(); }
-        catch (_) { m.className = "bk-msg"; m.textContent = "Select the text above and copy manually."; }
-      }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(done, () => { m.textContent = "Copy manually."; });
+      else try { document.execCommand("copy"); done(); } catch (_) { m.textContent = "Copy manually."; }
       return;
     }
-
-    const bkr = e.target.closest("#bk-restore");
-    if (bkr) {
-      const t = document.getElementById("backup-json");
-      const m = document.getElementById("bk-msg");
-      try {
-        applyPayload(JSON.parse(t.value));
-        m.className = "bk-msg ok";
-        m.textContent = "Restored.";
-        save();
-        render();
-      } catch (err) {
-        m.className = "bk-msg err";
-        m.textContent = "That isn't valid log data — paste the whole block, braces included.";
-      }
+    if (e.target.closest("#bk-restore")) { restoreFromBox(); return; }
+    const fold = e.target.closest("[data-fold]");
+    if (fold) {
+      const se = sess();
+      se.collapsed[fold.dataset.fold] = !se.collapsed[fold.dataset.fold];
+      save();
+      renderSession();
+      updateProgress();
       return;
     }
-
     const w = e.target.closest("[data-w]");
     if (w) { S.week = +w.dataset.w; save(); render(); return; }
     const d = e.target.closest("[data-d]");
     if (d) { S.day = +d.dataset.d; save(); render(); return; }
     const r = e.target.closest("[data-r]");
-    if (r) { S.ready = r.dataset.r; save(); render(); return; }
+    if (r) {
+      const se = sess();
+      const prev = se.ready;
+      se.ready = r.dataset.r;
+      if (se.ready === "amber") {
+        const rec = LOG.burn[C.wd(S.week, S.day)] || {};
+        if (!rec.scaled) { rec.scaled = "yes"; LOG.burn[C.wd(S.week, S.day)] = rec; }
+      }
+      save();
+      render();
+      toast("Readiness set for this session.", () => { se.ready = prev; save(); render(); });
+      return;
+    }
     const mt = e.target.closest("[data-m]");
     if (mt) { S.metric = mt.dataset.m; save(); renderHistory(); return; }
     const fl = e.target.closest("[data-flag]");
     if (fl) {
-      S.flags[fl.dataset.flag] = !S.flags[fl.dataset.flag];
+      const se = sess();
+      se.flags[fl.dataset.flag] = !se.flags[fl.dataset.flag];
       save(); render(); return;
     }
     const ov = e.target.closest("[data-override]");
     if (ov) {
-      S.overrides[ov.dataset.override] = !S.overrides[ov.dataset.override];
-      save(); render(); return;
+      const se = sess();
+      const prev = JSON.parse(JSON.stringify(se.overrides[ov.dataset.override] || {}));
+      se.overrides[ov.dataset.override] = { on: true, as: LOG.subs[C.loadKey(ov.dataset.override, S.week, S.day)] || "" };
+      save(); render();
+      toast("Swap logged for this session.", () => { se.overrides[ov.dataset.override] = prev; save(); render(); });
+      return;
     }
     const c = e.target.closest("[data-carry]");
     if (c) {
-      LOG.loads[loadKey(c.dataset.carry)] = c.dataset.val;
+      if (c.dataset.partial === "1" && !confirm("Prior week was incomplete. Carry that load anyway?")) return;
+      LOG.loads[C.loadKey(c.dataset.carry, S.week, S.day)] = c.dataset.val;
       const inp = document.querySelector(`[data-load="${c.dataset.carry}"]`);
       if (inp) inp.value = c.dataset.val;
       save();
@@ -758,44 +809,93 @@
 
   document.addEventListener("change", e => {
     const start = e.target.closest("#start-in");
-    if (start) { S.start = start.value; save(); renderChrome(); updateProgress(); return; }
+    if (start) {
+      if (C.hasLogs(LOG) && !confirm("Logs stay on week/day numbers. They will not move with this date. Continue?")) {
+        start.value = S.start; return;
+      }
+      const prev = S.start;
+      S.start = start.value;
+      save(); renderChrome(); updateProgress();
+      toast("Block start updated.", () => { S.start = prev; save(); renderChrome(); updateProgress(); });
+      return;
+    }
     const bw = e.target.closest("[data-bw]");
     if (bw) { LOG.bw[S.week] = bw.value; save(); renderChrome(); renderHistory(); return; }
     const loadEl = e.target.closest("[data-load]");
-    if (loadEl) { LOG.loads[loadKey(loadEl.dataset.load)] = loadEl.value; save(); renderHistory(); return; }
+    if (loadEl) { LOG.loads[C.loadKey(loadEl.dataset.load, S.week, S.day)] = loadEl.value; save(); renderHistory(); return; }
     const reps = e.target.closest("[data-reps]");
-    if (reps) { LOG.reps[loadKey(reps.dataset.reps)] = reps.value; save(); renderHistory(); return; }
+    if (reps) { LOG.reps[C.loadKey(reps.dataset.reps, S.week, S.day)] = reps.value; save(); renderHistory(); return; }
     const rpe = e.target.closest("[data-rpe]");
-    if (rpe) { LOG.rpe[loadKey(rpe.dataset.rpe)] = rpe.value; save(); return; }
+    if (rpe) { LOG.rpe[C.loadKey(rpe.dataset.rpe, S.week, S.day)] = rpe.value; save(); renderSession(); return; }
+    const sub = e.target.closest("[data-sub]");
+    if (sub) { LOG.subs[C.loadKey(sub.dataset.sub, S.week, S.day)] = sub.value; save(); return; }
     const burn = e.target.closest("[data-burn]");
     if (burn) {
-      const rec = LOG.burn[wd()] || {};
+      const rec = LOG.burn[C.wd(S.week, S.day)] || {};
       rec[burn.dataset.burn] = burn.value;
-      LOG.burn[wd()] = rec;
+      LOG.burn[C.wd(S.week, S.day)] = rec;
       save();
     }
   });
 
   document.addEventListener("input", e => {
+    if (e.target.id === "backup-json") { backupDirty = true; return; }
+    const bw = e.target.closest("[data-bw]");
+    if (bw) { LOG.bw[S.week] = bw.value; save(); return; }
     const loadEl = e.target.closest("[data-load]");
-    if (loadEl) { LOG.loads[loadKey(loadEl.dataset.load)] = loadEl.value; save(); }
+    if (loadEl) { LOG.loads[C.loadKey(loadEl.dataset.load, S.week, S.day)] = loadEl.value; save(); }
     const reps = e.target.closest("[data-reps]");
-    if (reps) { LOG.reps[loadKey(reps.dataset.reps)] = reps.value; save(); }
+    if (reps) { LOG.reps[C.loadKey(reps.dataset.reps, S.week, S.day)] = reps.value; save(); }
     const rpe = e.target.closest("[data-rpe]");
-    if (rpe) { LOG.rpe[loadKey(rpe.dataset.rpe)] = rpe.value; save(); }
+    if (rpe) { LOG.rpe[C.loadKey(rpe.dataset.rpe, S.week, S.day)] = rpe.value; save(); }
+    const sub = e.target.closest("[data-sub]");
+    if (sub) { LOG.subs[C.loadKey(sub.dataset.sub, S.week, S.day)] = sub.value; save(); }
     const burn = e.target.closest("[data-burn]");
     if (burn && burn.tagName === "INPUT") {
-      const rec = LOG.burn[wd()] || {};
+      const rec = LOG.burn[C.wd(S.week, S.day)] || {};
       rec[burn.dataset.burn] = burn.value;
-      LOG.burn[wd()] = rec;
+      LOG.burn[C.wd(S.week, S.day)] = rec;
       save();
     }
   });
 
+  document.getElementById("backup-json").addEventListener("blur", () => {
+    if (!backupDirty) syncBackup();
+  });
+
+  document.addEventListener("visibilitychange", () => { if (document.hidden) flush(); });
+  window.addEventListener("pagehide", flush);
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js").catch(() => {});
+      navigator.serviceWorker.register("./sw.js").then(reg => {
+        if (reg.waiting) offerUpdate(reg.waiting);
+        reg.addEventListener("updatefound", () => {
+          const sw = reg.installing;
+          if (!sw) return;
+          sw.addEventListener("statechange", () => { if (sw.state === "installed" && navigator.serviceWorker.controller) offerUpdate(sw); });
+        });
+      }).catch(() => {
+        const el = document.getElementById("update-banner");
+        el.hidden = false;
+        el.className = "save-banner show";
+        el.textContent = "Offline copy unavailable in this browser. The live page still works.";
+      });
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) return;
+        refreshing = true;
+        location.reload();
+      });
     });
+  }
+
+  function offerUpdate(worker) {
+    const el = document.getElementById("update-banner");
+    el.hidden = false;
+    el.className = "save-banner show";
+    el.innerHTML = `A newer Final Cut is ready. <button type="button" class="mbtn" id="reload-app">Update now</button>`;
+    document.getElementById("reload-app").onclick = () => { worker.postMessage({ type: "SKIP_WAITING" }); };
   }
 
   load();

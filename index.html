@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1F1F1F">
 <meta name="description" content="Skaling Ventures Final Cut — six-week home gym strength, mobility, and burnout block.">
+<meta name="app-version" content="1.1.0">
 <title>Final Cut — Block 01 · Skaling Ventures</title>
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
@@ -18,61 +19,92 @@
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="sr-live" id="save-live" aria-live="polite"></div>
 
+<div class="setup" id="setup" hidden>
+  <div class="setup-card">
+    <div class="setup-mark" id="setup-mark"></div>
+    <p class="setup-brand">Skaling Ventures</p>
+    <h1>Final Cut · Block 01</h1>
+    <p>Six weeks of strength, mobility, and burnouts. Everything you log stays on this phone. Nothing is uploaded.</p>
+    <div class="field">
+      <label for="setup-start">Block start Monday</label>
+      <input id="setup-start" type="date">
+      <span class="bw-note">Today will open the matching week and day from this date.</span>
+    </div>
+    <button type="button" class="primary" id="setup-go">Start the block</button>
+  </div>
+</div>
+
 <header class="sticky">
   <div class="sticky-inner">
     <div id="mark"></div>
     <div class="brand-copy">
-      <div class="brand-name">Skaling Ventures</div>
+      <div class="brand-name" id="save-chip">Saved locally</div>
       <div class="brand-block" id="sticky-week">W1 · Mon</div>
     </div>
     <div class="sticky-meta">
+      <span class="ready-chip" id="sticky-ready">Ready?</span>
       <button type="button" class="today-btn" id="today-btn">Today</button>
-      <div class="prog-ring" aria-label="Session progress">
+      <div class="prog-ring" id="prog-ring" aria-label="Session progress">
         <svg width="38" height="38" viewBox="0 0 38 38">
           <circle class="track" cx="19" cy="19" r="15"></circle>
           <circle class="fill" id="prog-fill" cx="19" cy="19" r="15" stroke-dasharray="0 94.2"></circle>
         </svg>
-        <span class="prog-pct" id="prog-pct">0</span>
+        <span class="prog-pct" id="prog-pct">—</span>
       </div>
     </div>
   </div>
 </header>
 
-<div class="wrap">
+<div class="wrap" id="app">
   <div class="save-banner" id="savestate"></div>
+  <div class="save-banner" id="update-banner" hidden></div>
+  <div class="toast" id="toast" hidden></div>
 
-  <header class="mast">
+  <header class="mast compact">
     <div class="eyebrow"><span>Block 01 · six weeks</span><span id="wk-lab">Week 1 of 6</span></div>
     <h1 class="intent" id="intent">Establish</h1>
     <div class="intent-sub" id="intent-sub"></div>
-    <p class="identity">Strong, mobile, athletic, durable, hard to break.</p>
     <nav class="ramp" id="ramp" aria-label="Week"></nav>
-    <div class="meta-row">
-      <div class="field">
-        <label for="start-in">Block start (Monday)</label>
-        <input id="start-in" type="date">
-        <span class="bw-note" id="start-note"></span>
-      </div>
-      <div class="field">
-        <label for="bw-in">Bodyweight · Week <span id="bw-wk">1</span></label>
-        <input id="bw-in" class="short" data-bw type="text" inputmode="decimal" placeholder="lb" aria-label="Bodyweight this week">
-        <span class="bw-note" id="bw-note"></span>
-      </div>
-    </div>
   </header>
 
   <nav class="days" id="days" aria-label="Training day"></nav>
 
-  <section class="ready" aria-labelledby="ready-h">
-    <h2 id="ready-h">Readiness</h2>
+  <section class="ready" id="ready-card" aria-labelledby="ready-h">
+    <h2 id="ready-h">How do you feel today?</h2>
+    <p class="ready-lead" id="ready-lead">Pick once. It stays with this session only.</p>
     <div class="ready-row" id="ready"></div>
     <p class="ready-note" id="ready-note"></p>
     <div class="flags" id="flags" aria-label="Situational flags"></div>
+    <div class="rx-card" id="rx-card" hidden></div>
   </section>
 
   <main class="session" id="main-content">
     <div id="session"></div>
   </main>
+
+  <section class="finish" id="finish-wrap">
+    <button type="button" class="primary" id="finish-btn">Finish session</button>
+    <p class="finish-recap" id="finish-recap" hidden></p>
+  </section>
+
+  <details class="ref utility" id="utility-wrap">
+    <summary><span>Setup, backup, history</span></summary>
+    <div class="hist-body">
+      <div class="meta-row">
+        <div class="field">
+          <label for="start-in">Block start (Monday)</label>
+          <input id="start-in" type="date">
+          <span class="bw-note" id="start-note"></span>
+        </div>
+        <div class="field">
+          <label for="bw-in">Bodyweight · Week <span id="bw-wk">1</span></label>
+          <input id="bw-in" class="short" data-bw type="text" inputmode="decimal" placeholder="lb" aria-label="Bodyweight this week">
+          <span class="bw-note" id="bw-note"></span>
+        </div>
+      </div>
+      <p class="status-line" id="status-line"></p>
+    </div>
+  </details>
 
   <details class="ref">
     <summary><span>Load history</span></summary>
@@ -87,11 +119,12 @@
   <details class="ref" id="backup-wrap">
     <summary><span>Backup</span></summary>
     <div class="hist-body">
-      <p class="hist-empty">Your whole log as text — sets, loads, reps, RPE, bodyweight, burnouts. It stays in this browser unless you copy it out. Paste it back here to restore on another device.</p>
+      <p class="hist-empty">This log lives on this phone only. Export weekly to Files or iCloud. Paste a backup here only when you need to recover.</p>
       <textarea id="backup-json" spellcheck="false" aria-label="Log data"></textarea>
-      <div class="bk-row">
+      <div class="bk-row three">
+        <button type="button" class="mbtn" id="bk-export">Export file</button>
         <button type="button" class="mbtn" id="bk-copy">Copy log</button>
-        <button type="button" class="mbtn" id="bk-restore">Restore from box</button>
+        <button type="button" class="mbtn" id="bk-restore">Restore</button>
       </div>
       <p class="bk-msg" id="bk-msg"></p>
     </div>
@@ -176,9 +209,11 @@
   <footer class="colophon">
     <div class="colophon-brand">Skaling Ventures</div>
     <div class="colophon-tagline">For the Love of the Game</div>
+    <div class="colophon-ver" id="app-ver"></div>
   </footer>
 </div>
 
+<script src="./core.js"></script>
 <script src="./program.js"></script>
 <script src="./app.js"></script>
 </body>
