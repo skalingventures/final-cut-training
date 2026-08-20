@@ -1,0 +1,28 @@
+{
+  "name": "Final Cut — Skaling Ventures",
+  "short_name": "Final Cut",
+  "description": "Six-week home gym strength, mobility, and burnout block.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1F1F1F",
+  "theme_color": "#1F1F1F",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

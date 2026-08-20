@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F1F1F">
+<meta name="description" content="Skaling Ventures Final Cut — six-week home gym strength, mobility, and burnout block.">
+<title>Final Cut — Block 01 · Skaling Ventures</title>
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div class="sr-live" id="save-live" aria-live="polite"></div>
+
+<header class="sticky">
+  <div class="sticky-inner">
+    <div id="mark"></div>
+    <div class="brand-copy">
+      <div class="brand-name">Skaling Ventures</div>
+      <div class="brand-block" id="sticky-week">W1 · Mon</div>
+    </div>
+    <div class="sticky-meta">
+      <button type="button" class="today-btn" id="today-btn">Today</button>
+      <div class="prog-ring" aria-label="Session progress">
+        <svg width="38" height="38" viewBox="0 0 38 38">
+          <circle class="track" cx="19" cy="19" r="15"></circle>
+          <circle class="fill" id="prog-fill" cx="19" cy="19" r="15" stroke-dasharray="0 94.2"></circle>
+        </svg>
+        <span class="prog-pct" id="prog-pct">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="save-banner" id="savestate"></div>
+
+  <header class="mast">
+    <div class="eyebrow"><span>Block 01 · six weeks</span><span id="wk-lab">Week 1 of 6</span></div>
+    <h1 class="intent" id="intent">Establish</h1>
+    <div class="intent-sub" id="intent-sub"></div>
+    <p class="identity">Strong, mobile, athletic, durable, hard to break.</p>
+    <nav class="ramp" id="ramp" aria-label="Week"></nav>
+    <div class="meta-row">
+      <div class="field">
+        <label for="start-in">Block start (Monday)</label>
+        <input id="start-in" type="date">
+        <span class="bw-note" id="start-note"></span>
+      </div>
+      <div class="field">
+        <label for="bw-in">Bodyweight · Week <span id="bw-wk">1</span></label>
+        <input id="bw-in" class="short" data-bw type="text" inputmode="decimal" placeholder="lb" aria-label="Bodyweight this week">
+        <span class="bw-note" id="bw-note"></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="days" id="days" aria-label="Training day"></nav>
+
+  <section class="ready" aria-labelledby="ready-h">
+    <h2 id="ready-h">Readiness</h2>
+    <div class="ready-row" id="ready"></div>
+    <p class="ready-note" id="ready-note"></p>
+    <div class="flags" id="flags" aria-label="Situational flags"></div>
+  </section>
+
+  <main class="session" id="main-content">
+    <div id="session"></div>
+  </main>
+
+  <details class="ref">
+    <summary><span>Load history</span></summary>
+    <div class="hist-body">
+      <div class="week-sum" id="week-sum"></div>
+      <div class="metrics" id="metrics"></div>
+      <p class="hist-key" id="hist-key"></p>
+      <div id="hist"></div>
+    </div>
+  </details>
+
+  <details class="ref" id="backup-wrap">
+    <summary><span>Backup</span></summary>
+    <div class="hist-body">
+      <p class="hist-empty">Your whole log as text — sets, loads, reps, RPE, bodyweight, burnouts. It stays in this browser unless you copy it out. Paste it back here to restore on another device.</p>
+      <textarea id="backup-json" spellcheck="false" aria-label="Log data"></textarea>
+      <div class="bk-row">
+        <button type="button" class="mbtn" id="bk-copy">Copy log</button>
+        <button type="button" class="mbtn" id="bk-restore">Restore from box</button>
+      </div>
+      <p class="bk-msg" id="bk-msg"></p>
+    </div>
+  </details>
+
+  <details class="ref">
+    <summary><span>Reference</span></summary>
+    <div class="ref-body">
+      <h4>Operating intent</h4>
+      <p>Built around the home setup, GBRS-style training, the daily mobility programming, a WHOOP goal of more Zone 4/5 exposure, and the need to stay durable rather than cooked. Training identity: strong, mobile, athletic, durable, hard to break.</p>
+
+      <h4>Daily session template</h4>
+      <dl>
+        <dt>Targeted myofascial release</dt><dd>3–5 minutes. Only hit areas that improve today's mobility or lifting. 10–15 minutes on recovery days.</dd>
+        <dt>Mobility programming</dt><dd>6–15 minutes. Follow the daily theme first.</dd>
+        <dt>Strength training</dt><dd>30–40 minutes. The main adaptation.</dd>
+        <dt>Burnout</dt><dd>10 minutes. Zone 4/5 exposure on hard days. Three hard burnouts plus one optional moderate each week.</dd>
+        <dt>Downshift</dt><dd>2–5 minutes. Breathing, easy walk, light rolling.</dd>
+      </dl>
+      <p>Typical total: 55–75 minutes.</p>
+
+      <h4>Main lift rule</h4>
+      <p>Add load only when the reps are clean. No ugly grinders. Strength should progress, but the program should never become a daily test of willpower.</p>
+
+      <h4>Myofascial rule</h4>
+      <p>Release only what improves the next movement. Do not roll for 20 minutes out of obligation, and do not hit every area every day — take the areas that match the session.</p>
+
+      <h4>What the terms mean</h4>
+      <dl>
+        <dt>Rectus femoris</dt><dd>Front thigh / hip-flexor quad area.</dd>
+        <dt>Iliotibial band</dt><dd>Outer thigh, outer quad, side-hip area.</dd>
+        <dt>Gluteus maximus</dt><dd>Big glute, the back pocket area.</dd>
+        <dt>Gluteus minimus</dt><dd>Side glute, the deep side-hip pocket.</dd>
+        <dt>Gluteal fold</dt><dd>The crease where glute meets hamstring.</dd>
+        <dt>Adductors</dt><dd>Inner thighs.</dd>
+        <dt>Quadratus lumborum</dt><dd>Low-back side wall, between the bottom rib and the pelvis.</dd>
+        <dt>Upper abdominals and serratus anterior</dt><dd>Upper side abs, rib-side, under-armpit area.</dd>
+        <dt>Pectoralis major</dt><dd>The broad chest muscle.</dd>
+      </dl>
+
+      <h4>Burnout rules</h4>
+      <dl>
+        <dt>Duration</dt><dd>10 minutes.</dd>
+        <dt>Goal</dt><dd>Zone 4 by minute 4–6; occasional Zone 5 near the end.</dd>
+        <dt>Frequency</dt><dd>Three hard burnouts plus one optional moderate.</dd>
+        <dt>Technique</dt><dd>Never chase WHOOP at the expense of form.</dd>
+        <dt>Scaling</dt><dd>Reduce reps or load before stopping.</dd>
+        <dt>Red recovery day</dt><dd>Skip the burnout or perform a 60–70% easy version.</dd>
+      </dl>
+
+      <h4>Burnout scaling</h4>
+      <dl>
+        <dt>Grip fails before breathing</dt><dd>Reduce pull-ups and carries.</dd>
+        <dt>Legs fail before heart rate climbs</dt><dd>Reduce squat and lunge volume.</dd>
+        <dt>Push-ups become singles</dt><dd>Elevate hands or reduce reps.</dd>
+        <dt>Barbell technique degrades</dt><dd>Drop load immediately.</dd>
+        <dt>Heart rate never climbs</dt><dd>Reduce transitions, pick faster movements.</dd>
+        <dt>Heart rate spikes but movement gets sloppy</dt><dd>Slow slightly and keep moving.</dd>
+      </dl>
+
+      <h4>Readiness rules</h4>
+      <dl>
+        <dt>Green</dt><dd>Full session + full burnout. Add load or reps if clean, not chaos.</dd>
+        <dt>Average</dt><dd>Full strength, moderate burnout.</dd>
+        <dt>Red</dt><dd>Strength only or recovery day. Burnout off. Heavy hinge off.</dd>
+        <dt>Achilles cranky</dt><dd>Keep strength, reduce jumps and burpees, emphasize carries and swings.</dd>
+        <dt>Back feels cooked</dt><dd>Avoid heavy hinge; swap deadlift for RDL or goblet work.</dd>
+        <dt>Shoulder feels pinchy</dt><dd>Skip dips, use push-ups or DB press, increase scap work.</dd>
+        <dt>Motivation low but body okay</dt><dd>Start the session; cut the burnout if needed.</dd>
+      </dl>
+
+      <h4>Redundancy guardrails</h4>
+      <p>The mobility program already carries real strengthening volume. Extra calf work stays on Day 5. No extra tib block unless the Achilles is cranky. Petersons stay but lower. Keep the deadlift clean and reduce hinge accessories. Carries cover the glute work — no extra fluff. Never lift heavy upper body on Day 3.</p>
+
+      <h4>Progression</h4>
+      <dl id="ref-prog"></dl>
+
+      <p class="closer">Mobility first. Strength as the priority. Burnouts as the edge. <b>Recovery as the limiter.</b></p>
+    </div>
+  </details>
+
+  <footer class="colophon">
+    <div class="colophon-brand">Skaling Ventures</div>
+    <div class="colophon-tagline">For the Love of the Game</div>
+  </footer>
+</div>
+
+<script src="./program.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
