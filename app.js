@@ -124,14 +124,16 @@
       render();
       return;
     }
-    if (!S.setupDone) showSetup(true);
-    else {
+    if (!S.setupDone) {
+      showSetup(true);
+      render();
+    } else {
       showSetup(false);
       const t = C.suggested(S.start);
       S.week = t.week;
       S.day = t.day;
+      render({ focus: true });
     }
-    render();
   }
 
   function esc(s) {
@@ -289,9 +291,9 @@
     const t = C.suggested(S.start);
     const se = sess();
     document.documentElement.style.setProperty("--seg", heatVar(D.heat));
-    document.getElementById("wk-lab").textContent = `Week ${W.n} of 6`;
-    document.getElementById("intent").textContent = W.intent;
-    document.getElementById("intent-sub").textContent = `Main lifts ${W.main} · ${W.rpe} · ${W.acc} · burnouts at ${W.burn}`;
+    document.getElementById("intent-sub").textContent = `Week ${W.n} · ${W.intent} · ${W.main} @ ${W.rpe} · ${W.acc}`;
+    const card = document.getElementById("ready-card");
+    if (card) card.classList.toggle("is-set", !!se.ready);
     document.getElementById("ramp").innerHTML = P.weeks.map(w =>
       `<button type="button" data-w="${w.n}" aria-pressed="${w.n === S.week}" style="--seg:${heatVar(w.heat)}">
          <span class="bar"></span><span class="lbl">W${w.n}</span></button>`).join("");
@@ -300,7 +302,8 @@
          <span class="dot"></span><span class="wd">${WEEKDAYS[d.n - 1]}</span><span class="n">${d.n}</span></button>`).join("");
     document.getElementById("ready").innerHTML = P.ready.map(r =>
       `<button type="button" class="rbtn" data-r="${r.id}" aria-pressed="${r.id === se.ready}">${r.lab}</button>`).join("");
-    document.getElementById("ready-note").textContent = se.ready ? P.ready.find(r => r.id === se.ready).note : "Not set for this session yet.";
+    document.getElementById("ready-note").textContent = se.ready ? P.ready.find(r => r.id === se.ready).note : "Pick once. It stays with this session only.";
+    document.getElementById("ready-lead").textContent = se.ready ? P.ready.find(r => r.id === se.ready).lab : "How do you feel?";
     document.getElementById("start-in").value = S.start;
     document.getElementById("bw-in").value = LOG.bw[S.week] || "";
     document.getElementById("bw-wk").textContent = S.week;
@@ -330,6 +333,7 @@
 
   function sec(title, dose, inner, foldId, done) {
     const se = sess();
+    if (foldId && done && se.collapsed[foldId] == null) se.collapsed[foldId] = true;
     const collapsed = foldId && se.collapsed[foldId] && done;
     return `<section class="sec${collapsed ? " is-collapsed" : ""}" data-sec="${foldId || ""}">
       <div class="sec-h">
@@ -355,9 +359,9 @@
     const amber = se.ready === "amber";
     const rpeMax = C.rpeTarget(W);
     let h = `<div class="s-head">
-      <div class="s-tag">Day ${D.n} · ${D.weekday} · ${D.tag}</div>
-      <h2 class="s-title">${esc(D.theme)}</h2>
-      <div class="s-sub">${esc(D.sub)}</div>
+      <div class="s-tag">W${W.n} ${esc(W.intent)} · ${D.weekday} · ${D.tag}</div>
+      <h1 class="s-title">${esc(D.theme)}</h1>
+      <div class="s-sub">${esc(D.sub)} · ${esc(D.n === 3 || D.n >= 6 ? "easy day" : "55–75 min")}</div>
     </div>`;
     if (D.guardTop) h += `<div class="sec"><div class="guard"><span>${esc(D.guardTop)}</span></div></div>`;
 
@@ -603,25 +607,51 @@
     t.value = payload();
   }
 
-  function render() {
+  function setNavOpen(on) {
+    const drawer = document.getElementById("nav-drawer");
+    const btn = document.getElementById("week-btn");
+    drawer.hidden = !on;
+    btn.setAttribute("aria-expanded", on ? "true" : "false");
+  }
+
+  function firstUnfinished() {
+    const se = sess();
+    if (!se.ready) return document.getElementById("ready-card");
+    const secs = document.querySelectorAll("#session .sec[data-sec], #session .sec");
+    for (const el of secs) {
+      if (el.classList.contains("is-collapsed")) continue;
+      const unchecked = el.querySelector(".box[aria-pressed='false'], .set[aria-pressed='false']");
+      if (unchecked) return el;
+    }
+    return document.getElementById("main-content");
+  }
+
+  function focusWork() {
+    const el = firstUnfinished();
+    if (!el) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+
+  function render(opts) {
     renderChrome();
     renderSession();
     updateProgress();
     renderHistory();
     syncBackup();
     updateStatus();
+    if (opts && opts.focus) {
+      requestAnimationFrame(() => requestAnimationFrame(focusWork));
+    }
   }
 
   function goToday() {
     const t = C.suggested(S.start);
     S.week = t.week;
     S.day = t.day;
+    setNavOpen(false);
     save();
-    render();
-    document.getElementById("main-content").scrollIntoView({
-      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      block: "start"
-    });
+    render({ focus: true });
   }
 
   function toggle(id, i, btn) {
@@ -721,7 +751,12 @@
       S.week = t.week; S.day = t.day;
       showSetup(false);
       saveNow();
-      render();
+      render({ focus: true });
+      return;
+    }
+    if (e.target.closest("#week-btn")) {
+      const drawer = document.getElementById("nav-drawer");
+      setNavOpen(drawer.hidden);
       return;
     }
     if (e.target.closest("#today-btn")) { goToday(); return; }
@@ -756,9 +791,9 @@
       return;
     }
     const w = e.target.closest("[data-w]");
-    if (w) { S.week = +w.dataset.w; save(); render(); return; }
+    if (w) { S.week = +w.dataset.w; setNavOpen(false); save(); render({ focus: true }); return; }
     const d = e.target.closest("[data-d]");
-    if (d) { S.day = +d.dataset.d; save(); render(); return; }
+    if (d) { S.day = +d.dataset.d; setNavOpen(false); save(); render({ focus: true }); return; }
     const r = e.target.closest("[data-r]");
     if (r) {
       const se = sess();
@@ -769,8 +804,9 @@
         if (!rec.scaled) { rec.scaled = "yes"; LOG.burn[C.wd(S.week, S.day)] = rec; }
       }
       save();
-      render();
-      toast("Readiness set for this session.", () => { se.ready = prev; save(); render(); });
+      setNavOpen(false);
+      render({ focus: true });
+      toast("Readiness set for this session.", () => { se.ready = prev; save(); render({ focus: true }); });
       return;
     }
     const mt = e.target.closest("[data-m]");

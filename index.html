@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1F1F1F">
 <meta name="description" content="Skaling Ventures Final Cut — six-week home gym strength, mobility, and burnout block.">
-<meta name="app-version" content="1.1.0">
+<meta name="app-version" content="1.2.0">
 <title>Final Cut — Block 01 · Skaling Ventures</title>
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
@@ -37,12 +37,12 @@
 <header class="sticky">
   <div class="sticky-inner">
     <div id="mark"></div>
-    <div class="brand-copy">
+    <button type="button" class="brand-copy week-btn" id="week-btn" aria-expanded="false" aria-controls="nav-drawer">
       <div class="brand-name" id="save-chip">Saved locally</div>
       <div class="brand-block" id="sticky-week">W1 · Mon</div>
-    </div>
+    </button>
     <div class="sticky-meta">
-      <span class="ready-chip" id="sticky-ready">Ready?</span>
+      <a class="ready-chip" id="sticky-ready" href="#ready-card">Ready?</a>
       <button type="button" class="today-btn" id="today-btn">Today</button>
       <div class="prog-ring" id="prog-ring" aria-label="Session progress">
         <svg width="38" height="38" viewBox="0 0 38 38">
@@ -53,6 +53,13 @@
       </div>
     </div>
   </div>
+  <div class="nav-drawer" id="nav-drawer" hidden>
+    <div class="nav-drawer-inner">
+      <nav class="ramp" id="ramp" aria-label="Week"></nav>
+      <nav class="days" id="days" aria-label="Training day"></nav>
+      <p class="intent-sub" id="intent-sub"></p>
+    </div>
+  </div>
 </header>
 
 <div class="wrap" id="app">
@@ -60,21 +67,14 @@
   <div class="save-banner" id="update-banner" hidden></div>
   <div class="toast" id="toast" hidden></div>
 
-  <header class="mast compact">
-    <div class="eyebrow"><span>Block 01 · six weeks</span><span id="wk-lab">Week 1 of 6</span></div>
-    <h1 class="intent" id="intent">Establish</h1>
-    <div class="intent-sub" id="intent-sub"></div>
-    <nav class="ramp" id="ramp" aria-label="Week"></nav>
-  </header>
-
-  <nav class="days" id="days" aria-label="Training day"></nav>
-
   <section class="ready" id="ready-card" aria-labelledby="ready-h">
-    <h2 id="ready-h">How do you feel today?</h2>
-    <p class="ready-lead" id="ready-lead">Pick once. It stays with this session only.</p>
+    <div class="ready-top">
+      <h2 id="ready-h">Today</h2>
+      <span class="ready-lead" id="ready-lead">How do you feel?</span>
+    </div>
     <div class="ready-row" id="ready"></div>
-    <p class="ready-note" id="ready-note"></p>
     <div class="flags" id="flags" aria-label="Situational flags"></div>
+    <p class="ready-note" id="ready-note"></p>
     <div class="rx-card" id="rx-card" hidden></div>
   </section>
 
