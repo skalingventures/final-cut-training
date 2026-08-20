@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "1.2.0";
+  const APP_VERSION = "1.3.0";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -204,7 +204,7 @@
       });
     }
     if (day.burn) {
-      if (ready === "red") items.push(["walk", 0]);
+      if (ready === "red") items.push(["walkOrEasy", 0]);
       else if (day.burn.optional && checks.burnskip && checks.burnskip[0]) items.push(["burnskip", 0]);
       else items.push(["burn", 0]);
     }
@@ -220,9 +220,34 @@
   Core.progress = function progress(day, week, sess, log, program) {
     const pack = Core.sessionItems(day, week, sess, log, program);
     const items = pack.items;
-    if (!items.length) return { done: 0, total: 0, pct: 0, state: "idle", strength: false };
+    const byPhase = {
+      tissue: { done: 0, total: 0 },
+      mobility: { done: 0, total: 0 },
+      work: { done: 0, total: 0 },
+      burnout: { done: 0, total: 0 },
+      downshift: { done: 0, total: 0 }
+    };
+    function phaseFor(id) {
+      if (id === "tissue") return "tissue";
+      if (id === "mob") return "mobility";
+      if (id === "burn" || id === "burnskip" || id === "burneasy" || id === "walk" || id === "walkOrEasy") return "burnout";
+      if (id === "down") return "downshift";
+      return "work";
+    }
+    if (!items.length) return { done: 0, total: 0, pct: 0, state: "idle", strength: false, byPhase: byPhase };
+    items.forEach(function (pair) {
+      const phase = phaseFor(pair[0]);
+      byPhase[phase].total++;
+      const isDone = pair[0] === "choice"
+        ? !!pack.choice
+        : pair[0] === "walkOrEasy"
+          ? Core.chk(log.checks, week, day.n, "walk", 0) || Core.chk(log.checks, week, day.n, "burneasy", 0)
+          : Core.chk(log.checks, week, day.n, pair[0], pair[1]);
+      if (isDone) byPhase[phase].done++;
+    });
     const done = items.filter(function (pair) {
       if (pair[0] === "choice") return !!pack.choice;
+      if (pair[0] === "walkOrEasy") return Core.chk(log.checks, week, day.n, "walk", 0) || Core.chk(log.checks, week, day.n, "burneasy", 0);
       return Core.chk(log.checks, week, day.n, pair[0], pair[1]);
     }).length;
     let strength = false;
@@ -238,7 +263,7 @@
     if (done === 0) state = "idle";
     else if (strength && done >= items.length) state = "done";
     else state = "active";
-    return { done: done, total: items.length, pct: pct, state: state, strength: strength };
+    return { done: done, total: items.length, pct: pct, state: state, strength: strength, byPhase: byPhase };
   };
 
   Core.liftBlocked = function liftBlocked(lift, sess) {

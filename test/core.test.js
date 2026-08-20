@@ -77,6 +77,26 @@ function emptyLog() { return C.emptyLog(); }
   assert.strictEqual(p.state, "done");
 }
 
+// Phase progress stays honest, including either red-day recovery option
+{
+  const log = emptyLog();
+  const sess = C.emptySession();
+  sess.ready = "green";
+  log.checks.w1d1 = { tissue: [true], mob: [false] };
+  const p = C.progress(program.days[0], 1, sess, log, program);
+  assert.deepStrictEqual(p.byPhase.tissue, { done: 1, total: 1 });
+  assert.deepStrictEqual(p.byPhase.mobility, { done: 0, total: 1 });
+  assert.strictEqual(p.byPhase.work.total, 7);
+  assert.deepStrictEqual(p.byPhase.burnout, { done: 0, total: 1 });
+  assert.deepStrictEqual(p.byPhase.downshift, { done: 0, total: 1 });
+
+  const red = C.emptySession();
+  red.ready = "red";
+  log.checks.w1d1.burneasy = [true];
+  const redP = C.progress(program.days[0], 1, red, log, program);
+  assert.deepStrictEqual(redP.byPhase.burnout, { done: 1, total: 1 });
+}
+
 // Deload accessory sets
 {
   assert.strictEqual(C.nSets({ sets: 3 }, 1, program), 3);

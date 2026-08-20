@@ -177,6 +177,19 @@
     </svg>`;
   }
 
+  function phaseSymbol(phase) {
+    const paths = {
+      readiness: `<path d="M12 3v18M3 12h18M7 7l10 10M17 7L7 17"/>`,
+      tissue: `<ellipse cx="12" cy="12" rx="8" ry="5"/><ellipse cx="12" cy="12" rx="5" ry="8"/><circle cx="12" cy="12" r="2.5"/>`,
+      mobility: `<path d="M5 3v18M9 6v12M14 4v16M19 8v8"/>`,
+      strength: `<rect x="4" y="5" width="16" height="14"/><rect x="8" y="8" width="8" height="8"/>`,
+      burnout: `<path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19M8 3l8 18M16 3L8 21"/>`,
+      downshift: `<path d="M12 4l8 15H4L12 4z"/><path d="M8 15h8"/>`,
+      recovery: `<circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3" ry="8"/>`
+    };
+    return `<svg class="phase-symbol" viewBox="0 0 24 24" fill="none" aria-hidden="true">${paths[phase] || paths.downshift}</svg>`;
+  }
+
   function showSetup(on) {
     document.getElementById("setup").hidden = !on;
     document.getElementById("app").hidden = on;
@@ -208,6 +221,16 @@
     if (fill) fill.setAttribute("stroke-dasharray", `${((p.state === "done" ? 100 : p.pct) / 100) * circ} ${circ}`);
     if (label) label.textContent = shown;
     if (ring) ring.setAttribute("aria-label", p.state === "done" ? "Session complete" : p.state === "active" ? `Session ${p.pct} percent` : "Session not started");
+    const phaseProgress = document.getElementById("phase-progress");
+    if (phaseProgress) {
+      phaseProgress.innerHTML = Object.keys(p.byPhase)
+        .filter(key => p.byPhase[key].total > 0)
+        .map(key => {
+          const ph = p.byPhase[key];
+          const state = ph.done === 0 ? "" : (ph.done >= ph.total ? " is-complete" : " is-active");
+          return `<span class="phase-pip${state}" data-phase="${key}" title="${key}: ${ph.done}/${ph.total}"></span>`;
+        }).join("");
+    }
     const today = document.getElementById("today-btn");
     const t = C.suggested(S.start);
     if (today) today.hidden = t.week === S.week && t.day === S.day && !t.unknown && S.setupDone;
@@ -297,9 +320,13 @@
     document.getElementById("ramp").innerHTML = P.weeks.map(w =>
       `<button type="button" data-w="${w.n}" aria-pressed="${w.n === S.week}" style="--seg:${heatVar(w.heat)}">
          <span class="bar"></span><span class="lbl">W${w.n}</span></button>`).join("");
-    document.getElementById("days").innerHTML = P.days.map(d =>
-      `<button type="button" class="day${t.week === S.week && t.day === d.n && !t.unknown ? " is-today" : ""}" data-d="${d.n}" aria-pressed="${d.n === S.day}" style="--seg:${heatVar(d.heat)}">
-         <span class="dot"></span><span class="wd">${WEEKDAYS[d.n - 1]}</span><span class="n">${d.n}</span></button>`).join("");
+    document.getElementById("days").innerHTML = P.days.map(d => {
+      const ds = C.defaultSession(SESSIONS[C.wd(S.week, d.n)]);
+      const dp = C.progress(d, S.week, ds, LOG, P);
+      return `<button type="button" class="day${t.week === S.week && t.day === d.n && !t.unknown ? " is-today" : ""}${dp.state === "done" || ds.finished ? " is-complete" : ""}" data-d="${d.n}" aria-pressed="${d.n === S.day}" style="--seg:${heatVar(d.heat)}">
+         <span class="dot"></span><span class="wd">${WEEKDAYS[d.n - 1]}</span><span class="n">${d.n}</span><span class="day-theme">${esc(d.theme.split(" ")[0])}</span></button>`;
+    }).join("");
+    document.getElementById("ready-h").innerHTML = `${phaseSymbol("readiness")}<span>Today</span>`;
     document.getElementById("ready").innerHTML = P.ready.map(r =>
       `<button type="button" class="rbtn" data-r="${r.id}" aria-pressed="${r.id === se.ready}">${r.lab}</button>`).join("");
     document.getElementById("ready-note").textContent = se.ready ? P.ready.find(r => r.id === se.ready).note : "Pick once. It stays with this session only.";
@@ -331,24 +358,25 @@
     document.getElementById("app-ver").textContent = "v" + C.APP_VERSION;
   }
 
-  function sec(title, dose, inner, foldId, done) {
+  function sec(title, dose, inner, foldId, done, phase, phaseProgress) {
     const se = sess();
     if (foldId && done && se.collapsed[foldId] == null) se.collapsed[foldId] = true;
     const collapsed = foldId && se.collapsed[foldId] && done;
-    return `<section class="sec${collapsed ? " is-collapsed" : ""}" data-sec="${foldId || ""}">
+    const p = phase || foldId || "downshift";
+    const count = phaseProgress && phaseProgress.total ? `${phaseProgress.done}/${phaseProgress.total}` : "";
+    return `<section class="sec phase-module${collapsed ? " is-collapsed" : ""}${done ? " is-complete" : ""}" data-phase="${esc(p)}" data-sec="${foldId || ""}">
+      <span class="phase-node">${phaseSymbol(p)}</span>
       <div class="sec-h">
-        <h3>${esc(title)}</h3>
-        <span class="dose">${dose ? esc(dose) : ""}${foldId ? ` <button type="button" class="fold" data-fold="${esc(foldId)}">${collapsed ? "Show" : "Hide"}</button>` : ""}</span>
+        <div class="phase-title">${phaseSymbol(p)}<div><span class="phase-kicker">${esc(p)}</span><h3>${esc(title)}</h3></div></div>
+        <span class="dose">${count ? `<b>${count}</b> · ` : ""}${dose ? esc(dose) : ""}${foldId ? ` <button type="button" class="fold" data-fold="${esc(foldId)}">${collapsed ? "Show" : "Hide"}</button>` : ""}</span>
       </div>
       <div class="sec-body">${inner}</div>
     </section>`;
   }
 
-  function sectionDone(kind) {
-    const D = dayObj();
-    if (kind === "tissue" && D.tissue) return D.tissue.items.every((_, i) => chk("tissue", i));
-    if (kind === "mob" && D.mob) return D.mob.every((_, i) => chk("mob", i));
-    return false;
+  function phaseStatus(phase) {
+    const p = C.progress(dayObj(), S.week, sess(), LOG, P).byPhase[phase];
+    return { progress: p, done: !!p && p.total > 0 && p.done >= p.total };
   }
 
   function renderSession() {
@@ -358,36 +386,43 @@
     const red = se.ready === "red";
     const amber = se.ready === "amber";
     const rpeMax = C.rpeTarget(W);
+    const tissuePhase = phaseStatus("tissue");
+    const mobilityPhase = phaseStatus("mobility");
+    const workPhase = phaseStatus("work");
+    const burnPhase = phaseStatus("burnout");
+    const downPhase = phaseStatus("downshift");
     let h = `<div class="s-head">
       <div class="s-tag">W${W.n} ${esc(W.intent)} · ${D.weekday} · ${D.tag}</div>
       <h1 class="s-title">${esc(D.theme)}</h1>
       <div class="s-sub">${esc(D.sub)} · ${esc(D.n === 3 || D.n >= 6 ? "easy day" : "55–75 min")}</div>
     </div>`;
-    if (D.guardTop) h += `<div class="sec"><div class="guard"><span>${esc(D.guardTop)}</span></div></div>`;
+    if (D.guardTop) h += `<div class="session-callout guard callout callout--warn"><span>${esc(D.guardTop)}</span></div>`;
 
     if (D.tissue) {
       h += sec("Tissue", D.tissue.dose, `
         ${D.tissue.goal ? `<div class="sec-goal">${esc(D.tissue.goal)}</div>` : ""}
         ${D.tissue.items.map((t, i) => `
-          <div class="line">
-            <button type="button" class="box" data-id="tissue" data-i="${i}" aria-pressed="${chk("tissue", i)}" aria-label="${esc(t.a)}"></button>
+          <div class="line release-row">
+            <button type="button" class="box phase-check" data-kind="release" data-id="tissue" data-i="${i}" aria-pressed="${chk("tissue", i)}" aria-label="${esc(t.a)}"></button>
             <div class="body">
               <div class="nm">${esc(t.a)}</div>
-              <div class="tool">${esc(t.tool)} · ${esc(t.d)}</div>
+              <div class="tool"><span>${esc(t.tool)}</span><span>${esc(t.d)}</span></div>
               <div class="why">${esc(t.cue)}</div>
             </div>
           </div>`).join("")}
-        ${D.tissue.note ? `<div class="guard"><span>${esc(D.tissue.note)}</span></div>` : ""}`, "tissue", sectionDone("tissue"));
+        ${D.tissue.note ? `<div class="guard callout callout--coach"><span>${esc(D.tissue.note)}</span></div>` : ""}`,
+        "tissue", tissuePhase.done, "tissue", tissuePhase.progress);
     }
 
     if (D.mob && D.mob.length) {
       h += sec("Mobility", "6–15 min", D.mob.map((m, i) => {
         const [nm, why] = m.split(" — ");
-        return `<div class="line">
-          <button type="button" class="box" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(nm)}"></button>
+        return `<div class="line move-row">
+          <span class="move-index">${String(i + 1).padStart(2, "0")}</span>
+          <button type="button" class="box phase-check" data-kind="move" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(nm)}"></button>
           <div class="body"><div class="nm">${esc(nm)}</div>${why ? `<div class="why">${esc(why)}</div>` : ""}</div>
         </div>`;
-      }).join(""), "mob", sectionDone("mob"));
+      }).join(""), "mob", mobilityPhase.done, "mobility", mobilityPhase.progress);
     }
 
     const strengthTitle = D.restTitle || "Strength";
@@ -395,15 +430,15 @@
     if (D.exclusive) {
       const chosen = LOG.choice[C.wd(S.week, S.day)] || "";
       h += sec(strengthTitle, "choose one", D.lifts.map(l => `
-        <div class="line">
-          <button type="button" class="box" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0" aria-pressed="${chosen === l.id}" aria-label="${esc(l.nm)}"></button>
+        <div class="line choice-card">
+          <button type="button" class="box phase-check" data-kind="choice" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0" aria-pressed="${chosen === l.id}" aria-label="${esc(l.nm)}"></button>
           <div class="body">
             <div class="nm">${esc(l.nm)}</div>
             <div class="rx">${esc(l.rx)}</div>
             ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
             ${chosen === l.id ? `<div class="choice-note">Today's pick.</div>` : ""}
           </div>
-        </div>`).join(""));
+        </div>`).join(""), "", workPhase.done, "recovery", workPhase.progress);
     } else {
       h += sec(strengthTitle, strengthDose, D.lifts.map(l => {
         const blocked = C.liftBlocked(l, se);
@@ -415,7 +450,7 @@
         const rpeWarn = l.prog && rpeMax != null && loggedRpe != null && loggedRpe > rpeMax + 0.5;
         const n = C.nSets(l, S.week, P);
         const accNote = !l.prog && W.n >= 2 && n > 1 ? W.acc : "";
-        return `<div class="line ${blocked ? "killed" : ""}" data-lift="${esc(l.id)}">
+        return `<div class="line lift-card${l.prog ? " lift-card--primary" : ""}${blocked ? " killed" : ""}" data-lift="${esc(l.id)}">
           <div class="body">
             <div class="nm">${esc(l.nm)}</div>
             <div class="rx">${rx}${W.n === 6 && !l.prog && (l.sets || 1) > 1 ? ` <em>· deload ${n} sets</em>` : ""}</div>
@@ -444,19 +479,19 @@
             </div>`}
           </div>
         </div>`;
-      }).join(""));
+      }).join(""), "", workPhase.done, "strength", workPhase.progress);
     }
 
     if (D.burn) {
       if (red) {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
-        h += sec("Burnout", "cut or easy", `<div class="cut"><b>Hard burnout is off.</b> Walk, or run a 60–70% easy version.</div>
-          <div class="line">
-            <button type="button" class="box" data-id="walk" data-i="0" aria-pressed="${chk("walk", 0)}" aria-label="Easy walk"></button>
+        h += sec("Burnout", "cut or easy", `<div class="cut callout callout--cut"><b>Hard burnout is off.</b> Walk, or run a 60–70% easy version.</div>
+          <div class="line conditioning-option">
+            <button type="button" class="box phase-check" data-kind="burn" data-id="walk" data-i="0" aria-pressed="${chk("walk", 0)}" aria-label="Easy walk"></button>
             <div class="body"><div class="nm">10-minute easy incline walk</div><div class="why">Does not count as a hard burnout.</div></div>
           </div>
-          <div class="line">
-            <button type="button" class="box" data-id="burneasy" data-i="0" aria-pressed="${chk("burneasy", 0)}" aria-label="Easy burnout"></button>
+          <div class="line conditioning-option">
+            <button type="button" class="box phase-check" data-kind="burn" data-id="burneasy" data-i="0" aria-pressed="${chk("burneasy", 0)}" aria-label="Easy burnout"></button>
             <div class="body">
               <div class="nm">Easy burnout · 60–70%</div>
               <div class="why">Same movements, slower and lighter. Distinct from a hard effort.</div>
@@ -464,7 +499,7 @@
                 <label class="ll">Note<input class="log-in wide" data-burn="note" value="${esc(b.note || "")}" placeholder="what you did"></label>
               </div>
             </div>
-          </div>`);
+          </div>`, "", burnPhase.done, "burnout", burnPhase.progress);
       } else {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
         const pct = amber ? "moderate / scaled" : `at ${W.burn}`;
@@ -472,11 +507,11 @@
         const achillesNote = se.flags.achilles && D.burn.achilles ? `<div class="guard"><span>${esc(D.burn.achilles)}</span></div>` : "";
         const motNote = se.flags.motivation ? `<div class="guard"><span>Motivation is low — skipping the burnout is allowed.</span></div>` : "";
         h += sec(`Burnout${D.burn.optional ? " — optional" : ""}`, `${D.burn.fmt.split(" ")[0]} · ${pct}`,
-          `<div class="line"><div class="body">
+          `<div class="conditioning-deck"><div class="body">
+            <div class="burn-meta"><span>${esc(D.burn.fmt)}</span><span>Z4 by minute 4–6</span></div>
             <div class="nm">${esc(D.burn.nm)}${W.n === 5 && D.burn.hard ? " · benchmark" : ""}</div>
-            <div class="rx">${esc(D.burn.fmt)}</div>
-            <div class="note">${D.burn.items.map(esc).join("<br>")}</div>
-            <div class="guard"><span>${esc(D.burn.adj)}</span></div>
+            <ol class="burn-stack">${D.burn.items.map(item => `<li>${esc(item)}</li>`).join("")}</ol>
+            <div class="guard callout callout--coach"><span>${esc(D.burn.adj)}</span></div>
             ${achillesNote}${motNote}${bench}
             <div class="sets">
               <button type="button" class="set" data-id="burn" data-i="0" aria-pressed="${chk("burn", 0)}" aria-label="Burnout done" style="width:auto;padding:0 14px">done</button>
@@ -484,10 +519,10 @@
             </div>
             <div class="burn-log">
               <div class="field"><label for="burn-rounds">Rounds / score</label><input id="burn-rounds" data-burn="rounds" value="${esc(b.rounds || "")}" placeholder="e.g. 4+8"></div>
-              <div class="field"><label for="burn-zone">WHOOP zone</label>
-                <select id="burn-zone" data-burn="zone">
-                  ${["", "Z3", "Z4", "Z5"].map(z => `<option value="${z}" ${b.zone === z ? "selected" : ""}>${z || "—"}</option>`).join("")}
-                </select>
+              <div class="field"><label>WHOOP zone</label>
+                <div class="zone-segments" role="group" aria-label="WHOOP zone">
+                  ${["Z3", "Z4", "Z5"].map(z => `<button type="button" data-zone="${z}" aria-pressed="${b.zone === z}">${z}</button>`).join("")}
+                </div>
               </div>
               <div class="field"><label for="burn-scaled">Scaled?</label>
                 <select id="burn-scaled" data-burn="scaled">
@@ -497,20 +532,24 @@
               </div>
               <div class="field"><label for="burn-note">Note</label><input id="burn-note" data-burn="note" value="${esc(b.note || "")}" placeholder="load, swap, feel"></div>
             </div>
-          </div></div>`);
+          </div></div>`, "", burnPhase.done, "burnout", burnPhase.progress);
       }
     }
 
     if (D.down) {
-      h += sec("Downshift", "2–5 min", `<div class="line">
-        <button type="button" class="box" data-id="down" data-i="0" aria-pressed="${chk("down", 0)}" aria-label="Downshift done"></button>
+      h += sec("Downshift", "2–5 min", `<div class="line downshift-cap">
+        <button type="button" class="box phase-check" data-kind="down" data-id="down" data-i="0" aria-pressed="${chk("down", 0)}" aria-label="Downshift done"></button>
         <div class="body"><div class="nm">${esc(D.down)}</div></div>
-      </div>`);
+      </div>${D.heat === "easy" || D.heat === "off" ? `<blockquote>${esc(P.principle)}</blockquote>` : ""}`,
+      "", downPhase.done, "downshift", downPhase.progress);
     }
 
     document.getElementById("session").innerHTML = h;
     document.getElementById("ref-prog").innerHTML = P.weeks.map(w =>
-      `<dt>Week ${w.n} — ${esc(w.intent)}</dt><dd>${esc(w.main)} @ ${esc(w.rpe)}. ${esc(w.acc)}. Burnouts ${esc(w.burn)}.</dd>`
+      `<div class="block-stage${w.n === S.week ? " is-current" : ""}" style="--seg:${heatVar(w.heat)}">
+        <dt><span>0${w.n}</span> ${esc(w.intent)}</dt>
+        <dd>${esc(w.main)} @ ${esc(w.rpe)}. ${esc(w.acc)}. Burnouts ${esc(w.burn)}.</dd>
+      </div>`
     ).join("");
   }
 
@@ -811,6 +850,17 @@
     }
     const mt = e.target.closest("[data-m]");
     if (mt) { S.metric = mt.dataset.m; save(); renderHistory(); return; }
+    const zone = e.target.closest("[data-zone]");
+    if (zone) {
+      const key = C.wd(S.week, S.day);
+      const rec = LOG.burn[key] || {};
+      rec.zone = rec.zone === zone.dataset.zone ? "" : zone.dataset.zone;
+      LOG.burn[key] = rec;
+      save();
+      renderSession();
+      renderHistory();
+      return;
+    }
     const fl = e.target.closest("[data-flag]");
     if (fl) {
       const se = sess();
