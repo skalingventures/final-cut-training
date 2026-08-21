@@ -639,6 +639,39 @@ input, textarea, select {
   border-radius: var(--radius);
   background: rgba(31,31,31,.44);
 }
+.lift-meta {
+  margin: 2px 0 4px;
+  font: 400 11px var(--font-mono);
+  letter-spacing: .02em;
+  color: var(--muted);
+}
+.pair-block {
+  margin: 12px 0;
+  padding: 6px 8px 2px;
+  border: 1px dashed rgba(128,126,122,.42);
+  border-radius: var(--radius);
+  background: rgba(31,31,31,.28);
+}
+.pair-head {
+  padding: 6px 8px 2px;
+  font: 500 10px var(--font-mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pair-slot {
+  display: inline-block;
+  margin-right: 8px;
+  font: 600 11px var(--font-mono);
+  letter-spacing: .04em;
+  color: var(--accent);
+}
+.pair-block .lift-card {
+  margin: 8px 0;
+}
+.pair-block .lift-card:last-child {
+  border-bottom-color: rgba(128,126,122,.32);
+}
 .choice-card {
   margin: 8px 0;
   padding: 11px;

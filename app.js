@@ -288,7 +288,7 @@
     if (se.flags.shoulder) bits.push("Shoulder: skip dips, use push-ups or DB press.");
     if (se.flags.achilles) bits.push("Achilles: keep strength, drop jumps/burpees, favor carries and swings.");
     if (se.flags.motivation) bits.push("Motivation low: start strength, cut burnout if needed.");
-    if (W.n === 6 && D.n <= 5 && !D.exclusive) bits.push("Deload week — accessories reduced 30–40%.");
+    if (W.n === 6 && D.n <= 5 && !D.exclusive) bits.push("Deload week — accessories reduced 30–40%. No redline conditioning.");
     return bits.join(" ");
   }
 
@@ -394,7 +394,7 @@
     let h = `<div class="s-head">
       <div class="s-tag">W${W.n} ${esc(W.intent)} · ${D.weekday} · ${D.tag}</div>
       <h1 class="s-title">${esc(D.theme)}</h1>
-      <div class="s-sub">${esc(D.sub)} · ${esc(D.n === 3 || D.n >= 6 ? "easy day" : "55–75 min")}</div>
+      <div class="s-sub">${esc(D.sub)} · ${esc(D.n === 3 || D.n >= 6 ? "easy day" : "60–75 min")}</div>
     </div>`;
     if (D.guardTop) h += `<div class="session-callout guard callout callout--warn"><span>${esc(D.guardTop)}</span></div>`;
 
@@ -426,7 +426,9 @@
     }
 
     const strengthTitle = D.restTitle || "Strength";
-    const strengthDose = (D.n === 3 || D.n >= 6) ? "" : (red ? "strength only" : "30–40 min");
+    const strengthDose = (D.n === 3 || D.n >= 6)
+      ? ""
+      : (red ? "strength only" : (D.n === 5 ? "RPE 7" : "main 15–25 · pairings 15–25"));
     if (D.exclusive) {
       const chosen = LOG.choice[C.wd(S.week, S.day)] || "";
       h += sec(strengthTitle, "choose one", D.lifts.map(l => `
@@ -440,7 +442,7 @@
           </div>
         </div>`).join(""), "", workPhase.done, "recovery", workPhase.progress);
     } else {
-      h += sec(strengthTitle, strengthDose, D.lifts.map(l => {
+      const liftCard = (l) => {
         const blocked = C.liftBlocked(l, se);
         const swap = C.liftSwapNote(l, se);
         const ov = se.overrides[l.id] || {};
@@ -450,9 +452,11 @@
         const rpeWarn = l.prog && rpeMax != null && loggedRpe != null && loggedRpe > rpeMax + 0.5;
         const n = C.nSets(l, S.week, P);
         const accNote = !l.prog && W.n >= 2 && n > 1 ? W.acc : "";
+        const slot = l.pair && l.slot ? `<span class="pair-slot">${esc(l.pair + l.slot)}</span>` : "";
         return `<div class="line lift-card${l.prog ? " lift-card--primary" : ""}${blocked ? " killed" : ""}" data-lift="${esc(l.id)}">
           <div class="body">
-            <div class="nm">${esc(l.nm)}</div>
+            <div class="nm">${slot}${esc(l.nm)}</div>
+            ${l.prog ? `<div class="lift-meta">Straight sets · full rest · never supersetted</div>` : ""}
             <div class="rx">${rx}${W.n === 6 && !l.prog && (l.sets || 1) > 1 ? ` <em>· deload ${n} sets</em>` : ""}</div>
             ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
             ${swap && blocked ? `<div class="guard"><span>${esc(swap)}</span></div>` : ""}
@@ -479,6 +483,20 @@
             </div>`}
           </div>
         </div>`;
+      };
+      const liftGroups = [];
+      (D.lifts || []).forEach(l => {
+        const last = liftGroups[liftGroups.length - 1];
+        if (l.pair && last && last.pair === l.pair) last.lifts.push(l);
+        else liftGroups.push({ pair: l.pair || null, lifts: [l] });
+      });
+      h += sec(strengthTitle, strengthDose, liftGroups.map(g => {
+        const cards = g.lifts.map(liftCard).join("");
+        if (!g.pair || g.lifts.length < 2) return cards;
+        return `<div class="pair-block">
+          <div class="pair-head">Pair ${esc(g.pair)} · non-competing</div>
+          ${cards}
+        </div>`;
       }).join(""), "", workPhase.done, "strength", workPhase.progress);
     }
 
@@ -503,13 +521,13 @@
       } else {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
         const pct = amber ? "moderate / scaled" : `at ${W.burn}`;
-        const bench = W.n === 5 && D.burn.hard ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
+        const bench = W.n === 5 && D.burn.benchmark ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
         const achillesNote = se.flags.achilles && D.burn.achilles ? `<div class="guard"><span>${esc(D.burn.achilles)}</span></div>` : "";
         const motNote = se.flags.motivation ? `<div class="guard"><span>Motivation is low — skipping the burnout is allowed.</span></div>` : "";
         h += sec(`Burnout${D.burn.optional ? " — optional" : ""}`, `${D.burn.fmt.split(" ")[0]} · ${pct}`,
           `<div class="conditioning-deck"><div class="body">
             <div class="burn-meta"><span>${esc(D.burn.fmt)}</span><span>Z4 by minute 4–6</span></div>
-            <div class="nm">${esc(D.burn.nm)}${W.n === 5 && D.burn.hard ? " · benchmark" : ""}</div>
+            <div class="nm">${esc(D.burn.nm)}${W.n === 5 && D.burn.benchmark ? " · benchmark" : ""}</div>
             <ol class="burn-stack">${D.burn.items.map(item => `<li>${esc(item)}</li>`).join("")}</ol>
             <div class="guard callout callout--coach"><span>${esc(D.burn.adj)}</span></div>
             ${achillesNote}${motNote}${bench}

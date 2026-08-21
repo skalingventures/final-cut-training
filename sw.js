@@ -1,4 +1,4 @@
-const CACHE = "final-cut-v4";
+const CACHE = "final-cut-v5";
 const ASSETS = [
   "./",
   "./index.html",

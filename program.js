@@ -3,16 +3,16 @@ window.PROGRAM = {
   title: "Block 01",
   subtitle: "Strength, Mobility, Burnouts",
   identity: "Strong, mobile, athletic, durable, hard to break.",
-  principle: "Mobility opens the pattern. Strength loads the pattern. Burnouts stress the system. Recovery lets the adaptation happen.",
+  principle: "Mobility opens the pattern. Main lifts drive strength. Accessory pairings create density. Burnouts add the edge. Recovery protects the adaptation.",
   calendar: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
 
   weeks: [
     { n: 1, main: "4 × 6", rpe: "RPE 7", acc: "Accessories moderate", burn: "80%", intent: "Establish", heat: "easy" },
-    { n: 2, main: "4 × 6", rpe: "slightly heavier than wk 1", acc: "Add reps where clean", burn: "85%", intent: "Build", heat: "moderate" },
+    { n: 2, main: "4 × 6", rpe: "slightly heavier", acc: "Add reps where clean", burn: "85%", intent: "Build", heat: "moderate" },
     { n: 3, main: "5 × 5", rpe: "RPE 8", acc: "Accessories stable", burn: "90%", intent: "Build hard", heat: "hard" },
     { n: 4, main: "5 × 4", rpe: "RPE 8–8.5", acc: "Accessories slightly reduced", burn: "85–90%", intent: "Intensify", heat: "hard" },
-    { n: 5, main: "5 × 3", rpe: "RPE 8.5–9", acc: "Minimal fluff", burn: "1–2 benchmark efforts", intent: "Peak", heat: "hardest" },
-    { n: 6, main: "3 × 5", rpe: "RPE 6–7", acc: "Reduce accessories 30–40%", burn: "60–70%", intent: "Deload", heat: "easy" }
+    { n: 5, main: "5 × 3", rpe: "RPE 8.5–9", acc: "Minimal fluff", burn: "1 benchmark burnout", intent: "Peak", heat: "hardest" },
+    { n: 6, main: "3 × 5", rpe: "RPE 6–7", acc: "Reduce accessories 30–40%", burn: "60–70%", intent: "Deload / absorb", heat: "easy" }
   ],
 
   sets: { 1: 4, 2: 4, 3: 5, 4: 5, 5: 5, 6: 3 },
@@ -33,7 +33,7 @@ window.PROGRAM = {
   days: [
     {
       n: 1, heat: "hard", tag: "Hard", weekday: "Monday",
-      theme: "Ankles & Knees", sub: "Lower strength + pull",
+      theme: "Ankles & Knees", sub: "Squat strength + pull",
       tissue: {
         dose: "3–5 min",
         goal: "Prep squatting, knee travel, ankle range.",
@@ -55,16 +55,16 @@ window.PROGRAM = {
       ],
       lifts: [
         { id: "squat", nm: "Back squat or front squat", prog: true, note: "Main lower-body strength lift.", load: true },
-        { id: "pullup", nm: "Weighted or strict pull-ups", rx: "4 × 4–8", sets: 4, note: "Add weight once 8 strict reps are easy.", load: true, bw: true },
-        { id: "rdl", nm: "Romanian deadlift", rx: "3 × 6–8", sets: 3, note: "Posterior-chain support, not max hinge work.", load: true },
-        { id: "peterson", nm: "Peterson step-ups", rx: "2–3 × 6–8 / side", sets: 3, note: "Controlled knee-over-toe work.", guard: "Mobility already covers knee-over-toe with slant-board squats — keep this volume low." },
-        { id: "hkr", nm: "Hanging knee raises", rx: "3 × 8–12", sets: 3, note: "Strict trunk and grip." }
+        { id: "pullup", nm: "Pull-ups or weighted pull-ups", rx: "4 × 4–8", sets: 4, pair: "2", slot: "A", note: "Upper pull. Add weight if 8 strict reps are easy.", load: true, bw: true },
+        { id: "peterson", nm: "Peterson step-ups", rx: "2–3 × 6–8 / side", sets: 3, pair: "2", slot: "B", note: "Controlled knee-over-toe strength.", guard: "Mobility already covers knee-over-toe with slant-board squats — keep this volume low." },
+        { id: "rdl", nm: "Romanian deadlift", rx: "3 × 6–8", sets: 3, note: "Separate. Use straps if grip limits the posterior chain.", load: true },
+        { id: "hkr", nm: "Hanging knee raises", rx: "3 × 8–12", sets: 3, note: "Strict trunk and grip work." }
       ],
       burn: {
-        nm: "Hinge + Pull Engine", fmt: "10-minute AMRAP", hard: true,
-        items: ["Kettlebell swings × 15", "Push-ups × 12", "Goblet squats × 10", "Pull-ups × 3–4"],
-        adj: "If knees feel heavily worked, swap goblet squats for 40 sec farmer carry or march.",
-        achilles: "If Achilles is cranky, keep swings and carries. Swap goblet squats for a farmer march."
+        nm: "Hinge / Push / Carry Engine", fmt: "10-minute AMRAP", hard: true,
+        items: ["Kettlebell swings × 15", "Push-ups × 10–12", "Farmer carry or farmer march × 40 sec", "Pull-ups × 3"],
+        adj: "Avoids more squat volume on squat day while staying hard, athletic, and GBRS-adjacent.",
+        achilles: "If Achilles is cranky, keep swings and the farmer carry or march. Drop nothing else unless form goes."
       },
       down: "2–5 min breathing or easy walk."
     },
@@ -91,15 +91,15 @@ window.PROGRAM = {
       ],
       lifts: [
         { id: "bench", nm: "Bench press or weighted dips", prog: true, note: "Bench for raw strength, dips for athletic carryover.", load: true },
-        { id: "row", nm: "Barbell row or chest-supported DB row", rx: "4 × 6–10", sets: 4, note: "Heavy, controlled pull.", load: true },
-        { id: "ohp", nm: "Standing DB overhead press", rx: "3 × 6–8", sets: 3, note: "Strict reps, ribs down, glutes lightly engaged.", load: true },
-        { id: "dips", nm: "Weighted dips or close-grip push-ups", rx: "3 × 8–12", sets: 3, note: "Secondary push. Skip dips if shoulders feel pinchy.", swapPinch: "Skip dips. Use push-ups or DB press and add scap work." },
-        { id: "farmer", nm: "Farmer carry", rx: "4 × 40–60 sec", sets: 4, note: "Heavy, tall, braced. Make this a feature.", load: true }
+        { id: "row", nm: "Barbell row or chest-supported DB row", rx: "4 × 6–10", sets: 4, pair: "2", slot: "A", note: "Horizontal pull. Heavy but controlled.", load: true },
+        { id: "ohp", nm: "Standing DB overhead press", rx: "3–4 × 6–8", sets: 4, pair: "2", slot: "B", note: "Vertical push. Strict reps, ribs down.", load: true },
+        { id: "dips", nm: "Dips or close-grip push-ups", rx: "2–3 × 8–12", sets: 3, pair: "3", slot: "A", note: "Secondary push. Shoulder-dependent.", swapPinch: "Skip dips. Use push-ups or DB press and add scap work." },
+        { id: "farmer", nm: "Farmer carry", rx: "4 × 40–60 sec", sets: 4, pair: "3", slot: "B", note: "Heavy, tall, braced.", load: true }
       ],
       burn: {
-        nm: "DB Fight Gone Mini", fmt: "40 sec work / 20 sec transition × 10 min", hard: true,
-        items: ["1 · DB thrusters", "2 · Renegade rows or plank DB drag", "3 · Burpees or sprawls", "4 · Farmer march", "5 · Easy walk, nasal breathing", "6–10 · Repeat the sequence"],
-        adj: "Load lighter than ego wants. Fast, clean, athletic.",
+        nm: "Upper + Carry Fight Gone Mini", fmt: "40 sec work / 20 sec transition × 10 min", hard: true,
+        items: ["1 · DB push press", "2 · Renegade rows or plank DB drag", "3 · Burpees or sprawls", "4 · Farmer march", "5 · Easy walk, nasal breathing", "6 · DB push press", "7 · Renegade rows or plank DB drag", "8 · Burpees or sprawls", "9 · Farmer march", "10 · Easy walk, nasal breathing"],
+        adj: "This day is already dense. Keep the burnout at 85–90%, not death-match intensity.",
         achilles: "If Achilles is cranky, swap burpees/sprawls for farmer march or swings."
       },
       down: "2–5 min breathing or easy walk."
@@ -108,7 +108,7 @@ window.PROGRAM = {
       n: 3, heat: "easy", tag: "Easy", weekday: "Wednesday",
       theme: "Spine & Shoulders", sub: "Recovery · Zone 2 · tissue",
       restTitle: "Recovery session",
-      guardTop: "No heavy upper body today — the mobility block already loads the shoulders and scaps. This day exists to make Day 4 better.",
+      guardTop: "No strength. No burnout. No heavy upper body — this day exists to make Day 4 better.",
       tissue: {
         dose: "10–15 min",
         goal: "Restore spine, shoulders, ribs, and low-back tone.",
@@ -161,15 +161,15 @@ window.PROGRAM = {
       ],
       lifts: [
         { id: "dead", nm: "Deadlift", prog: true, note: "Heavy but clean. No grinders.", load: true, swapRed: "Swap for RDL or goblet work today." },
-        { id: "pp", nm: "Push press", rx: "4 × 4–6", sets: 4, note: "Athletic overhead power.", load: true },
-        { id: "chin", nm: "Chin-ups", rx: "4 × 5–8", sets: 4, note: "Add weight if strong.", load: true, bw: true },
-        { id: "lunge", nm: "DB walking or front-rack reverse lunges", rx: "2–3 × 6–8 / side", sets: 3, guard: "Mobility already includes long split lunges — keep this reduced." },
-        { id: "suit", nm: "Suitcase carry", rx: "3 × 40 sec / side", sets: 3, note: "Anti-rotation and chassis work.", load: true }
+        { id: "pp", nm: "Push press", rx: "4 × 4–6", sets: 4, pair: "2", slot: "A", note: "Athletic overhead power.", load: true },
+        { id: "chin", nm: "Chin-ups", rx: "4 × 5–8", sets: 4, pair: "2", slot: "B", note: "Clean reps. Add weight only if crisp.", load: true, bw: true },
+        { id: "lunge", nm: "DB reverse lunges or walking lunges", rx: "2–3 × 6–8 / side", sets: 3, pair: "3", slot: "A", note: "Controlled, not crushing.", guard: "Mobility already includes long split lunges — keep this reduced." },
+        { id: "suit", nm: "Suitcase carry", rx: "3 × 40 sec / side", sets: 3, pair: "3", slot: "B", note: "Anti-rotation and chassis work.", load: true }
       ],
       burn: {
-        nm: "Barbell + Burpee Couplet", fmt: "10-minute AMRAP", hard: true,
-        items: ["Deadlift × 6", "Hang power clean × 6", "Push press × 6", "Burpees over bar × 6"],
-        adj: "Usually 75–115 lb. This is conditioning with a barbell, not a second strength workout.",
+        nm: "Light Barbell + Burpee Couplet", fmt: "10-minute AMRAP", hard: true, benchmark: true,
+        items: ["Barbell deadlift × 5", "Hang power clean × 5", "Push press × 5", "Burpees over bar × 5"],
+        adj: "Default 65–95 lb. Use 115 lb only on high-readiness days when movement is fast and clean. Power-endurance, not a second heavy strength session.",
         achilles: "If Achilles is cranky, drop burpees for farmer march or swings."
       },
       down: "2–5 min breathing or easy walk."
@@ -177,7 +177,7 @@ window.PROGRAM = {
     {
       n: 5, heat: "moderate", tag: "Moderate", weekday: "Friday",
       theme: "Full Body Light Reset", sub: "Chassis · durability · pump",
-      restTitle: "Three controlled rounds — not for time",
+      restTitle: "Three controlled rounds — not for time · RPE 7",
       tissue: {
         dose: "3–5 min",
         goal: "Posture, tissue quality, joint-friendly durability.",
@@ -202,14 +202,14 @@ window.PROGRAM = {
         { id: "goblet", nm: "Goblet squat", rx: "10–12", sets: 3, note: "Moderate load, smooth range.", load: true },
         { id: "floor", nm: "DB floor press or incline press", rx: "10–12", sets: 3, note: "Controlled reps.", load: true },
         { id: "oarow", nm: "One-arm DB row", rx: "10–12 / side", sets: 3, note: "Pull the elbow toward the hip.", load: true },
-        { id: "wallcalf", nm: "Wall-sit calf raises", rx: "2 × 15–20", sets: 2, note: "Soleus and Achilles capacity.", guard: "This is the only place extra calf work belongs — keep volume modest." },
-        { id: "copen", nm: "Copenhagen or side plank", rx: "20–30 sec / side", sets: 3, note: "Trunk and adductors." },
+        { id: "wallcalf", nm: "Wall-sit calf raises", rx: "2 × 15–20", sets: 2, note: "Soleus and Achilles capacity. Keep modest.", guard: "This is the only place extra calf work belongs — keep volume modest." },
+        { id: "copen", nm: "Copenhagen plank or side plank", rx: "20–30 sec / side", sets: 3, note: "Trunk and adductors." },
         { id: "hang", nm: "Dead hang", rx: "30–45 sec", sets: 3, note: "Grip and shoulder decompression." }
       ],
       burn: {
-        optional: true, nm: "Carry, Crawl, Swing", fmt: "Every 2 min for 10 min — 5 rounds",
-        items: ["Farmer carry or march — 40 sec", "Kettlebell swings × 12–15", "Bear crawl × 20 steps", "Rest the remainder"],
-        adj: "Optional. If fatigue has accumulated, replace it with a 10-minute easy incline walk or loaded carry."
+        optional: true, nm: "Carry / Crawl / Swing", fmt: "Every 2 min for 10 min — 5 rounds",
+        items: ["Farmer carry or march — 40 sec", "Kettlebell swings × 12", "Bear crawl × 20 steps", "Rest the remainder"],
+        adj: "Optional, 70–85%. Day 5 should leave you better, not depleted. If fatigue has accumulated, replace with a 10-minute easy incline walk, easy loaded carry, or nasal breathing walk."
       },
       down: "2–5 min breathing or easy walk."
     },
