@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "1.4.0";
+  const APP_VERSION = "1.5.0";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;

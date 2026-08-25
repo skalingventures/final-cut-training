@@ -62,7 +62,7 @@ window.PROGRAM = {
       ],
       burn: {
         nm: "Hinge / Push / Carry Engine", fmt: "10-minute AMRAP", hard: true,
-        items: ["Kettlebell swings × 15", "Push-ups × 10–12", "Farmer carry or farmer march × 40 sec", "Pull-ups × 3"],
+        items: ["Kettlebell swings × 15", "Push-ups × 10–12", "Farmer carry or farmer march × 40 sec"],
         adj: "Avoids more squat volume on squat day while staying hard, athletic, and GBRS-adjacent.",
         achilles: "If Achilles is cranky, keep swings and the farmer carry or march. Drop nothing else unless form goes."
       },
@@ -142,12 +142,12 @@ window.PROGRAM = {
       theme: "Ankles & Posterior Chain", sub: "Athletic full body",
       tissue: {
         dose: "3–5 min",
-        goal: "Prep the hinge, deadlift, lunges, and athletic barbell work.",
+        goal: "Prep the hinge, deadlift, and a small athletic landing dose.",
         items: [
           { a: "Calves", tool: "Roller", d: "60 sec / side", cue: "Slow passes, especially the lower calf and soleus." },
           { a: "Glute fold / high hamstring", tool: "Ball", d: "45 sec / side", cue: "Sit near the crease where glute meets hamstring. Controlled pressure, not aggressive digging." },
           { a: "Hamstrings", tool: "Roller", d: "45–60 sec / side", cue: "Roll the back of the thigh before hinging." },
-          { a: "Inner thighs", tool: "Roller", d: "45 sec / side", cue: "Helps before adductor rock-backs and lunges." },
+          { a: "Inner thighs", tool: "Roller", d: "45 sec / side", cue: "Helps before adductor rock-backs and the athletic slot." },
           { a: "Front thigh / hip-flexor quad", tool: "Roller", d: "45 sec / side", cue: "Keep it moderate — enough to open the front of the hip." },
           { a: "T-spine / upper back", tool: "Roller", d: "60 sec", cue: "Helps the front rack, push press, and clean position." }
         ]
@@ -163,14 +163,14 @@ window.PROGRAM = {
         { id: "dead", nm: "Deadlift", prog: true, note: "Heavy but clean. No grinders.", load: true, swapRed: "Swap for RDL or goblet work today." },
         { id: "pp", nm: "Push press", rx: "4 × 4–6", sets: 4, pair: "2", slot: "A", note: "Athletic overhead power.", load: true },
         { id: "chin", nm: "Chin-ups", rx: "4 × 5–8", sets: 4, pair: "2", slot: "B", note: "Clean reps. Add weight only if crisp.", load: true, bw: true },
-        { id: "lunge", nm: "DB reverse lunges or walking lunges", rx: "2–3 × 6–8 / side", sets: 3, pair: "3", slot: "A", note: "Controlled, not crushing.", guard: "Mobility already includes long split lunges — keep this reduced." },
+        { id: "elastic", nm: "Broad jumps, pogo bounds, or med-ball slam", rx: "3 × 3–5 jumps or 3 × 8–10 pogos", sets: 3, pair: "3", slot: "A", note: "Crisp landings, not a max-out. Mobility already covers the split lunge. If Achilles is cranky, swap for step-overs or skip jumps." },
         { id: "suit", nm: "Suitcase carry", rx: "3 × 40 sec / side", sets: 3, pair: "3", slot: "B", note: "Anti-rotation and chassis work.", load: true }
       ],
       burn: {
-        nm: "Light Barbell + Burpee Couplet", fmt: "10-minute AMRAP", hard: true, benchmark: true,
-        items: ["Barbell deadlift × 5", "Hang power clean × 5", "Push press × 5", "Burpees over bar × 5"],
-        adj: "Default 65–95 lb. Use 115 lb only on high-readiness days when movement is fast and clean. Power-endurance, not a second heavy strength session.",
-        achilles: "If Achilles is cranky, drop burpees for farmer march or swings."
+        nm: "Light Squat + Burpee Couplet", fmt: "10-minute AMRAP", hard: true, benchmark: true,
+        items: ["Goblet squat × 10", "Push-ups × 10–12", "Burpees over bar × 5"],
+        adj: "Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press.",
+        achilles: "If Achilles is cranky, drop burpees for farmer march or step-overs."
       },
       down: "2–5 min breathing or easy walk."
     },

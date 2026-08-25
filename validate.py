@@ -22,7 +22,7 @@ def read(name: str) -> str:
 def check_files() -> None:
     required = [
         "index.html", "styles.css", "app.js", "core.js", "program.js",
-        "sw.js", "manifest.webmanifest", "README.md", ".nojekyll",
+        "sw.js", "manifest.webmanifest", "README.md", "CANON.md", ".nojekyll",
         "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png",
         "icons/apple-touch-icon.png", "test/core.test.js", "test/persist.test.js",
         ".github/workflows/ci.yml",
