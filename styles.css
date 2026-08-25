@@ -599,13 +599,34 @@ input, textarea, select {
   background: rgba(142,158,130,.06);
 }
 .move-row { align-items: center; }
+.move-row--levels { align-items: flex-start; }
 .move-index {
   width: 22px;
   font: 500 10px var(--font-mono);
   color: var(--phase-mobility);
   letter-spacing: .06em;
 }
+.move-row--levels .move-index { padding-top: 4px; }
 .move-row .nm { font-size: 15.5px; }
+.mob-levels {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mob-levels li {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 5px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.mob-lvl {
+  flex: 0 0 auto;
+  font: 600 10px var(--font-mono);
+  letter-spacing: .04em;
+  color: var(--phase-mobility);
+}
 
 .phase-module[data-phase="strength"] {
   padding: 16px 12px 10px;

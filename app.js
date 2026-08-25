@@ -415,12 +415,25 @@
     }
 
     if (D.mob && D.mob.length) {
-      h += sec("Mobility", "6–15 min", D.mob.map((m, i) => {
-        const [nm, why] = m.split(" — ");
-        return `<div class="line move-row">
+      const showWave = D.n === 1 || D.n === 2 || D.n === 4 || D.n === 5;
+      const mobLead = [
+        D.mobNote ? `<div class="sec-goal">${esc(D.mobNote)}</div>` : "",
+        showWave && W.mob ? `<div class="sec-goal">${esc(W.mob)}</div>` : ""
+      ].join("");
+      h += sec("Mobility", D.n === 6 ? "5–15 min" : "6–15 min", mobLead + D.mob.map((m, i) => {
+        const item = typeof m === "string" ? (function () {
+          const parts = m.split(" — ");
+          return { nm: parts[0], why: parts[1] || "", levels: [] };
+        }()) : m;
+        const levels = item.levels || [];
+        return `<div class="line move-row${levels.length ? " move-row--levels" : ""}">
           <span class="move-index">${String(i + 1).padStart(2, "0")}</span>
-          <button type="button" class="box phase-check" data-kind="move" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(nm)}"></button>
-          <div class="body"><div class="nm">${esc(nm)}</div>${why ? `<div class="why">${esc(why)}</div>` : ""}</div>
+          <button type="button" class="box phase-check" data-kind="move" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(item.nm)}"></button>
+          <div class="body">
+            <div class="nm">${esc(item.nm)}</div>
+            ${item.why ? `<div class="why">${esc(item.why)}</div>` : ""}
+            ${levels.length ? `<ol class="mob-levels">${levels.map((lv, li) => `<li><span class="mob-lvl">L${li + 1}</span> ${esc(lv)}</li>`).join("")}</ol>` : ""}
+          </div>
         </div>`;
       }).join(""), "mob", mobilityPhase.done, "mobility", mobilityPhase.progress);
     }
@@ -520,7 +533,8 @@
           </div>`, "", burnPhase.done, "burnout", burnPhase.progress);
       } else {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
-        const pct = amber ? "moderate / scaled" : `at ${W.burn}`;
+        const effort = D.n === 4 && D.burn.benchmark && W.n <= 4 ? "90–95%" : W.burn;
+        const pct = amber ? "moderate / scaled" : `at ${effort}`;
         const bench = W.n === 5 && D.burn.benchmark ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
         const achillesNote = se.flags.achilles && D.burn.achilles ? `<div class="guard"><span>${esc(D.burn.achilles)}</span></div>` : "";
         const motNote = se.flags.motivation ? `<div class="guard"><span>Motivation is low — skipping the burnout is allowed.</span></div>` : "";
