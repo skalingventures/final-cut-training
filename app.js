@@ -65,12 +65,12 @@
       el.innerHTML = `<b>Not saving on this device.</b> ${esc(msg)}. Export a backup before you close.`;
       document.getElementById("backup-wrap").open = true;
       if (live) live.textContent = "Training log is not saving.";
-      if (chip) chip.textContent = "Not saving";
+      if (chip) { chip.hidden = false; chip.className = "fc-savewarn svbg svbg-bad"; chip.textContent = "Not saving on this device"; }
     } else {
       el.className = "save-banner";
       el.innerHTML = "";
       if (live) live.textContent = "Training log saved on this device.";
-      if (chip) chip.textContent = S.lastSaved ? "Saved " + relTime(S.lastSaved) : "Saved locally";
+      if (chip) chip.hidden = true;
     }
   }
 
@@ -163,7 +163,7 @@
     LOG.checks[k][id][i] = !!on;
   }
 
-  function heatVar(h) { return `var(--${h})`; }
+  function heatVar(h) { return `var(--fc-heat-${h})`; }
   function dayObj() { return P.days[S.day - 1]; }
   function weekObj() { return P.weeks[S.week - 1]; }
   function liftById(id) { return (dayObj().lifts || []).find(l => l.id === id); }
@@ -221,31 +221,16 @@
   function updateProgress() {
     const se = sess();
     const p = C.progress(dayObj(), S.week, se, LOG, P);
-    const circ = 2 * Math.PI * 15;
-    const fill = document.getElementById("prog-fill");
-    const label = document.getElementById("prog-pct");
-    const ring = document.getElementById("prog-ring");
-    const shown = p.state === "idle" ? "—" : (p.state === "done" ? "✓" : String(p.pct));
-    if (fill) fill.setAttribute("stroke-dasharray", `${((p.state === "done" ? 100 : p.pct) / 100) * circ} ${circ}`);
-    if (label) label.textContent = shown;
-    if (ring) ring.setAttribute("aria-label", p.state === "done" ? "Session complete" : p.state === "active" ? `Session ${p.pct} percent` : "Session not started");
-    const phaseProgress = document.getElementById("phase-progress");
-    if (phaseProgress) {
-      phaseProgress.innerHTML = Object.keys(p.byPhase)
-        .filter(key => p.byPhase[key].total > 0)
-        .map(key => {
-          const ph = p.byPhase[key];
-          const state = ph.done === 0 ? "" : (ph.done >= ph.total ? " is-complete" : " is-active");
-          return `<span class="phase-pip${state}" data-phase="${key}" title="${key}: ${ph.done}/${ph.total}"></span>`;
-        }).join("");
+    const label = document.getElementById("prog-text");
+    if (label) {
+      label.textContent = p.state === "idle" ? "—" : (p.state === "done" ? "\u2713" : `${p.done} / ${p.total}`);
+      label.setAttribute("aria-label", p.state === "done" ? "Session complete"
+        : p.state === "active" ? `${p.done} of ${p.total} done` : "Session not started");
     }
     const today = document.getElementById("today-btn");
     const t = C.suggested(S.start);
     if (today) today.hidden = t.week === S.week && t.day === S.day && !t.unknown && S.setupDone;
-    document.getElementById("sticky-week").textContent = `W${S.week} · ${WEEKDAYS[S.day - 1]}`;
-    const chip = document.getElementById("sticky-ready");
-    chip.textContent = se.ready ? se.ready : "Ready?";
-    chip.dataset.r = se.ready || "";
+    document.getElementById("sticky-week").textContent = `W${S.week} \u00b7 ${WEEKDAYS[S.day - 1]}`;
     const recap = document.getElementById("finish-recap");
     const btn = document.getElementById("finish-btn");
     if (se.finished) {
@@ -279,8 +264,6 @@
       if (matchMedia("(display-mode: standalone)").matches) bits.push("Home screen");
     } catch (e) { /* ignore */ }
     line.textContent = bits.join(" · ");
-    const chip = document.getElementById("save-chip");
-    if (persistOk && chip) chip.textContent = S.lastSaved ? "Saved " + relTime(S.lastSaved) : "Saved locally";
   }
 
   function prescription() {
@@ -321,17 +304,16 @@
     const D = dayObj();
     const t = C.suggested(S.start);
     const se = sess();
-    document.documentElement.style.setProperty("--seg", heatVar(D.heat));
     document.getElementById("intent-sub").textContent = `Week ${W.n} · ${W.intent} · ${W.main} @ ${W.rpe} · ${W.acc}`;
     const card = document.getElementById("ready-card");
     if (card) card.classList.toggle("is-set", !!se.ready);
     document.getElementById("ramp").innerHTML = P.weeks.map(w =>
-      `<button type="button" data-w="${w.n}" aria-pressed="${w.n === S.week}" style="--seg:${heatVar(w.heat)}">
+      `<button type="button" data-w="${w.n}" aria-pressed="${w.n === S.week}">
          <span class="bar"></span><span class="lbl">W${w.n}</span></button>`).join("");
     document.getElementById("days").innerHTML = P.days.map(d => {
       const ds = C.defaultSession(SESSIONS[C.wd(S.week, d.n)]);
       const dp = C.progress(d, S.week, ds, LOG, P);
-      return `<button type="button" class="day${t.week === S.week && t.day === d.n && !t.unknown ? " is-today" : ""}${dp.state === "done" || ds.finished ? " is-complete" : ""}" data-d="${d.n}" aria-pressed="${d.n === S.day}" style="--seg:${heatVar(d.heat)}">
+      return `<button type="button" class="day${t.week === S.week && t.day === d.n && !t.unknown ? " is-today" : ""}${dp.state === "done" || ds.finished ? " is-complete" : ""}" data-d="${d.n}" aria-pressed="${d.n === S.day}">
          <span class="dot"></span><span class="wd">${WEEKDAYS[d.n - 1]}</span><span class="n">${d.n}</span><span class="day-theme">${esc(d.theme.split(" ")[0])}</span></button>`;
     }).join("");
     document.getElementById("ready-h").innerHTML = `${phaseSymbol("readiness")}<span>Today</span>`;
@@ -368,18 +350,18 @@
 
   function sec(title, dose, inner, foldId, done, phase, phaseProgress) {
     const se = sess();
-    if (foldId && done && se.collapsed[foldId] == null) se.collapsed[foldId] = true;
-    const collapsed = foldId && se.collapsed[foldId] && done;
-    const p = phase || foldId || "downshift";
+    const key = foldId || phase || "phase";
+    if (done && se.collapsed[key] == null) se.collapsed[key] = true;
+    const open = !se.collapsed[key];
     const count = phaseProgress && phaseProgress.total ? `${phaseProgress.done}/${phaseProgress.total}` : "";
-    return `<section class="sec phase-module${collapsed ? " is-collapsed" : ""}${done ? " is-complete" : ""}" data-phase="${esc(p)}" data-sec="${foldId || ""}">
-      <span class="phase-node">${phaseSymbol(p)}</span>
-      <div class="sec-h">
-        <div class="phase-title">${phaseSymbol(p)}<div><span class="phase-kicker">${esc(p)}</span><h3>${esc(title)}</h3></div></div>
-        <span class="dose">${count ? `<b>${count}</b> · ` : ""}${dose ? esc(dose) : ""}${foldId ? ` <button type="button" class="fold" data-fold="${esc(foldId)}">${collapsed ? "Show" : "Hide"}</button>` : ""}</span>
-      </div>
-      <div class="sec-body">${inner}</div>
-    </section>`;
+    const meta = [count, dose].filter(Boolean).join(" \u00b7 ");
+    return `<details class="svd fc-phase" data-sec="${esc(key)}"${open ? " open" : ""}>
+      <summary class="svd-summary">
+        <span class="svd-title">${esc(title)}</span>
+        <span class="svd-meta">${esc(meta)}</span>
+      </summary>
+      <div class="svd-body">${inner}</div>
+    </details>`;
   }
 
   function phaseStatus(phase) {
@@ -399,10 +381,11 @@
     const workPhase = phaseStatus("work");
     const burnPhase = phaseStatus("burnout");
     const downPhase = phaseStatus("downshift");
-    let h = `<div class="s-head">
-      <div class="s-tag">W${W.n} ${esc(W.intent)} · ${D.weekday} · ${D.tag}</div>
-      <h1 class="s-title">${esc(D.theme)}</h1>
-      <div class="s-sub">${esc(D.sub)} · ${esc(D.n === 3 || D.n >= 6 ? "easy day" : "60–75 min")}</div>
+    let h = `<div class="svr-section fc-day">
+      <p class="sveb">W${W.n} ${esc(W.intent)} \u00b7 ${esc(D.weekday)}
+        <span class="svbg" style="--svbg-fg: var(--fc-heat-${esc(D.heat)})">${esc(D.tag)}</span></p>
+      <h1 class="svr-section-title">${esc(D.theme)}</h1>
+      <p class="svlede">${esc(D.sub)} \u00b7 ${esc(D.n === 3 || D.n >= 6 ? "easy day" : "60–75 min")}</p>
     </div>`;
     if (D.guardTop) h += `<div class="session-callout guard callout callout--warn"><span>${esc(D.guardTop)}</span></div>`;
 
@@ -586,7 +569,7 @@
 
     document.getElementById("session").innerHTML = h;
     document.getElementById("ref-prog").innerHTML = P.weeks.map(w =>
-      `<div class="block-stage${w.n === S.week ? " is-current" : ""}" style="--seg:${heatVar(w.heat)}">
+      `<div class="block-stage${w.n === S.week ? " is-current" : ""}">
         <dt><span>0${w.n}</span> ${esc(w.intent)}</dt>
         <dd>${esc(w.main)} @ ${esc(w.rpe)}. ${esc(w.acc)}. Burnouts ${esc(w.burn)}.</dd>
       </div>`
@@ -696,9 +679,9 @@
   function firstUnfinished() {
     const se = sess();
     if (!se.ready) return document.getElementById("ready-card");
-    const secs = document.querySelectorAll("#session .sec[data-sec], #session .sec");
+    const secs = document.querySelectorAll("#session .fc-phase");
     for (const el of secs) {
-      if (el.classList.contains("is-collapsed")) continue;
+      if (!el.open) continue;
       const unchecked = el.querySelector(".box[aria-pressed='false'], .set[aria-pressed='false']");
       if (unchecked) return el;
     }
@@ -862,15 +845,6 @@
       return;
     }
     if (e.target.closest("#bk-restore")) { restoreFromBox(); return; }
-    const fold = e.target.closest("[data-fold]");
-    if (fold) {
-      const se = sess();
-      se.collapsed[fold.dataset.fold] = !se.collapsed[fold.dataset.fold];
-      save();
-      renderSession();
-      updateProgress();
-      return;
-    }
     const w = e.target.closest("[data-w]");
     if (w) { S.week = +w.dataset.w; setNavOpen(false); save(); render({ focus: true }); return; }
     const d = e.target.closest("[data-d]");
@@ -934,6 +908,13 @@
     const b = e.target.closest("[data-id]");
     if (b) toggle(b.dataset.id, +b.dataset.i, b);
   });
+
+  document.addEventListener("toggle", e => {
+    const d = e.target.closest(".fc-phase");
+    if (!d) return;
+    sess().collapsed[d.dataset.sec] = !d.open;
+    save();
+  }, true);
 
   document.addEventListener("change", e => {
     const start = e.target.closest("#start-in");

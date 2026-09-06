@@ -44,6 +44,7 @@ def check_html() -> None:
         "./app.js",
         "How do you feel",
         "nav-drawer",
+        'id="prog-text"',
         "Finish session",
         "Export file",
         "Block start Monday",
@@ -54,6 +55,14 @@ def check_html() -> None:
                 err("index.html missing viewport-fit=cover")
             elif needle != "safe-area":
                 err(f"index.html missing {needle!r}")
+
+
+def check_html_absences() -> None:
+    """Chrome deleted in the 2.0 rebuild must not creep back."""
+    html = read("index.html")
+    for gone in ["prog-ring", "phase-progress", "sticky-ready"]:
+        if gone in html:
+            err(f"index.html still contains {gone!r}")
 
 
 def check_css() -> None:
@@ -151,6 +160,7 @@ def check_sw() -> None:
 def main() -> int:
     check_files()
     check_html()
+    check_html_absences()
     check_css()
     check_type_floor()
     check_js_syntax()
