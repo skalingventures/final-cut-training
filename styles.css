@@ -30,6 +30,9 @@ body {
 }
 b, strong { font-weight: var(--sv-weight-medium); }
 
+a { color: var(--sv-text-link); }
+a:hover { color: var(--sv-text-link-hover); }
+
 button {
   font-family: inherit;
   font-size: var(--sv-text-base);
@@ -115,31 +118,6 @@ input, textarea, select {
 .ramp button[aria-pressed="true"] .bar { background: var(--sv-action-primary); height: 8px; margin-top: -4px; }
 .ramp .lbl { display: block; font: 500 12px var(--sv-font-mono); color: var(--sv-text-muted); margin-top: 8px; letter-spacing: 0.06em; }
 .ramp button[aria-pressed="true"] .lbl { color: var(--sv-text-strong); }
-
-.meta-row {
-  display: flex; flex-wrap: wrap; gap: 14px 20px;
-  align-items: flex-end;
-  margin-top: 18px;
-  position: relative;
-}
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field label {
-  font: 500 12px/1 var(--sv-font-mono);
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--sv-text-muted);
-}
-.field input, .field select {
-  height: 40px;
-  background: var(--sv-surface-panel);
-  border: 1px solid var(--sv-border-default);
-  font: 500 16px var(--sv-font-mono);
-  color: var(--sv-text-strong);
-  padding: 0 10px;
-}
-.field input { width: 148px; }
-.field input.short { width: 86px; }
-.field input::placeholder { color: var(--sv-text-muted); }
-.bw-note { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); }
 
 .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 22px 0 0; }
 .day {
@@ -267,9 +245,9 @@ input, textarea, select {
 .fc-setlog { table-layout: fixed; }
 .fc-setlog tbody td { padding: var(--sv-space-1) 2px; vertical-align: middle; }
 .fc-setlog thead th { padding: var(--sv-space-2) 2px; }
-.fc-setlog th:first-child, .fc-setlog td:first-child { width: 5.75rem; }
+.fc-setlog th:first-child, .fc-setlog td:first-child { width: 5.5rem; }
 .fc-setlog .svf-input { height: 44px; min-width: 0; padding: 0 var(--sv-space-2); }
-.fc-setcell { display: flex; align-items: center; gap: var(--sv-space-1); }
+.fc-setcell { display: flex; align-items: center; gap: 0; }
 
 .fc-set {
   min-width: 44px; min-height: 44px;
@@ -288,7 +266,7 @@ input, textarea, select {
 .fc-set:disabled, .fc-set[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
 
 .fc-same {
-  min-width: 32px; min-height: 44px;
+  min-width: 44px; min-height: 44px;
   border: 0; background: none;
   font: 400 var(--sv-text-sm) var(--sv-font-mono);
   color: var(--sv-text-muted);
@@ -452,14 +430,6 @@ input, textarea, select {
 
 .cut b { color: var(--sv-text-strong); font-weight: 500; }
 
-.burn-log {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 12px;
-}
-.burn-log .field input, .burn-log .field select { width: 100%; }
-
 /* ── Operator timeline / phase components ───── */
 
 .pair-block {
@@ -525,24 +495,6 @@ input, textarea, select {
   color: var(--sv-text-muted);
   font: 500 12px var(--sv-font-mono);
 }
-.zone-segments {
-  height: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--sv-status-danger);
-  overflow: hidden;
-}
-.zone-segments button {
-  min-width: 42px;
-  color: var(--sv-text-muted);
-  font: 500 12px var(--sv-font-mono);
-  border-right: 1px solid var(--sv-status-danger);
-}
-.zone-segments button:last-child { border-right: 0; }
-.zone-segments button[aria-pressed="true"] {
-  color: var(--sv-surface-page);
-  background: var(--sv-action-primary);
-}
 .svd-body blockquote {
   margin: var(--sv-space-3) 0 0;
   padding-left: var(--sv-space-3);
@@ -571,122 +523,27 @@ input, textarea, select {
   color: var(--sv-status-success);
   font-size: 12px;
 }
-.ref:first-of-type,
-.ref:has(#hist) {
-  border-color: var(--sv-status-info);
-  background: var(--sv-status-info-tint);
-}
+
+/* Every control on this screen is a thumb target. The system sizes buttons
+   for a desktop report; a phone in a gym needs 44px, so the app scopes its
+   own containers up rather than editing the primitive. */
+.sticky .svb,
+.ready .svb,
+.fc-foot .svb,
+.fc-bk .svb,
+.fc-swap .svb,
+.fc-drawer .svb,
+.fc-ref-foot .svb { --svb-height: 2.75rem; }
+.sv-skip { min-height: 44px; display: inline-flex; align-items: center; padding: 0 var(--sv-space-5); }
 
 /* ── Drawers ─────────────────────────────────── */
-.ref {
-  margin-top: 28px;
-  border: 1px solid var(--sv-border-default);
-  background: var(--sv-surface-panel);
-  overflow: hidden;
-}
-.ref summary {
-  list-style: none;
-  padding: 16px 16px;
-  font: 500 12px/1 var(--sv-font-mono);
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--sv-text-muted);
-  cursor: pointer;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.ref summary::-webkit-details-marker { display: none; }
-.ref summary::after { content: "▸"; color: var(--sv-text-muted); font-size: 12px; }
-.ref[open] summary { color: var(--sv-text-strong); background: var(--sv-surface-raised); }
-.ref[open] summary::after { transform: rotate(90deg); }
-.ref-body, .hist-body { padding: 8px 16px 22px; }
-.ref-body h4 {
-  font: 500 18px/1.15 var(--sv-font-sans);
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  color: var(--sv-text-strong);
-  margin: 22px 0 8px;
-  position: relative;
-  padding-bottom: 8px;
-}
-.ref-body h4::after {
-  content: "";
-  position: absolute; bottom: 0; left: 0;
-  width: 48px; height: 1px;
-  background: var(--sv-text-accent);
-}
-.ref-body h4:first-child { margin-top: 8px; }
-.ref-body p { font-size: 16px; color: var(--sv-text-muted); margin: 0 0 8px; }
-.ref-body dl { margin: 0; font-size: 16px; }
-.ref-body dt { font-weight: 500; color: var(--sv-text-strong); margin-top: 10px; }
-.ref-body dd { margin: 2px 0 0; color: var(--sv-text-muted); }
-.block-stage {
-  position: relative;
-  margin: 8px 0;
-  padding: 12px 12px 12px 15px;
-  border: 1px solid var(--sv-border-default);
-  border-left: 2px solid var(--sv-border-default);
-  background: var(--sv-surface-panel);
-}
-.block-stage.is-current {
-  border-color: var(--sv-action-primary);
-  background: var(--sv-surface-raised);
-}
-.block-stage dt { margin: 0; text-transform: uppercase; letter-spacing: .06em; }
-.block-stage dt span { color: var(--sv-text-accent); font: 500 var(--sv-text-xs) var(--sv-font-mono); margin-right: 7px; }
-.block-stage dd { padding-left: 25px; }
-.closer {
-  font: 500 20px/1.2 var(--sv-font-sans);
-  text-transform: uppercase;
-  margin: 28px 0 0;
-  color: var(--sv-text-muted);
-}
-.closer b { color: var(--sv-text-strong); }
 
-#backup-json {
-  width: 100%; height: 110px;
-  background: var(--sv-surface-raised);
-  border: 1px solid var(--sv-border-default);
-  font: 400 12px/1.4 var(--sv-font-mono);
-  color: var(--sv-text-muted);
-  padding: 10px;
-  resize: vertical;
-}
-.bk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .bk-msg { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); margin: 9px 0 0; min-height: 14px; }
 .bk-msg.ok { color: var(--sv-status-success); }
 .bk-msg.err { color: var(--sv-status-danger); }
 
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
-.mbtn {
-  min-height: 40px;
-  border: 1px solid var(--sv-border-default);
-  font: 500 12px var(--sv-font-mono);
-  letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--sv-text-muted);
-}
-.mbtn[aria-pressed="true"] { background: var(--sv-surface-raised); border-color: var(--sv-text-accent); color: var(--sv-text-strong); }
-.week-sum {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 8px; margin: 0 0 16px;
-}
-.dash-cell {
-  background: var(--sv-surface-raised);
-  border: 1px solid var(--sv-border-default);
-  padding: 12px 14px;
-}
-.dash-cell .label {
-  font: 500 12px var(--sv-font-mono);
-  letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--sv-text-muted);
-}
-.dash-cell .value {
-  font: 500 16px/1.2 var(--sv-font-sans);
-  color: var(--sv-text-strong);
-  margin-top: 4px;
-}
 .mnote { font-size: 14px; color: var(--sv-text-muted); line-height: 1.5; margin: 0 0 14px; }
 .hist-key { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); margin: 0 0 16px; line-height: 1.6; }
-.hist-key i { font-style: normal; display: inline-block; width: 8px; height: 8px; margin-right: 5px; }
-.hist-empty { font-size: 16px; color: var(--sv-text-muted); line-height: 1.5; }
 .lift { padding: 15px 0; border-bottom: 1px solid var(--sv-border-subtle); }
 .lift:last-child { border-bottom: none; }
 .lift-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 9px; }
@@ -705,6 +562,87 @@ input, textarea, select {
 .lift.timed { opacity: 0.65; }
 .timed-note { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); margin-top: 6px; }
 .bwtag { font: 400 12px var(--sv-font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--sv-text-muted); }
+
+/* Every control on this screen is a thumb target. The system sizes buttons
+   for a desktop report; a phone in a gym needs 44px, so the app scopes its
+   own containers up rather than editing the primitive. */
+.sticky .svb,
+.ready .svb,
+.fc-foot .svb,
+.fc-bk .svb,
+.fc-swap .svb,
+.fc-drawer .svb,
+.fc-ref-foot .svb { --svb-height: 2.75rem; }
+.sv-skip { min-height: 44px; display: inline-flex; align-items: center; padding: 0 var(--sv-space-5); }
+
+/* ── Drawers ──────────────────────────────────
+   Three on the session screen: setup, history, backup. The manual is a
+   separate page — it is a document you read once, not chrome you carry
+   under every session. */
+.fc-drawer { margin-top: var(--sv-space-4); }
+.fc-drawer .svd-summary { min-height: 44px; }
+.fc-drawer .svd-body > * + * { margin-top: var(--sv-space-4); }
+.fc-drawer .svf-input { height: 44px; }
+.fc-raw .svf-input-area { min-height: 7rem; font-family: var(--sv-font-mono); font-size: var(--sv-text-xs); }
+.fc-bk { display: flex; flex-wrap: wrap; gap: var(--sv-space-3); }
+.fc-bk .svb { flex: 1 1 9rem; }
+.fc-now td { color: var(--sv-text-accent); }
+
+/* A segmented control: buttons sharing borders, one pressed. */
+.fc-seg { display: flex; border: 1px solid var(--sv-border-default); }
+.fc-seg .fc-seg-btn { flex: 1 1 0; border: 0; border-right: 1px solid var(--sv-border-default); }
+.fc-seg .fc-seg-btn:last-child { border-right: 0; }
+.fc-seg-btn {
+  min-height: 44px; padding: 0 var(--sv-space-3);
+  border: 1px solid var(--sv-border-default);
+  background: none;
+  font: 500 var(--sv-text-xs) var(--sv-font-mono);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+  transition: var(--sv-transition-color);
+}
+.fc-seg-btn[aria-pressed="true"] {
+  background: var(--sv-action-primary);
+  border-color: var(--sv-action-primary);
+  color: var(--sv-action-primary-text);
+}
+.metrics { display: flex; flex-wrap: wrap; gap: var(--sv-space-2); }
+.week-sum { display: grid; gap: var(--sv-space-3); grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr)); }
+.fc-key { display: flex; flex-wrap: wrap; gap: var(--sv-space-2); margin-top: var(--sv-space-2); }
+.fc-set-wide { min-width: 5.5rem; }
+.burn-log { display: grid; gap: var(--sv-space-3); grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr)); margin-top: var(--sv-space-4); }
+.fc-fields .svf-input, .burn-log .svf-input { height: 44px; }
+
+/* ── The reference page ───────────────────────
+   Bone: a printable document, read once, away from the instrument. */
+.fc-reference { background: var(--sv-surface-page); color: var(--sv-text-body); }
+.fc-ref-shell { max-width: 44rem; margin: 0 auto; padding: var(--sv-space-12) var(--sv-gutter) var(--sv-space-16); }
+.fc-ref-mast { display: grid; gap: var(--sv-space-4); padding-bottom: var(--sv-space-6); border-bottom: 1px solid var(--sv-border-default); }
+.fc-ref-title { margin: 0; font-size: var(--sv-text-3xl); font-weight: var(--sv-weight-light); line-height: var(--sv-leading-tight); color: var(--sv-text-strong); }
+.fc-ref-body { max-width: var(--sv-measure); }
+.fc-ref-body .svr-section { margin: var(--sv-section-gap) 0 var(--sv-space-5); }
+.fc-ref-body p { margin: 0 0 var(--sv-space-4); }
+.fc-ref-body dl { margin: 0 0 var(--sv-space-5); }
+.fc-ref-body dt { margin-top: var(--sv-space-4); color: var(--sv-text-strong); font-weight: var(--sv-weight-medium); }
+.fc-ref-body dd { margin: var(--sv-space-1) 0 0; color: var(--sv-text-muted); }
+.fc-closer { margin-top: var(--sv-space-8); font-size: var(--sv-text-md); font-weight: var(--sv-weight-light); color: var(--sv-text-muted); }
+.fc-closer b { color: var(--sv-text-strong); font-weight: var(--sv-weight-regular); }
+.fc-ref-foot { margin-top: var(--sv-section-gap); padding-top: var(--sv-space-6); border-top: 1px solid var(--sv-border-default); }
+/* Internal navigation, not a citation — so a plain link, not the source chip. */
+.fc-ref-link {
+  display: inline-flex; align-items: center;
+  min-height: 44px; padding: 0 var(--sv-space-3);
+  margin-top: var(--sv-space-2);
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+  text-decoration: none;
+  transition: var(--sv-transition-color);
+}
+.fc-ref-link:hover { color: var(--sv-text-accent); }
 
 /* ── Colophon ────────────────────────────────── */
 .colophon {
@@ -743,20 +681,13 @@ input, textarea, select {
   border: 1px solid var(--sv-border-default);
   padding: 28px 22px;
 }
-.setup-brand {
-  font: 300 12px var(--sv-font-sans);
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--sv-text-muted); margin: 10px 0 0;
-}
 .setup-card h1 {
   font: 300 var(--sv-text-2xl)/var(--sv-leading-snug) var(--sv-font-sans);
   letter-spacing: var(--sv-tracking-title); text-transform: uppercase;
   color: var(--sv-text-strong); margin: 10px 0;
 }
-.setup-card p { color: var(--sv-text-muted); }
 
 .status-line { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); margin-top: 12px; }
-.bk-row.three { grid-template-columns: 1fr 1fr 1fr; }
 
 @media (max-width: 600px) {
   .bk-row.three { grid-template-columns: 1fr; }

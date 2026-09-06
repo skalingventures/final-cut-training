@@ -271,7 +271,9 @@
     try {
       if (matchMedia("(display-mode: standalone)").matches) bits.push("Home screen");
     } catch (e) { /* ignore */ }
-    line.textContent = bits.join(" · ");
+    line.textContent = bits.join(" \u00b7 ");
+    const meta = document.getElementById("status-meta");
+    if (meta) meta.textContent = S.lastSaved ? "saved " + relTime(S.lastSaved) : "";
   }
 
   function prescription() {
@@ -584,24 +586,24 @@
             <ol class="burn-stack">${D.burn.items.map(item => `<li>${esc(item)}</li>`).join("")}</ol>
             <div class="guard callout callout--coach"><span>${esc(D.burn.adj)}</span></div>
             ${achillesNote}${motNote}${bench}
-            <div class="sets">
-              <button type="button" class="set" data-id="burn" data-i="0" aria-pressed="${chk("burn", 0)}" aria-label="Burnout done" style="width:auto;padding:0 14px">done</button>
-              ${D.burn.optional || se.flags.motivation ? `<button type="button" class="set" data-id="burnskip" data-i="0" aria-pressed="${chk("burnskip", 0)}" aria-label="Skip burnout" style="width:auto;padding:0 14px">skip</button>` : ""}
+            <div class="fc-sets">
+              <button type="button" class="fc-set fc-set-wide" data-id="burn" data-i="0" aria-pressed="${chk("burn", 0)}" aria-label="Burnout done">Done</button>
+              ${D.burn.optional || se.flags.motivation ? `<button type="button" class="fc-set fc-set-wide" data-id="burnskip" data-i="0" aria-pressed="${chk("burnskip", 0)}" aria-label="Skip burnout">Skip</button>` : ""}
             </div>
             <div class="burn-log">
-              <div class="field"><label for="burn-rounds">Rounds / score</label><input id="burn-rounds" data-burn="rounds" value="${esc(b.rounds || "")}" placeholder="e.g. 4+8"></div>
-              <div class="field"><label>WHOOP zone</label>
-                <div class="zone-segments" role="group" aria-label="WHOOP zone">
-                  ${["Z3", "Z4", "Z5"].map(z => `<button type="button" data-zone="${z}" aria-pressed="${b.zone === z}">${z}</button>`).join("")}
+              <div class="svf-field"><label class="svf-label" for="burn-rounds">Rounds / score</label><input class="svf-input" id="burn-rounds" data-burn="rounds" value="${esc(b.rounds || "")}" placeholder="e.g. 4+8"></div>
+              <div class="svf-field"><span class="svf-label">WHOOP zone</span>
+                <div class="fc-seg" role="group" aria-label="WHOOP zone">
+                  ${["Z3", "Z4", "Z5"].map(z => `<button type="button" class="fc-seg-btn" data-zone="${z}" aria-pressed="${b.zone === z}">${z}</button>`).join("")}
                 </div>
               </div>
-              <div class="field"><label for="burn-scaled">Scaled?</label>
-                <select id="burn-scaled" data-burn="scaled">
+              <div class="svf-field"><label class="svf-label" for="burn-scaled">Scaled?</label>
+                <select class="svf-input" id="burn-scaled" data-burn="scaled">
                   <option value="" ${!b.scaled ? "selected" : ""}>As written</option>
                   <option value="yes" ${b.scaled === "yes" || (amber && !b.scaled && b.scaled !== "") ? "selected" : ""}>Scaled</option>
                 </select>
               </div>
-              <div class="field"><label for="burn-note">Note</label><input id="burn-note" data-burn="note" value="${esc(b.note || "")}" placeholder="load, swap, feel"></div>
+              <div class="svf-field"><label class="svf-label" for="burn-note">Note</label><input class="svf-input" id="burn-note" data-burn="note" value="${esc(b.note || "")}" placeholder="load, swap, feel"></div>
             </div>
           </div></div>`, "", burnPhase.done, "burnout", burnPhase.progress);
       }
@@ -616,12 +618,12 @@
     }
 
     document.getElementById("session").innerHTML = h;
-    document.getElementById("ref-prog").innerHTML = P.weeks.map(w =>
-      `<div class="block-stage${w.n === S.week ? " is-current" : ""}">
-        <dt><span>0${w.n}</span> ${esc(w.intent)}</dt>
-        <dd>${esc(w.main)} @ ${esc(w.rpe)}. ${esc(w.acc)}. Burnouts ${esc(w.burn)}.</dd>
-      </div>`
-    ).join("");
+    const prog = document.getElementById("ref-prog");
+    if (prog) prog.innerHTML = `<thead><tr><th>Wk</th><th>Intent</th><th class="svdt-num">Main</th><th class="svdt-num">RPE</th></tr></thead><tbody>` +
+      P.weeks.map(w => `<tr${w.n === S.week ? ' class="fc-now"' : ""}>
+        <td>${w.n}</td><td>${esc(w.intent)}</td>
+        <td class="svdt-num">${esc(w.main)}</td><td class="svdt-num">${esc(w.rpe)}</td>
+      </tr>`).join("") + "</tbody>";
   }
 
   const METRICS = {
@@ -645,16 +647,18 @@
     const M = METRICS[mode];
     const sum = C.weekSummary(S.week, LOG, P, SESSIONS);
     document.getElementById("week-sum").innerHTML = `
-      <div class="dash-cell"><div class="label">Week ${S.week} started / complete</div><div class="value">${sum.started} / ${sum.completed}</div></div>
-      <div class="dash-cell"><div class="label">Burnouts · Z4/5</div><div class="value">${sum.hard} hard · ${sum.optional} opt · ${sum.scaled} scaled · ${sum.z45} Z4/5</div></div>`;
+      <div class="svt"><p class="svt-label">Week ${S.week} started</p><p class="svt-value">${sum.started}<span class="svt-unit">/ 7</span></p><p class="svt-note">${sum.completed} complete</p></div>
+      <div class="svt"><p class="svt-label">Burnouts</p><p class="svt-value">${sum.hard}<span class="svt-unit">hard</span></p><p class="svt-note">${sum.optional} opt · ${sum.scaled} scaled · ${sum.z45} Z4/5</p></div>`;
     document.getElementById("metrics").innerHTML = Object.keys(METRICS).map(k =>
-      `<button type="button" class="mbtn" data-m="${k}" aria-pressed="${k === mode}">${METRICS[k].lab}</button>`
+      `<button type="button" class="fc-seg-btn" data-m="${k}" aria-pressed="${k === mode}">${METRICS[k].lab}</button>`
     ).join("");
     document.getElementById("hist-key").innerHTML =
-      `<span class="mnote" style="display:block">${M.note}</span>
-       <i style="background:var(--ok)"></i>logged reps &amp; sets &nbsp;
-       <i style="background:var(--warn)"></i>load only &nbsp;
-       <i style="background:var(--muted)"></i>empty`;
+      `<span class="mnote">${M.note}</span>
+       <span class="fc-key">
+         <span class="svbg svbg-ok">Reps &amp; sets</span>
+         <span class="svbg svbg-warn">Load only</span>
+         <span class="svbg">Empty</span>
+       </span>`;
 
     const tracked = P.days.flatMap(d => (d.lifts || []).filter(l => l.load).map(l => Object.assign({}, l, { day: d.n })));
     const rows = tracked.map(l => {
@@ -695,14 +699,14 @@
       let delta = "";
       if (vals.length > 1 && first.v !== last.v) {
         const d = last.v - first.v;
-        delta = ` <b style="color:${d > 0 ? "var(--ok)" : "var(--muted)"}">${d > 0 ? "+" : ""}${M.fmt(d)}</b>`;
+        delta = ` <b style="color:${d > 0 ? "var(--sv-status-success)" : "var(--sv-text-muted)"}">${d > 0 ? "+" : ""}${M.fmt(d)}</b>`;
       } else if (vals.length === 1) delta = ` <i>first entry</i>`;
       if (plotted) return `<div class="lift timed"><div class="lift-h"><span class="ln">${esc(l.nm)}</span><span class="dl"><i>time-based</i></span></div>
         <div class="timed-note">Carries are held for time — switch to Load to see the weight.</div></div>`;
       const plot = series.map(s => {
         if (s.v == null) return `<div class="col empty"><div class="bar2"></div></div>`;
         const ht = Math.round(6 + (s.v / max) * 38);
-        const c = !s.spec.logged && mode !== "load" ? "var(--warn)" : (s.done >= s.total ? "var(--ok)" : "var(--warn)");
+        const c = !s.spec.logged && mode !== "load" ? "var(--sv-status-warning)" : (s.done >= s.total ? "var(--sv-status-success)" : "var(--sv-status-warning)");
         return `<div class="col ${s.w === 6 ? "deload" : ""}"><div class="bar2" style="height:${ht}px;--bc:${c}"></div></div>`;
       }).join("");
       const axis = series.map(s =>

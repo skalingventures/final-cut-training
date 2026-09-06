@@ -65,6 +65,14 @@ def check_html_absences() -> None:
     for gone in ["prog-ring", "phase-progress", "sticky-ready", 'class="toast"']:
         if gone in html:
             err(f"index.html still contains {gone!r}")
+    # The manual is its own page; the instrument does not carry it.
+    if "Operating intent" in html:
+        err("index.html still carries the reference text; it belongs in reference.html")
+    ref = read("reference.html")
+    if "Operating intent" not in ref:
+        err("reference.html is missing the reference text")
+    if 'data-mode="bone"' not in ref:
+        err("reference.html should be Bone mode")
 
 
 def check_css() -> None:
@@ -92,6 +100,16 @@ def check_css() -> None:
         err("styles.css must not contain a hex colour; use a semantic token")
     if "family=DM+Sans" in html:
         err("index.html still loads DM Sans")
+
+
+def check_app_tokens() -> None:
+    """Inline styles in app.js reach for the same semantic tokens as the CSS."""
+    js = read("app.js")
+    stale = re.findall(r"var\(--(?!sv-|fc-|svb-|svc-|svt-|svd-|svf-|svbg-|svm-|bc\b)[a-z-]+\)", js)
+    if stale:
+        err(f"app.js uses retired tokens: {sorted(set(stale))}")
+    if re.search(r"#[0-9A-Fa-f]{6}\b", js):
+        err("app.js must not contain a hex colour; use a semantic token")
 
 
 def check_type_floor() -> None:
@@ -165,6 +183,7 @@ def main() -> int:
     check_html_absences()
     check_css()
     check_type_floor()
+    check_app_tokens()
     check_js_syntax()
     program = load_program()
     check_program(program)

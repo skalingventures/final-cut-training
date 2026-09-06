@@ -1,7 +1,8 @@
-const CACHE = "final-cut-v8";
+const CACHE = "final-cut-v9";
 const ASSETS = [
   "./",
   "./index.html",
+  "./reference.html",
   "./ds/tokens/index.css",
   "./ds/tokens/color.css",
   "./ds/tokens/type.css",
