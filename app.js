@@ -8,7 +8,6 @@
   let SESSIONS = {};
   let saveTimer = null;
   let persistOk = true;
-  let undo = null;
   let backupDirty = false;
   let lastGoodRaw = null;
 
@@ -186,19 +185,6 @@
     return `<span class="svm ${size ? "svm-" + size : ""}">${MARK}</span>`;
   }
 
-  function phaseSymbol(phase) {
-    const paths = {
-      readiness: `<path d="M12 3v18M3 12h18M7 7l10 10M17 7L7 17"/>`,
-      tissue: `<ellipse cx="12" cy="12" rx="8" ry="5"/><ellipse cx="12" cy="12" rx="5" ry="8"/><circle cx="12" cy="12" r="2.5"/>`,
-      mobility: `<path d="M5 3v18M9 6v12M14 4v16M19 8v8"/>`,
-      strength: `<rect x="4" y="5" width="16" height="14"/><rect x="8" y="8" width="8" height="8"/>`,
-      burnout: `<path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19M8 3l8 18M16 3L8 21"/>`,
-      downshift: `<path d="M12 4l8 15H4L12 4z"/><path d="M8 15h8"/>`,
-      recovery: `<circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3" ry="8"/>`
-    };
-    return `<svg class="phase-symbol" viewBox="0 0 24 24" fill="none" aria-hidden="true">${paths[phase] || paths.downshift}</svg>`;
-  }
-
   function showSetup(on) {
     document.getElementById("setup").hidden = !on;
     document.getElementById("app").hidden = on;
@@ -208,15 +194,26 @@
     }
   }
 
-  function toast(msg, undoFn) {
-    const el = document.getElementById("toast");
-    undo = undoFn || null;
-    el.hidden = false;
-    el.innerHTML = undo
-      ? `${esc(msg)} <button type="button" class="toast-undo" id="toast-undo">Undo</button>`
-      : esc(msg);
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => { el.hidden = true; undo = null; }, 5000);
+  /* A confirmation belongs next to the thing that changed, not over the top
+     of it. The old overlay sat above the session for five seconds and ate
+     taps aimed at whatever was underneath. */
+  function notify(hostId, msg, undoFn) {
+    const host = document.getElementById(hostId);
+    if (!host) return;
+    const prev = host.querySelector(".fc-note");
+    if (prev) prev.remove();
+    const el = document.createElement("p");
+    el.className = "fc-note svbg svbg-accent";
+    el.textContent = msg;
+    if (undoFn) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "svb svb-sm svb-ghost fc-undo";
+      btn.textContent = "Undo";
+      btn.addEventListener("click", () => { el.remove(); undoFn(); });
+      el.appendChild(btn);
+    }
+    host.appendChild(el);
   }
 
   function updateProgress() {
@@ -232,6 +229,16 @@
     const t = C.suggested(S.start);
     if (today) today.hidden = t.week === S.week && t.day === S.day && !t.unknown && S.setupDone;
     document.getElementById("sticky-week").textContent = `W${S.week} \u00b7 ${WEEKDAYS[S.day - 1]}`;
+    const prevBtn = document.getElementById("prev-day");
+    const nextBtn = document.getElementById("next-day");
+    if (prevBtn && nextBtn) {
+      const atStart = S.week === 1 && S.day === 1;
+      const atEnd = S.week === 6 && S.day === 7;
+      prevBtn.textContent = atStart ? "\u2039 Start" : "\u2039 " + WEEKDAYS[(S.day + 5) % 7];
+      nextBtn.textContent = atEnd ? "End \u203a" : WEEKDAYS[S.day % 7] + " \u203a";
+      prevBtn.setAttribute("aria-disabled", atStart ? "true" : "false");
+      nextBtn.setAttribute("aria-disabled", atEnd ? "true" : "false");
+    }
     const recap = document.getElementById("finish-recap");
     const btn = document.getElementById("finish-btn");
     if (se.finished) {
@@ -328,24 +335,23 @@
       return `<button type="button" class="day${t.week === S.week && t.day === d.n && !t.unknown ? " is-today" : ""}${dp.state === "done" || ds.finished ? " is-complete" : ""}" data-d="${d.n}" aria-pressed="${d.n === S.day}">
          <span class="dot"></span><span class="wd">${WEEKDAYS[d.n - 1]}</span><span class="n">${d.n}</span><span class="day-theme">${esc(d.theme.split(" ")[0])}</span></button>`;
     }).join("");
-    document.getElementById("ready-h").innerHTML = `${phaseSymbol("readiness")}<span>Today</span>`;
     document.getElementById("ready").innerHTML = P.ready.map(r =>
-      `<button type="button" class="rbtn" data-r="${r.id}" aria-pressed="${r.id === se.ready}">${r.lab}</button>`).join("");
-    document.getElementById("ready-note").textContent = se.ready ? P.ready.find(r => r.id === se.ready).note : "Pick once. It stays with this session only.";
-    document.getElementById("ready-lead").textContent = se.ready ? P.ready.find(r => r.id === se.ready).lab : "How do you feel?";
+      `<button type="button" class="svb svb-sm ${r.id === se.ready ? "svb-primary" : "svb-secondary"}" data-r="${r.id}" aria-pressed="${r.id === se.ready}">${r.lab}</button>`).join("");
+    document.getElementById("ready-lead").textContent = se.ready ? "\u00b7 " + P.ready.find(r => r.id === se.ready).lab : "\u00b7 how do you feel?";
+    document.getElementById("ready-card").hidden = D.heat === "off";
     document.getElementById("start-in").value = S.start;
     document.getElementById("bw-in").value = LOG.bw[S.week] || "";
     document.getElementById("bw-wk").textContent = S.week;
     refreshBwNote();
     document.getElementById("flags").innerHTML = (P.flags || []).map(f =>
-      `<button type="button" class="flag" data-flag="${f.id}" aria-pressed="${se.flags[f.id] ? "true" : "false"}">${f.lab}</button>`
+      `<button type="button" class="svbg ${se.flags[f.id] ? "svbg-warn" : ""} fc-flag" data-flag="${f.id}" aria-pressed="${se.flags[f.id] ? "true" : "false"}">${f.lab}</button>`
     ).join("");
     const startNote = document.getElementById("start-note");
     if (t.before) startNote.textContent = "Block has not started — Today opens Week 1, Day 1.";
     else if (t.after) startNote.textContent = "Block window has passed — Today opens Week 6, Day 7.";
     else startNote.textContent = `Today is Week ${t.week}, ${WEEKDAYS[t.day - 1]}. Logs stay on week/day numbers if you change this date.`;
     const rx = document.getElementById("rx-card");
-    const text = prescription();
+    const text = prescription() || (se.ready ? "" : "Pick once. It stays with this session only.");
     rx.hidden = !text;
     rx.textContent = text;
     document.getElementById("app-ver").textContent = "v" + C.APP_VERSION;
@@ -437,14 +443,22 @@
       : (red ? "strength only" : (D.n === 5 ? "RPE 7" : "main 15–25 · pairings 15–25"));
     if (D.exclusive) {
       const chosen = LOG.choice[C.wd(S.week, S.day)] || "";
-      h += sec(strengthTitle, "choose one", D.lifts.map(l => `
-        <div class="fc-row">
-          <button type="button" class="fc-check" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0" aria-pressed="${chosen === l.id}" aria-label="${esc(l.nm)}"></button>
-          <div class="fc-row-body">
-            <p class="fc-row-name">${esc(l.nm)} <span class="fc-row-meta">${esc(l.rx)}</span></p>
-            ${l.note ? `<p class="fc-row-cue">${esc(l.note)}</p>` : ""}
-          </div>
-        </div>`).join(""), "", workPhase.done, "recovery", workPhase.progress);
+      /* A rest day wants one card and a choice, not a phase stack with a
+         progress count. */
+      h += `<article class="svc fc-choice">
+        <header class="svc-head"><h3 class="svc-title">${esc(strengthTitle)}</h3></header>
+        <div class="svc-body">
+          ${D.lifts.map(l => `
+            <label class="svf-check fc-choice-row" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0">
+              <input type="radio" name="fc-choice" ${chosen === l.id ? "checked" : ""} tabindex="-1" aria-hidden="true">
+              <span class="svf-check-box"></span>
+              <span class="svf-check-label">
+                <span class="fc-choice-name">${esc(l.nm)}${l.rx && l.rx !== "—" ? ` <span class="fc-row-meta">${esc(l.rx)}</span>` : ""}</span>
+                ${l.note ? `<span class="fc-row-cue">${esc(l.note)}</span>` : ""}
+              </span>
+            </label>`).join("")}
+        </div>
+      </article>`;
     } else {
       const liftCard = (l) => {
         const blocked = C.liftBlocked(l, se);
@@ -772,7 +786,7 @@
     if (id === "burnskip" && !chk("burnskip", 0)) {
       const prev = { burn: chk("burn", 0) };
       setChk("burn", 0, false);
-      toast("Burnout skipped.", () => { setChk("burnskip", 0, false); if (prev.burn) setChk("burn", 0, true); save(); render(); });
+      notify("session", "Burnout skipped.", () => { setChk("burnskip", 0, false); if (prev.burn) setChk("burn", 0, true); save(); render(); });
     }
     setChk(id, i, !chk(id, i));
     save();
@@ -862,7 +876,7 @@
       m.textContent = "Restored.";
       saveNow();
       render();
-      toast("Backup restored.", () => { applyMigrated(prev); saveNow(); render(); });
+      notify("backup-wrap", "Backup restored.", () => { applyMigrated(prev); saveNow(); render(); });
     } catch (err) {
       m.className = "bk-msg err";
       m.textContent = err.message || "Restore failed.";
@@ -874,7 +888,6 @@
   if (colo) colo.innerHTML = mark("sm");
 
   document.addEventListener("click", e => {
-    if (e.target.closest("#toast-undo") && undo) { const fn = undo; undo = null; document.getElementById("toast").hidden = true; fn(); return; }
     if (e.target.closest("#setup-go")) {
       S.start = document.getElementById("setup-start").value || S.start;
       S.setupDone = true;
@@ -891,13 +904,26 @@
       return;
     }
     if (e.target.closest("#today-btn")) { goToday(); return; }
+    const step = e.target.closest("#prev-day, #next-day");
+    if (step) {
+      if (step.getAttribute("aria-disabled") === "true") return;
+      const dir = step.id === "next-day" ? 1 : -1;
+      let d = S.day + dir, w = S.week;
+      if (d > 7) { d = 1; w += 1; }
+      if (d < 1) { d = 7; w -= 1; }
+      if (w < 1 || w > 6) return;
+      S.week = w; S.day = d;
+      save();
+      render({ focus: true });
+      return;
+    }
     if (e.target.closest("#finish-btn")) {
       const se = sess();
       const prev = se.finished;
       se.finished = !se.finished;
       save();
       updateProgress();
-      toast(se.finished ? "Session marked finished." : "Session reopened.", () => { se.finished = prev; save(); updateProgress(); });
+      if (se.finished) notify("finish-recap-host", "Session marked finished.", () => { se.finished = prev; save(); render(); });
       return;
     }
     if (e.target.closest("#bk-export")) { exportFile(); return; }
@@ -928,7 +954,6 @@
       save();
       setNavOpen(false);
       render({ focus: true });
-      toast("Readiness set for this session.", () => { se.ready = prev; save(); render({ focus: true }); });
       return;
     }
     const mt = e.target.closest("[data-m]");
@@ -956,7 +981,7 @@
       const prev = JSON.parse(JSON.stringify(se.overrides[ov.dataset.override] || {}));
       se.overrides[ov.dataset.override] = { on: true, as: LOG.subs[C.loadKey(ov.dataset.override, S.week, S.day)] || "" };
       save(); render();
-      toast("Swap logged for this session.", () => { se.overrides[ov.dataset.override] = prev; save(); render(); });
+      notify("session", "Swap logged for this session.", () => { se.overrides[ov.dataset.override] = prev; save(); render(); });
       return;
     }
     const same = e.target.closest("[data-same]");
@@ -989,7 +1014,10 @@
       return;
     }
     const b = e.target.closest("[data-id]");
-    if (b) toggle(b.dataset.id, +b.dataset.i, b);
+    if (b) {
+      if (b.tagName === "LABEL") e.preventDefault();
+      toggle(b.dataset.id, +b.dataset.i, b);
+    }
   });
 
   document.addEventListener("toggle", e => {
@@ -1008,7 +1036,7 @@
       const prev = S.start;
       S.start = start.value;
       save(); renderChrome(); updateProgress();
-      toast("Block start updated.", () => { S.start = prev; save(); renderChrome(); updateProgress(); });
+      notify("utility-wrap", "Block start updated.", () => { S.start = prev; save(); renderChrome(); updateProgress(); });
       return;
     }
     const bw = e.target.closest("[data-bw]");

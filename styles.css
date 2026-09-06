@@ -158,50 +158,6 @@ input, textarea, select {
 .day[aria-pressed="true"] .dot { opacity: 1; }
 .day.is-today { box-shadow: inset 0 0 0 1px var(--sv-text-accent); }
 
-.ready {
-  margin-top: 14px;
-  border: 1px solid var(--sv-border-default);
-  background: var(--sv-surface-panel);
-  padding: 12px 14px 12px;
-}
-.ready-top {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 8px;
-}
-.ready h2 {
-  font: 500 12px/1 var(--sv-font-mono);
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--sv-text-muted); margin: 0; font-weight: 500;
-}
-.ready.is-set .ready-note { display: none; }
-.ready.is-set .ready-lead { color: var(--sv-text-muted); }
-.ready.is-set { padding-bottom: 10px; }
-.ready-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.rbtn {
-  min-height: 44px;
-  border: 1px solid var(--sv-border-default);
-  font: 500 16px var(--sv-font-sans);
-  color: var(--sv-text-muted);
-}
-.rbtn[data-r="green"][aria-pressed="true"] { background: var(--sv-status-success); border-color: var(--sv-status-success); color: var(--sv-action-primary-text); }
-.rbtn[data-r="amber"][aria-pressed="true"] { background: var(--sv-status-warning); border-color: var(--sv-status-warning); color: var(--sv-action-primary-text); }
-.rbtn[data-r="red"][aria-pressed="true"] { background: var(--sv-status-danger); border-color: var(--sv-status-danger); color: var(--sv-action-primary-text); }
-.ready-note { font-size: 16px; color: var(--sv-text-muted); margin: 10px 0 0; line-height: 1.45; }
-
-.flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.flag {
-  min-height: 44px; padding: 0 10px;
-  border: 1px solid var(--sv-border-default);
-  font: 500 12px var(--sv-font-mono);
-  letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--sv-text-muted);
-}
-.flag[aria-pressed="true"] {
-  background: var(--sv-status-warning-tint);
-  border-color: var(--sv-status-warning);
-  color: var(--sv-status-warning);
-}
-
 .save-banner {
   display: none;
   margin-top: 16px;
@@ -352,6 +308,67 @@ input, textarea, select {
   margin-right: var(--sv-space-2);
 }
 
+/* ── Readiness ────────────────────────────────
+   One card. The prescription it writes is the confirmation; there is no
+   toast, because a five-second overlay that covers the next control is not
+   a confirmation, it is an obstacle. */
+.ready { margin-top: var(--sv-space-5); --svc-pad: var(--sv-space-4); gap: var(--sv-space-3); }
+.ready[hidden] { display: none !important; }
+.ready .sveb { flex-wrap: wrap; }
+.fc-rx-text {
+  margin: 0;
+  font-size: var(--sv-text-base);
+  line-height: var(--sv-leading-normal);
+  color: var(--sv-text-strong);
+}
+.ready-row { display: flex; flex-wrap: wrap; gap: var(--sv-space-2); }
+.flags { display: flex; flex-wrap: wrap; gap: var(--sv-space-2); }
+/* A flag that is off is not a status. It takes muted ink until it is set,
+   and only then does it carry the warning colour. */
+.fc-flag { min-height: 44px; cursor: pointer; --svbg-fg: var(--sv-text-muted); }
+.fc-flag[aria-pressed="true"] { --svbg-fg: var(--sv-status-warning); }
+
+/* ── Finish, and the two steps either side of it ──
+   The one action every session ends with, where the thumb already is. */
+.fc-foot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--sv-space-2);
+  align-items: center;
+  margin: var(--sv-space-8) 0 0;
+}
+.fc-foot .svb-lg { width: 100%; white-space: nowrap; }
+.fc-foot .svb-ghost { --svb-pad: 0 var(--sv-space-2); }
+.fc-foot .svb[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.fc-recap {
+  margin: var(--sv-space-3) 0 0;
+  font-size: var(--sv-text-sm);
+  color: var(--sv-text-muted);
+}
+
+/* An inline confirmation, beside what changed. */
+.fc-note {
+  display: inline-flex; align-items: center; gap: var(--sv-space-2);
+  margin: var(--sv-space-3) 0 0;
+}
+.fc-undo { --svb-height: 1.75rem; }
+
+.fc-block-start { width: 100%; margin-top: var(--sv-space-5); }
+
+/* A rest day: one card, one choice, no progress count. */
+.fc-choice { margin-top: var(--sv-space-5); --svc-pad: var(--sv-space-4); }
+.fc-choice .svc-body { display: grid; gap: 0; }
+.fc-choice-row {
+  display: flex; align-items: flex-start; gap: var(--sv-space-3);
+  min-height: 44px;
+  padding: var(--sv-space-3) 0;
+  border-bottom: 1px solid var(--sv-border-subtle);
+}
+.fc-choice-row:last-child { border-bottom: 0; }
+.fc-choice-row .svf-check-box { margin-top: 0.2rem; }
+.fc-choice-name { display: block; color: var(--sv-text-strong); }
+.fc-choice-row .fc-row-cue { display: block; margin-top: var(--sv-space-1); }
+
 /* ── Session ─────────────────────────────────── */
 
 /* The day is a section head: eyebrow, light title, lede. Not a poster. */
@@ -369,7 +386,6 @@ input, textarea, select {
 /* The system sets badges at 11px for dense report tables. On a phone held at
    arm's length in a gym, this app's badges take the next step up. */
 .fc-day .svbg, .fc-row .svbg, .ready .svbg { font-size: var(--sv-text-xs); }
-.ready { scroll-margin-top: calc(var(--fc-sticky-h) + env(safe-area-inset-top, 0px) + 8px); }
 
 .sec-goal { font-size: 16px; color: var(--sv-text-muted); padding: 10px 0 2px; }
 
@@ -538,11 +554,6 @@ input, textarea, select {
 .callout--coach { border-left-color: var(--sv-status-info); }
 .callout--warn { border-left-color: var(--sv-status-warning); }
 .callout--cut { border-left-color: var(--sv-status-danger); }
-
-.ready-top h2 {
-  display: flex; align-items: center; gap: 8px;
-  color: var(--sv-text-accent);
-}
 
 .day { min-height: 72px; }
 .day-theme {
@@ -744,28 +755,6 @@ input, textarea, select {
 }
 .setup-card p { color: var(--sv-text-muted); }
 
-.ready-lead { font-size: 16px; color: var(--sv-text-muted); margin: 0 0 10px; }
-
-.toast {
-  position: sticky; top: calc(var(--fc-sticky-h) + env(safe-area-inset-top, 0px) + 8px);
-  z-index: 25;
-  margin: 10px 0 0;
-  background: var(--sv-surface-raised);
-  border: 1px solid var(--sv-border-default);
-  padding: 10px 12px;
-  font-size: 16px;
-  display: flex; justify-content: space-between; align-items: center; gap: 10px;
-}
-.toast[hidden] { display: none; }
-.toast-undo {
-  min-height: 36px; padding: 0 10px;
-  color: var(--sv-text-accent);
-  font: 500 12px var(--sv-font-mono);
-  letter-spacing: 0.08em; text-transform: uppercase;
-}
-
-.finish { margin: 28px 0 8px; }
-.finish-recap { color: var(--sv-text-muted); font-size: 16px; }
 .status-line { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); margin-top: 12px; }
 .bk-row.three { grid-template-columns: 1fr 1fr 1fr; }
 

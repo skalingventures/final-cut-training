@@ -45,6 +45,8 @@ def check_html() -> None:
         "How do you feel",
         "nav-drawer",
         'id="prog-text"',
+        'id="prev-day"',
+        'id="next-day"',
         "Finish session",
         "Export file",
         "Block start Monday",
@@ -60,7 +62,7 @@ def check_html() -> None:
 def check_html_absences() -> None:
     """Chrome deleted in the 2.0 rebuild must not creep back."""
     html = read("index.html")
-    for gone in ["prog-ring", "phase-progress", "sticky-ready"]:
+    for gone in ["prog-ring", "phase-progress", "sticky-ready", 'class="toast"']:
         if gone in html:
             err(f"index.html still contains {gone!r}")
 

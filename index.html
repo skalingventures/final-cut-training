@@ -41,7 +41,7 @@
       <input id="setup-start" type="date">
       <span class="bw-note">Today will open the matching week and day from this date.</span>
     </div>
-    <button type="button" class="primary" id="setup-go">Start the block</button>
+    <button type="button" class="svb svb-lg svb-primary fc-block-start" id="setup-go">Start the block</button>
   </div>
 </div>
 
@@ -67,27 +67,23 @@
   <p class="fc-savewarn" id="save-chip" hidden></p>
   <div class="save-banner" id="savestate"></div>
   <div class="save-banner" id="update-banner" hidden></div>
-  <div class="toast" id="toast" hidden></div>
-
-  <section class="ready" id="ready-card" aria-labelledby="ready-h">
-    <div class="ready-top">
-      <h2 id="ready-h">Today</h2>
-      <span class="ready-lead" id="ready-lead">How do you feel?</span>
-    </div>
+  <section class="svc svc-accent ready" id="ready-card" aria-labelledby="ready-h">
+    <p class="sveb" id="ready-h">Readiness <span id="ready-lead">How do you feel?</span></p>
+    <p class="fc-rx-text" id="rx-card" hidden></p>
     <div class="ready-row" id="ready"></div>
     <div class="flags" id="flags" aria-label="Situational flags"></div>
-    <p class="ready-note" id="ready-note"></p>
-    <div class="rx-card" id="rx-card" hidden></div>
   </section>
 
   <main class="session" id="main-content">
     <div id="session"></div>
   </main>
 
-  <section class="finish" id="finish-wrap">
-    <button type="button" class="primary" id="finish-btn">Finish session</button>
-    <p class="finish-recap" id="finish-recap" hidden></p>
-  </section>
+  <div class="fc-foot">
+    <button type="button" class="svb svb-md svb-ghost" id="prev-day">‹ Prev</button>
+    <button type="button" class="svb svb-lg svb-primary" id="finish-btn">Finish session</button>
+    <button type="button" class="svb svb-md svb-ghost" id="next-day">Next ›</button>
+  </div>
+  <div id="finish-recap-host"><p class="fc-recap" id="finish-recap" hidden></p></div>
 
   <details class="ref utility" id="utility-wrap">
     <summary><span>Setup, backup, history</span></summary>
