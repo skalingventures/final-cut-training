@@ -168,13 +168,21 @@
   function weekObj() { return P.weeks[S.week - 1]; }
   function liftById(id) { return (dayObj().lifts || []).find(l => l.id === id); }
 
-  function mountain() {
-    return `<svg class="brand-mark" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M5 38 L30 6 L55 38" stroke="var(--accent)" stroke-width="1.2" fill="none" opacity="0.5"/>
-      <path d="M12 38 L30 14 L48 38" stroke="var(--accent)" stroke-width="1.2" fill="none" opacity="0.7"/>
-      <path d="M19 38 L30 22 L41 38" stroke="var(--accent)" stroke-width="1.2" fill="none" opacity="0.9"/>
-      <line x1="5" y1="38" x2="55" y2="38" stroke="var(--accent)" stroke-width="1" opacity="0.3"/>
+  /* The brand mark, inline. Five peaks sharing a baseline and a right-hand
+     vertex. Kept as a constant so the service worker never has to fetch it.
+     Source of truth: ds/assets/sv-mark.svg — replace both together. */
+  const MARK = `<svg class="svm-glyph" viewBox="0 0 324.44 162.22" role="img"
+      fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke">
+      <title>Skaling Ventures</title>
+      <path d="M0 162.22L60 112.48L324.44 162.22Z"/>
+      <path d="M38.32 162.22L104.38 84.06L324.44 162.22Z"/>
+      <path d="M76.64 162.22L148.75 55.62L324.44 162.22Z"/>
+      <path d="M114.96 162.22L193.12 27.2L324.44 162.22Z"/>
+      <path d="M150.63 162.22L237.5 0L324.44 162.22Z"/>
     </svg>`;
+
+  function mark(size) {
+    return `<span class="svm ${size ? "svm-" + size : ""}">${MARK}</span>`;
   }
 
   function phaseSymbol(phase) {
@@ -195,7 +203,7 @@
     document.getElementById("app").hidden = on;
     if (on) {
       document.getElementById("setup-start").value = S.start;
-      document.getElementById("setup-mark").innerHTML = mountain();
+      document.getElementById("setup-mark").innerHTML = mark("lg");
     }
   }
 
@@ -811,7 +819,9 @@
     }
   }
 
-  document.getElementById("mark").innerHTML = mountain();
+  document.getElementById("mark").innerHTML = mark("sm");
+  const colo = document.getElementById("colophon-mark");
+  if (colo) colo.innerHTML = mark("sm");
 
   document.addEventListener("click", e => {
     if (e.target.closest("#toast-undo") && undo) { const fn = undo; undo = null; document.getElementById("toast").hidden = true; fn(); return; }

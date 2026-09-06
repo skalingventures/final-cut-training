@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -57,9 +58,38 @@ def check_html() -> None:
 
 def check_css() -> None:
     css = read("styles.css")
-    for t in ["--bg: #1F1F1F", "--accent: #D08B68", "safe-area-inset", "min-height: 44px", ".setup"]:
+    html = read("index.html")
+    for t in ["min-height: 44px", ".setup", "--fc-heat-hard"]:
         if t not in css:
             err(f"styles.css missing {t!r}")
+    for t in ['data-mode="graphite"', "ds/tokens/index.css", 'class="sv-skip"']:
+        if t not in html:
+            err(f"index.html missing {t!r}")
+    # The brand contract, enforced. Each of these is an anti-pattern the
+    # design system names by hand; see docs/DESIGN_AUDIT.md section 3.1.
+    banned = [
+        "border-radius: 1", "border-radius: 999", "border-radius: 50%",
+        "backdrop-filter", "linear-gradient", "color-mix",
+        "font: 600", "font: 700", "font: 800",
+        "font-weight: 6", "font-weight: 7", "font-weight: 8",
+        "rgba(", "DM Sans",
+    ]
+    for t in banned:
+        if t in css:
+            err(f"styles.css must not contain {t!r}")
+    if re.search(r"#[0-9A-Fa-f]{6}\b", css):
+        err("styles.css must not contain a hex colour; use a semantic token")
+    if "family=DM+Sans" in html:
+        err("index.html still loads DM Sans")
+
+
+def check_type_floor() -> None:
+    """Body 16, labels 14, mono meta 12. Nothing smaller, anywhere."""
+    css = read("styles.css")
+    for decl in re.findall(r"font(?:-size)?\s*:\s*([^;{}]+)", css):
+        for raw in re.findall(r"([\d.]+)px", decl):
+            if float(raw) < 12:
+                err(f"styles.css font size {raw}px is below the 12px floor")
 
 
 def check_js_syntax() -> None:
@@ -122,6 +152,7 @@ def main() -> int:
     check_files()
     check_html()
     check_css()
+    check_type_floor()
     check_js_syntax()
     program = load_program()
     check_program(program)
