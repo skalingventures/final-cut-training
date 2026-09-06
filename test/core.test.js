@@ -6,7 +6,7 @@ const program = {
   progReps: { 1: 6, 2: 6, 3: 5, 4: 4, 5: 3, 6: 5 },
   weeks: [
     { n: 1, main: "4 × 6", rpe: "RPE 7" },
-    { n: 2, main: "4 × 6", rpe: "slightly heavier than wk 1" },
+    { n: 2, main: "4 × 6", rpe: "RPE 7.5" },
     { n: 3, main: "5 × 5", rpe: "RPE 8" },
     { n: 4, main: "5 × 4", rpe: "RPE 8–8.5" },
     { n: 5, main: "5 × 3", rpe: "RPE 8.5–9" },
@@ -146,5 +146,49 @@ function emptyLog() { return C.emptyLog(); }
 {
   assert.strictEqual(C.rpeTarget({ rpe: "RPE 8–8.5" }), 8.5);
 }
+
+// ── Per-set logging (2.0) ────────────────────────────────────────────────
+{
+  const log = C.emptyLog();
+  assert.deepStrictEqual(log.setlog, {}, "emptyLog carries setlog");
+
+  log.setlog["w1d1:squat"] = [
+    { load: "225", reps: "6" },
+    { load: "225", reps: "6" },
+    { load: "230", reps: "5" }
+  ];
+  assert.strictEqual(C.tonnageFromSetlog(log.setlog["w1d1:squat"], [true, true, true]), 3850);
+  assert.strictEqual(C.tonnageFromSetlog(log.setlog["w1d1:squat"], [true, true, false]), 2700,
+    "an unticked set contributes nothing");
+  assert.strictEqual(C.tonnageFromSetlog([{}, {}], [true, true]), null,
+    "no per-set data falls back to the legacy estimate");
+
+  const rows = C.setRows(log, "squat", 1, 1, 4);
+  assert.strictEqual(rows.length, 4, "one row per prescribed set");
+  assert.strictEqual(rows[0].load, "225");
+  assert.strictEqual(rows[3].load, "", "unlogged sets are empty, not absent");
+}
+
+// A log written before 2.0 shows its single value in set one.
+{
+  const legacy = C.emptyLog();
+  legacy.loads["w1d1:squat"] = "315";
+  legacy.reps["w1d1:squat"] = "5";
+  const rows = C.setRows(legacy, "squat", 1, 1, 3);
+  assert.strictEqual(rows[0].load, "315", "legacy load lands in set one");
+  assert.strictEqual(rows[0].reps, "5");
+  assert.strictEqual(rows[1].load, "", "and nowhere else");
+}
+
+// migrate and validate accept the new key without requiring it.
+{
+  const m = C.migrate({ v: 3, state: {}, checks: {} });
+  assert.deepStrictEqual(m.setlog, {}, "a v3 payload without setlog migrates to an empty map");
+  assert.ok(C.validatePayload({ v: 3, setlog: {} }));
+  assert.throws(() => C.validatePayload({ v: 3, setlog: [] }), /setlog/);
+}
+
+// Week 2 carries a real RPE number, not prose.
+assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a number");
 
 console.log("PASS core tests");

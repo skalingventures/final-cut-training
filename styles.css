@@ -14,6 +14,7 @@
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
 html, body { margin: 0; padding: 0; }
 html { background: var(--sv-surface-page); }
 body {
@@ -220,6 +221,137 @@ input, textarea, select {
 }
 .sr-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
+/* ── Rows ─────────────────────────────────────
+   One movement, one row: name and dose on a line, the cue under it, the
+   check on the left. Five tissue items are five rows, not five cards. */
+.fc-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: var(--sv-space-2);
+  align-items: start;
+  padding: var(--sv-space-2) 0;
+  border-bottom: 1px solid var(--sv-border-subtle);
+}
+.fc-row:last-child { border-bottom: 0; }
+.fc-row-body { min-width: 0; padding-top: 0.55rem; }
+.fc-row-name {
+  margin: 0;
+  font-size: var(--sv-text-base);
+  line-height: var(--sv-leading-snug);
+  color: var(--sv-text-strong);
+}
+.fc-row-meta {
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  letter-spacing: var(--sv-tracking-label);
+  color: var(--sv-text-muted);
+  white-space: nowrap;
+}
+.fc-row-cue {
+  margin: var(--sv-space-1) 0 0;
+  font-size: var(--sv-text-sm);
+  line-height: var(--sv-leading-normal);
+  color: var(--sv-text-muted);
+}
+
+/* A 44px target around a hairline box. The check itself keeps the system's
+   checkbox geometry; only the reach is bigger. */
+.fc-check {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  background: none; border: 0;
+}
+.fc-check::before {
+  content: "";
+  width: 1.15rem; height: 1.15rem;
+  border: 1px solid var(--sv-border-default);
+  border-radius: var(--sv-radius-sm);
+  transition: var(--sv-transition-color);
+}
+.fc-check:hover::before { border-color: var(--sv-border-strong); }
+.fc-check[aria-pressed="true"]::before {
+  background: var(--sv-action-primary);
+  border-color: var(--sv-action-primary);
+}
+.fc-check[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  width: 0.42rem; height: 0.72rem;
+  border-right: 2px solid var(--sv-action-primary-text);
+  border-bottom: 2px solid var(--sv-action-primary-text);
+  transform: translateY(-0.08rem) rotate(42deg);
+}
+.fc-check { position: relative; }
+
+/* ── Lifts ────────────────────────────────────
+   The main lift is the one card that takes the copper edge. */
+.fc-lift { margin-top: var(--sv-space-4); --svc-pad: var(--sv-space-4); gap: var(--sv-space-2); }
+.fc-lift .svc-head { gap: var(--sv-space-1); }
+.fc-rx {
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-base);
+  font-variant-numeric: var(--sv-numeric);
+  color: var(--sv-text-accent);
+}
+.fc-lift-meta {
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  color: var(--sv-text-muted);
+}
+.fc-lift-blocked { opacity: 0.72; }
+.fc-swap { display: grid; gap: var(--sv-space-3); margin-top: var(--sv-space-2); }
+
+/* ── The set log ──────────────────────────────
+   One row per set. Week 5 is a 5 × 3 at RPE 8.5–9; set one and set five are
+   not the same number, and the log should not pretend they are. */
+.fc-setlog { margin-top: var(--sv-space-2); }
+.fc-setlog thead th { background: none; }
+.fc-setlog { table-layout: fixed; }
+.fc-setlog tbody td { padding: var(--sv-space-1) 2px; vertical-align: middle; }
+.fc-setlog thead th { padding: var(--sv-space-2) 2px; }
+.fc-setlog th:first-child, .fc-setlog td:first-child { width: 5.75rem; }
+.fc-setlog .svf-input { height: 44px; min-width: 0; padding: 0 var(--sv-space-2); }
+.fc-setcell { display: flex; align-items: center; gap: var(--sv-space-1); }
+
+.fc-set {
+  min-width: 44px; min-height: 44px;
+  border: 1px solid var(--sv-border-default);
+  background: none;
+  font: 500 var(--sv-text-sm) var(--sv-font-mono);
+  font-variant-numeric: var(--sv-numeric);
+  color: var(--sv-text-muted);
+  transition: var(--sv-transition-color);
+}
+.fc-set[aria-pressed="true"] {
+  background: var(--sv-action-primary);
+  border-color: var(--sv-action-primary);
+  color: var(--sv-action-primary-text);
+}
+.fc-set:disabled, .fc-set[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+
+.fc-same {
+  min-width: 32px; min-height: 44px;
+  border: 0; background: none;
+  font: 400 var(--sv-text-sm) var(--sv-font-mono);
+  color: var(--sv-text-muted);
+}
+.fc-same:hover { color: var(--sv-text-accent); }
+
+.fc-log { margin-top: var(--sv-space-3); }
+.fc-sets { display: flex; flex-wrap: wrap; gap: var(--sv-space-2); }
+.fc-fields { display: flex; flex-wrap: wrap; gap: var(--sv-space-3); margin-top: var(--sv-space-3); }
+.fc-fields .svf-field { flex: 1 1 8rem; }
+.fc-fields .svf-input { height: 44px; }
+
+.pair-slot {
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  color: var(--sv-text-accent);
+  margin-right: var(--sv-space-2);
+}
+
 /* ── Session ─────────────────────────────────── */
 
 /* The day is a section head: eyebrow, light title, lede. Not a poster. */
@@ -241,24 +373,12 @@ input, textarea, select {
 
 .sec-goal { font-size: 16px; color: var(--sv-text-muted); padding: 10px 0 2px; }
 
-.line {
-  display: flex; gap: 12px; align-items: flex-start;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--sv-border-subtle);
-}
-.line:last-child { border-bottom: none; }
-.line .body { flex: 1; min-width: 0; }
-.nm { font-size: 16px; font-weight: 500; line-height: 1.3; color: var(--sv-text-strong); }
-.why { font-size: 14px; color: var(--sv-text-muted); margin-top: 3px; }
 .tool {
   display: flex; flex-wrap: wrap; gap: var(--sv-space-1) var(--sv-space-3);
   font: 400 var(--sv-text-xs) var(--sv-font-mono);
   color: var(--sv-text-muted);
   margin-top: 4px;
 }
-.rx { font: 500 14px var(--sv-font-mono); color: var(--sv-text-body); margin-top: 5px; }
-.rx em { font-style: normal; color: var(--sv-text-muted); }
-.note { font-size: 14px; color: var(--sv-text-muted); margin-top: 5px; }
 /* A note attached to the thing it qualifies: copper leading edge, no fill.
    Status variants change only the edge colour. */
 .guard, .cut, .rx-card {
@@ -271,49 +391,13 @@ input, textarea, select {
   line-height: var(--sv-leading-normal);
   color: var(--sv-text-body);
 }
-.killed { opacity: 0.72; }
 
-.box {
-  flex: 0 0 auto;
-  width: 44px; height: 44px;
-  border: 1px solid var(--sv-border-default);
-  margin-top: 0;
-}
-.box[aria-pressed="true"] { background: var(--sv-text-accent); border-color: var(--sv-text-accent); }
-.box[aria-pressed="true"]::after {
-  content: ""; display: block;
-  width: 8px; height: 14px;
-  margin: 10px auto 0;
-  border: solid var(--sv-action-primary-text);
-  border-width: 0 2px 2px 0;
-  transform: rotate(42deg);
-}
-
-.sets { display: flex; gap: 6px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
-.set {
-  min-width: 44px; min-height: 44px;
-  border: 1px solid var(--sv-border-default);
-  font: 500 16px var(--sv-font-mono);
-  color: var(--sv-text-muted);
-}
 .set[aria-pressed="true"] {
   background: var(--sv-text-accent);
   border-color: var(--sv-text-accent);
   color: var(--sv-action-primary-text);
   font-weight: 500;
 }
-.set:disabled, .set[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
-.log-in {
-  width: 72px; height: 44px;
-  background: var(--sv-surface-panel);
-  border: 1px solid var(--sv-border-default);
-  font: 500 16px var(--sv-font-mono);
-  color: var(--sv-text-strong);
-  padding: 0 8px;
-}
-.log-in.wide { width: 88px; }
-.log-in::placeholder { color: var(--sv-text-muted); }
-.rpe-in { width: 58px; }
 
 .last {
   display: flex; align-items: center; gap: 8px;
@@ -359,76 +443,9 @@ input, textarea, select {
   margin-top: 12px;
 }
 .burn-log .field input, .burn-log .field select { width: 100%; }
-.choice-note {
-  font: 400 12px var(--sv-font-mono);
-  color: var(--sv-status-info);
-  margin-top: 6px;
-}
 
 /* ── Operator timeline / phase components ───── */
 
-.move-row { align-items: center; }
-.move-row--levels { align-items: flex-start; }
-.move-index {
-  width: 22px;
-  font: 500 12px var(--sv-font-mono);
-  color: var(--sv-text-muted);
-  letter-spacing: .06em;
-}
-.move-row--levels .move-index { padding-top: 4px; }
-.move-row .nm { font-size: 16px; }
-.mob-levels {
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.mob-levels li {
-  display: flex;
-  gap: 8px;
-  margin: 0 0 5px;
-  font-size: 16px;
-  line-height: 1.35;
-  color: var(--sv-text-muted);
-}
-.mob-lvl {
-  flex: 0 0 auto;
-  font: 500 12px var(--sv-font-mono);
-  letter-spacing: .04em;
-  color: var(--sv-text-muted);
-}
-
-.lift-card {
-  margin: 10px 0;
-  padding: 13px 12px;
-  border: 1px solid var(--sv-border-default);
-  background: var(--sv-surface-panel);
-}
-.lift-card:last-child { border-bottom: 1px solid var(--sv-border-default); }
-.lift-card--primary {
-  border-color: var(--sv-text-accent);
-  border-top-width: 3px;
-  background: var(--sv-surface-raised);
-}
-.lift-card--primary .nm {
-  font-size: 18px;
-  font-weight: 500;
-}
-.lift-card--primary .rx {
-  color: var(--sv-text-accent);
-  font-size: 16px;
-}
-.lift-card .log-grid {
-  margin-left: -4px;
-  margin-right: -4px;
-  padding: 10px;
-  background: var(--sv-surface-panel);
-}
-.lift-meta {
-  margin: 2px 0 4px;
-  font: 400 12px var(--sv-font-mono);
-  letter-spacing: .02em;
-  color: var(--sv-text-muted);
-}
 .pair-block {
   margin: 12px 0;
   padding: 6px 8px 2px;
@@ -454,12 +471,6 @@ input, textarea, select {
 }
 .pair-block .lift-card:last-child {
   border-bottom-color: var(--sv-border-default);
-}
-.choice-card {
-  margin: 8px 0;
-  padding: 11px;
-  border: 1px solid var(--sv-status-success);
-  background: var(--sv-status-success-tint);
 }
 
 .conditioning-deck {
@@ -498,7 +509,6 @@ input, textarea, select {
   color: var(--sv-text-muted);
   font: 500 12px var(--sv-font-mono);
 }
-.conditioning-option { border-color: var(--sv-status-danger); }
 .zone-segments {
   height: 40px;
   display: grid;
@@ -517,7 +527,6 @@ input, textarea, select {
   color: var(--sv-surface-page);
   background: var(--sv-action-primary);
 }
-.downshift-cap { align-items: center; border-bottom: 0; }
 .svd-body blockquote {
   margin: var(--sv-space-3) 0 0;
   padding-left: var(--sv-space-3);
@@ -755,18 +764,6 @@ input, textarea, select {
   letter-spacing: 0.08em; text-transform: uppercase;
 }
 
-.log-grid { margin-top: 10px; }
-.log-fields {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin-top: 8px;
-}
-.ll {
-  display: flex; flex-direction: column; gap: 4px;
-  font: 500 12px var(--sv-font-mono);
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--sv-text-muted);
-}
-.swap-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; align-items: center; }
 .finish { margin: 28px 0 8px; }
 .finish-recap { color: var(--sv-text-muted); font-size: 16px; }
 .status-line { font: 400 12px var(--sv-font-mono); color: var(--sv-text-muted); margin-top: 12px; }

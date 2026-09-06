@@ -29,4 +29,20 @@ assert.throws(() => C.validatePayload({ v: 1 }), /Unrecognized|version/);
 assert.ok(C.hasLogs(again));
 assert.ok(!C.hasLogs(C.emptyLog()));
 
+// Per-set rows survive a save/load round trip.
+{
+  const withSets = {
+    v: 3,
+    state: { week: 1, day: 1, metric: "e1rm", start: "2026-08-31", setupDone: true },
+    sessions: {}, checks: {}, loads: { "w1d1:squat": "225" }, reps: {}, rpe: {},
+    bw: {}, burn: {}, choice: {}, subs: {},
+    setlog: { "w1d1:squat": [{ load: "225", reps: "6", rpe: "7" }, { load: "235", reps: "5", rpe: "8" }] }
+  };
+  save(withSets);
+  const back = load();
+  assert.strictEqual(back.setlog["w1d1:squat"][1].load, "235");
+  assert.strictEqual(back.setlog["w1d1:squat"][1].rpe, "8");
+  assert.strictEqual(back.loads["w1d1:squat"], "225", "the legacy mirror is untouched");
+}
+
 console.log("PASS persist tests");

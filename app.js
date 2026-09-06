@@ -30,7 +30,8 @@
       bw: LOG.bw,
       burn: LOG.burn,
       choice: LOG.choice,
-      subs: LOG.subs
+      subs: LOG.subs,
+      setlog: LOG.setlog
     };
   }
 
@@ -42,7 +43,7 @@
     SESSIONS = m.sessions;
     LOG = {
       checks: m.checks, loads: m.loads, reps: m.reps, rpe: m.rpe,
-      bw: m.bw, burn: m.burn, choice: m.choice, subs: m.subs
+      bw: m.bw, burn: m.burn, choice: m.choice, subs: m.subs, setlog: m.setlog
     };
   }
 
@@ -299,6 +300,17 @@
     </div>`;
   }
 
+  function refreshBwNote() {
+    const el = document.getElementById("bw-note");
+    if (!el) return;
+    if (C.num(LOG.bw[S.week]) != null) { el.textContent = ""; return; }
+    for (let i = S.week - 1; i >= 1; i--) {
+      const v = C.num(LOG.bw[i]);
+      if (v != null) { el.textContent = `carried from W${i} — ${v}`; return; }
+    }
+    el.textContent = "needed for pull-up and chin-up strength math";
+  }
+
   function renderChrome() {
     const W = weekObj();
     const D = dayObj();
@@ -324,16 +336,7 @@
     document.getElementById("start-in").value = S.start;
     document.getElementById("bw-in").value = LOG.bw[S.week] || "";
     document.getElementById("bw-wk").textContent = S.week;
-    const own = C.num(LOG.bw[S.week]);
-    let bwNote = "needed for pull-up and chin-up strength math";
-    if (own != null) bwNote = "";
-    else {
-      for (let i = S.week - 1; i >= 1; i--) {
-        const v = C.num(LOG.bw[i]);
-        if (v != null) { bwNote = `carried from W${i} — ${v}`; break; }
-      }
-    }
-    document.getElementById("bw-note").textContent = bwNote;
+    refreshBwNote();
     document.getElementById("flags").innerHTML = (P.flags || []).map(f =>
       `<button type="button" class="flag" data-flag="${f.id}" aria-pressed="${se.flags[f.id] ? "true" : "false"}">${f.lab}</button>`
     ).join("");
@@ -393,12 +396,11 @@
       h += sec("Tissue", D.tissue.dose, `
         ${D.tissue.goal ? `<div class="sec-goal">${esc(D.tissue.goal)}</div>` : ""}
         ${D.tissue.items.map((t, i) => `
-          <div class="line release-row">
-            <button type="button" class="box phase-check" data-kind="release" data-id="tissue" data-i="${i}" aria-pressed="${chk("tissue", i)}" aria-label="${esc(t.a)}"></button>
-            <div class="body">
-              <div class="nm">${esc(t.a)}</div>
-              <div class="tool"><span>${esc(t.tool)}</span><span>${esc(t.d)}</span></div>
-              <div class="why">${esc(t.cue)}</div>
+          <div class="fc-row">
+            <button type="button" class="fc-check" data-id="tissue" data-i="${i}" aria-pressed="${chk("tissue", i)}" aria-label="${esc(t.a)}"></button>
+            <div class="fc-row-body">
+              <p class="fc-row-name">${esc(t.a)} <span class="fc-row-meta">${esc(t.tool)} \u00b7 ${esc(t.d)}</span></p>
+              <p class="fc-row-cue">${esc(t.cue)}</p>
             </div>
           </div>`).join("")}
         ${D.tissue.note ? `<div class="guard callout callout--coach"><span>${esc(D.tissue.note)}</span></div>` : ""}`,
@@ -417,13 +419,13 @@
           return { nm: parts[0], why: parts[1] || "", levels: [] };
         }()) : m;
         const levels = item.levels || [];
-        return `<div class="line move-row${levels.length ? " move-row--levels" : ""}">
-          <span class="move-index">${String(i + 1).padStart(2, "0")}</span>
-          <button type="button" class="box phase-check" data-kind="move" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(item.nm)}"></button>
-          <div class="body">
-            <div class="nm">${esc(item.nm)}</div>
-            ${item.why ? `<div class="why">${esc(item.why)}</div>` : ""}
-            ${levels.length ? `<ol class="mob-levels">${levels.map((lv, li) => `<li><span class="mob-lvl">L${li + 1}</span> ${esc(lv)}</li>`).join("")}</ol>` : ""}
+        const ladder = levels.map((lv, li) => `L${li + 1} ${esc(lv)}`).join(" \u00b7 ");
+        return `<div class="fc-row">
+          <button type="button" class="fc-check" data-id="mob" data-i="${i}" aria-pressed="${chk("mob", i)}" aria-label="${esc(item.nm)}"></button>
+          <div class="fc-row-body">
+            <p class="fc-row-name">${esc(item.nm)}</p>
+            ${item.why ? `<p class="fc-row-cue">${esc(item.why)}</p>` : ""}
+            ${ladder ? `<p class="fc-row-cue">${ladder}</p>` : ""}
           </div>
         </div>`;
       }).join(""), "mob", mobilityPhase.done, "mobility", mobilityPhase.progress);
@@ -436,13 +438,11 @@
     if (D.exclusive) {
       const chosen = LOG.choice[C.wd(S.week, S.day)] || "";
       h += sec(strengthTitle, "choose one", D.lifts.map(l => `
-        <div class="line choice-card">
-          <button type="button" class="box phase-check" data-kind="choice" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0" aria-pressed="${chosen === l.id}" aria-label="${esc(l.nm)}"></button>
-          <div class="body">
-            <div class="nm">${esc(l.nm)}</div>
-            <div class="rx">${esc(l.rx)}</div>
-            ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
-            ${chosen === l.id ? `<div class="choice-note">Today's pick.</div>` : ""}
+        <div class="fc-row">
+          <button type="button" class="fc-check" data-choice="${esc(l.id)}" data-id="${esc(l.id)}" data-i="0" aria-pressed="${chosen === l.id}" aria-label="${esc(l.nm)}"></button>
+          <div class="fc-row-body">
+            <p class="fc-row-name">${esc(l.nm)} <span class="fc-row-meta">${esc(l.rx)}</span></p>
+            ${l.note ? `<p class="fc-row-cue">${esc(l.note)}</p>` : ""}
           </div>
         </div>`).join(""), "", workPhase.done, "recovery", workPhase.progress);
     } else {
@@ -450,43 +450,78 @@
         const blocked = C.liftBlocked(l, se);
         const swap = C.liftSwapNote(l, se);
         const ov = se.overrides[l.id] || {};
-        const rx = l.prog ? `${W.main} <em>@ ${W.rpe}</em>` : esc(l.rx || "");
+        const rx = l.prog ? `${W.main} \u00b7 ${W.rpe}` : esc(l.rx || "");
         const prescribed = l.prog ? P.progReps[S.week] : "";
         const loggedRpe = C.num(LOG.rpe[C.loadKey(l.id, S.week, S.day)]);
         const rpeWarn = l.prog && rpeMax != null && loggedRpe != null && loggedRpe > rpeMax + 0.5;
         const n = C.nSets(l, S.week, P);
         const accNote = !l.prog && W.n >= 2 && n > 1 ? W.acc : "";
         const slot = l.pair && l.slot ? `<span class="pair-slot">${esc(l.pair + l.slot)}</span>` : "";
-        return `<div class="line lift-card${l.prog ? " lift-card--primary" : ""}${blocked ? " killed" : ""}" data-lift="${esc(l.id)}">
-          <div class="body">
-            <div class="nm">${slot}${esc(l.nm)}</div>
-            ${l.prog ? `<div class="lift-meta">Straight sets · full rest · never supersetted</div>` : ""}
-            <div class="rx">${rx}${W.n === 6 && !l.prog && (l.sets || 1) > 1 ? ` <em>· deload ${n} sets</em>` : ""}</div>
-            ${l.note ? `<div class="note">${esc(l.note)}</div>` : ""}
-            ${swap && blocked ? `<div class="guard"><span>${esc(swap)}</span></div>` : ""}
-            ${swap && !blocked ? `<div class="note">Substitution active: ${esc((LOG.subs[C.loadKey(l.id, S.week, S.day)] || ov.as || swap))}</div>` : ""}
-            ${l.guard ? `<div class="guard"><span>${esc(l.guard)}</span></div>` : ""}
-            ${accNote ? `<div class="note">${esc(accNote)}.</div>` : ""}
-            ${blocked ? `<div class="swap-row">
-              <input class="log-in wide" data-sub="${esc(l.id)}" value="${esc(LOG.subs[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="Did instead (RDL, goblet…)" aria-label="Substitution for ${esc(l.nm)}">
-              <button type="button" class="override" data-override="${esc(l.id)}" aria-pressed="${ov.on ? "true" : "false"}">Log the swap</button>
-            </div>` : ""}
-            ${!blocked && l.load ? lastLine(l) : ""}
-            ${blocked ? "" : `<div class="log-grid">
-              <div class="sets">
-                ${Array.from({ length: n }, (_, i) =>
-                  `<button type="button" class="set" data-id="${esc(l.id)}" data-i="${i}" aria-pressed="${chk(l.id, i)}" aria-label="Set ${i + 1}">${i + 1}</button>`
-                ).join("")}
-              </div>
-              <div class="log-fields">
-                ${l.load ? `<label class="ll">Load<input class="log-in wide" data-load="${esc(l.id)}" value="${esc(LOG.loads[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="${l.bw ? "+ added" : "lb"}" inputmode="text"></label>` : ""}
-                ${l.prog || l.load ? `<label class="ll">Reps<input class="log-in" data-reps="${esc(l.id)}" value="${esc(LOG.reps[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="${prescribed || "reps"}" inputmode="decimal"></label>` : ""}
-                ${l.prog ? `<label class="ll">RPE<input class="log-in rpe-in" data-rpe="${esc(l.id)}" value="${esc(LOG.rpe[C.loadKey(l.id, S.week, S.day)] || "")}" placeholder="${rpeMax || "RPE"}" inputmode="decimal"></label>` : ""}
-              </div>
-              ${rpeWarn ? `<div class="guard"><span>Logged RPE is above this week's target. Keep it if it was clean — otherwise drop load.</span></div>` : ""}
-            </div>`}
+        const key = C.loadKey(l.id, S.week, S.day);
+
+        /* A main lift is logged set by set: week 5's 5 × 3 at RPE 8.5–9 is
+           exactly where set one and set five differ. Accessories keep one
+           value for the lift. */
+        const setTable = () => {
+          const rows = C.setRows(LOG, l.id, S.week, S.day, n);
+          const body = rows.map((r, i) => {
+            const prev = i > 0 ? rows[i - 1] : null;
+            const cell = (f, ph) => `<input class="svf-input svf-input-num" inputmode="decimal"
+                data-setlog="${esc(l.id)}:${i}:${f}" value="${esc(r[f])}"
+                placeholder="${esc(prev && prev[f] ? prev[f] : ph)}"
+                aria-label="Set ${i + 1} ${f}">`;
+            return `<tr data-set="${i}">
+              <td class="fc-setcell">
+                <button type="button" class="fc-set" data-id="${esc(l.id)}" data-i="${i}"
+                  aria-pressed="${chk(l.id, i)}" aria-label="Set ${i + 1} done">${i + 1}</button>
+                ${prev ? `<button type="button" class="fc-same" data-same="${esc(l.id)}:${i}"
+                  aria-label="Copy set ${i} into set ${i + 1}">=</button>` : ""}
+              </td>
+              <td class="svdt-num">${cell("load", l.bw ? "+ added" : "lb")}</td>
+              <td class="svdt-num">${cell("reps", String(prescribed || "reps"))}</td>
+              <td class="svdt-num">${cell("rpe", String(rpeMax || "RPE"))}</td>
+            </tr>`;
+          }).join("");
+          return `<div class="svdt-scroll"><table class="svdt fc-setlog" data-lift="${esc(l.id)}">
+            <thead><tr><th>Set</th><th class="svdt-num">Load</th><th class="svdt-num">Reps</th><th class="svdt-num">RPE</th></tr></thead>
+            <tbody>${body}</tbody>
+          </table></div>
+          <p class="guard" data-rpe-warn="${esc(l.id)}"${rpeWarn ? "" : " hidden"}>Logged RPE is above this week's target. Keep it if it was clean — otherwise drop load.</p>`;
+        };
+
+        const simpleLog = () => `<div class="fc-log">
+          <div class="fc-sets">
+            ${Array.from({ length: n }, (_, i) =>
+              `<button type="button" class="fc-set" data-id="${esc(l.id)}" data-i="${i}" aria-pressed="${chk(l.id, i)}" aria-label="Set ${i + 1}">${i + 1}</button>`
+            ).join("")}
           </div>
+          ${l.load ? `<div class="fc-fields">
+            <div class="svf-field"><label class="svf-label" for="load-${esc(l.id)}">Load</label>
+              <input class="svf-input svf-input-num" id="load-${esc(l.id)}" data-load="${esc(l.id)}" value="${esc(LOG.loads[key] || "")}" placeholder="${l.bw ? "+ added" : "lb"}" inputmode="text"></div>
+            <div class="svf-field"><label class="svf-label" for="reps-${esc(l.id)}">Reps</label>
+              <input class="svf-input svf-input-num" id="reps-${esc(l.id)}" data-reps="${esc(l.id)}" value="${esc(LOG.reps[key] || "")}" placeholder="${prescribed || "reps"}" inputmode="decimal"></div>
+          </div>` : ""}
         </div>`;
+
+        return `<article class="svc fc-lift${l.prog ? " svc-accent" : ""}${blocked ? " fc-lift-blocked" : ""}" data-lift="${esc(l.id)}">
+          <header class="svc-head">
+            <h4 class="svc-title">${slot}${esc(l.nm)}</h4>
+            <p class="fc-rx">${rx}${W.n === 6 && !l.prog && (l.sets || 1) > 1 ? ` \u00b7 deload ${n} sets` : ""}</p>
+          </header>
+          ${l.prog ? `<p class="fc-lift-meta">Straight sets \u00b7 full rest \u00b7 never supersetted</p>` : ""}
+          ${l.note ? `<p class="note">${esc(l.note)}</p>` : ""}
+          ${swap && blocked ? `<p class="guard">${esc(swap)}</p>` : ""}
+          ${swap && !blocked ? `<p class="note">Substitution active: ${esc((LOG.subs[key] || ov.as || swap))}</p>` : ""}
+          ${l.guard ? `<p class="guard">${esc(l.guard)}</p>` : ""}
+          ${accNote ? `<p class="note">${esc(accNote)}.</p>` : ""}
+          ${blocked ? `<div class="fc-swap">
+            <div class="svf-field"><label class="svf-label" for="sub-${esc(l.id)}">What you did instead</label>
+              <input class="svf-input" id="sub-${esc(l.id)}" data-sub="${esc(l.id)}" value="${esc(LOG.subs[key] || "")}" placeholder="RDL, goblet squat…"></div>
+            <button type="button" class="svb svb-sm svb-secondary" data-override="${esc(l.id)}" aria-pressed="${ov.on ? "true" : "false"}">Log the swap</button>
+          </div>` : ""}
+          ${!blocked && l.load ? lastLine(l) : ""}
+          ${blocked ? "" : (l.prog ? setTable() : simpleLog())}
+        </article>`;
       };
       const liftGroups = [];
       (D.lifts || []).forEach(l => {
@@ -508,18 +543,17 @@
       if (red) {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
         h += sec("Burnout", "cut or easy", `<div class="cut callout callout--cut"><b>Hard burnout is off.</b> Walk, or run a 60–70% easy version.</div>
-          <div class="line conditioning-option">
-            <button type="button" class="box phase-check" data-kind="burn" data-id="walk" data-i="0" aria-pressed="${chk("walk", 0)}" aria-label="Easy walk"></button>
-            <div class="body"><div class="nm">10-minute easy incline walk</div><div class="why">Does not count as a hard burnout.</div></div>
+          <div class="fc-row">
+            <button type="button" class="fc-check" data-id="walk" data-i="0" aria-pressed="${chk("walk", 0)}" aria-label="Easy walk"></button>
+            <div class="fc-row-body"><p class="fc-row-name">10-minute easy incline walk</p><p class="fc-row-cue">Does not count as a hard burnout.</p></div>
           </div>
-          <div class="line conditioning-option">
-            <button type="button" class="box phase-check" data-kind="burn" data-id="burneasy" data-i="0" aria-pressed="${chk("burneasy", 0)}" aria-label="Easy burnout"></button>
-            <div class="body">
-              <div class="nm">Easy burnout · 60–70%</div>
-              <div class="why">Same movements, slower and lighter. Distinct from a hard effort.</div>
-              <div class="log-fields">
-                <label class="ll">Note<input class="log-in wide" data-burn="note" value="${esc(b.note || "")}" placeholder="what you did"></label>
-              </div>
+          <div class="fc-row">
+            <button type="button" class="fc-check" data-id="burneasy" data-i="0" aria-pressed="${chk("burneasy", 0)}" aria-label="Easy burnout"></button>
+            <div class="fc-row-body">
+              <p class="fc-row-name">Easy burnout <span class="fc-row-meta">60–70%</span></p>
+              <p class="fc-row-cue">Same movements, slower and lighter. Distinct from a hard effort.</p>
+              <div class="svf-field"><label class="svf-label" for="burn-easy-note">Note</label>
+                <input class="svf-input" id="burn-easy-note" data-burn="note" value="${esc(b.note || "")}" placeholder="what you did"></div>
             </div>
           </div>`, "", burnPhase.done, "burnout", burnPhase.progress);
       } else {
@@ -560,9 +594,9 @@
     }
 
     if (D.down) {
-      h += sec("Downshift", "2–5 min", `<div class="line downshift-cap">
-        <button type="button" class="box phase-check" data-kind="down" data-id="down" data-i="0" aria-pressed="${chk("down", 0)}" aria-label="Downshift done"></button>
-        <div class="body"><div class="nm">${esc(D.down)}</div></div>
+      h += sec("Downshift", "2–5 min", `<div class="fc-row">
+        <button type="button" class="fc-check" data-id="down" data-i="0" aria-pressed="${chk("down", 0)}" aria-label="Downshift done"></button>
+        <div class="fc-row-body"><p class="fc-row-name">${esc(D.down)}</p></div>
       </div>${D.heat === "easy" || D.heat === "off" ? `<blockquote>${esc(P.principle)}</blockquote>` : ""}`,
       "", downPhase.done, "downshift", downPhase.progress);
     }
@@ -618,7 +652,12 @@
         const added = C.num(raw);
         const bw = l.bw ? bwFor(w.n) : null;
         const eff = l.bw ? (bw ? bw.v + (added || 0) : null) : added;
-        const v = mode === "load" ? C.metricValue(mode, eff, spec, done) : (spec.logged ? C.metricValue(mode, eff, spec, done) : null);
+        const rows = C.setRows(LOG, l.id, w.n, l.day, spec.sets);
+        const checks = arr.slice(0, spec.sets);
+        const perSet = mode === "tonnage" ? C.tonnageFromSetlog(rows, checks) : null;
+        const v = perSet != null ? perSet
+          : (mode === "load" ? C.metricValue(mode, eff, spec, done)
+            : (spec.logged ? C.metricValue(mode, eff, spec, done) : null));
         return { w: w.n, raw: raw, n: eff, spec: spec, done: done, total: spec.sets, v: v };
       });
       const bwMissing = l.bw && !bwFor(S.week) && series.some(s => s.raw);
@@ -749,6 +788,34 @@
       renderSession();
       updateProgress();
     }
+  }
+
+  /* Set one is mirrored into loads/reps/rpe so history, carry-forward and
+     every backup written before 2.0 keep reading the same shape. */
+  function writeSet(id, i, field, value) {
+    const key = C.loadKey(id, S.week, S.day);
+    const rows = LOG.setlog[key] || [];
+    while (rows.length <= i) rows.push({});
+    rows[i] = Object.assign({}, rows[i], { [field]: value });
+    LOG.setlog[key] = rows;
+    if (i === 0) {
+      if (field === "load") LOG.loads[key] = value;
+      if (field === "reps") LOG.reps[key] = value;
+      if (field === "rpe") LOG.rpe[key] = value;
+    }
+  }
+
+  /* The RPE ceiling warning updates in place. Re-rendering the session here
+     is what used to eat the next tap: on a phone the blur that fires change
+     is the same gesture as the tap that follows it. */
+  function refreshRpeWarn(id) {
+    const el = document.querySelector(`[data-rpe-warn="${id}"]`);
+    if (!el) return;
+    const max = C.rpeTarget(weekObj());
+    const rows = C.setRows(LOG, id, S.week, S.day, C.nSets(liftById(id) || {}, S.week, P));
+    const over = rows.some(r => { const v = C.num(r.rpe); return max != null && v != null && v > max + 0.5; })
+      || (function () { const v = C.num(LOG.rpe[C.loadKey(id, S.week, S.day)]); return max != null && v != null && v > max + 0.5; }());
+    el.hidden = !over;
   }
 
   function exportFile() {
@@ -892,6 +959,22 @@
       toast("Swap logged for this session.", () => { se.overrides[ov.dataset.override] = prev; save(); render(); });
       return;
     }
+    const same = e.target.closest("[data-same]");
+    if (same) {
+      const [id, i] = same.dataset.same.split(":");
+      const idx = +i;
+      const lift = liftById(id);
+      const rows = C.setRows(LOG, id, S.week, S.day, C.nSets(lift || {}, S.week, P));
+      const prev = rows[idx - 1] || {};
+      ["load", "reps", "rpe"].forEach(f => { if (prev[f]) writeSet(id, idx, f, prev[f]); });
+      save();
+      ["load", "reps", "rpe"].forEach(f => {
+        const el = document.querySelector(`[data-setlog="${id}:${idx}:${f}"]`);
+        if (el && prev[f]) el.value = prev[f];
+      });
+      renderHistory();
+      return;
+    }
     const c = e.target.closest("[data-carry]");
     if (c) {
       if (c.dataset.partial === "1" && !confirm("Prior week was incomplete. Carry that load anyway?")) return;
@@ -929,13 +1012,22 @@
       return;
     }
     const bw = e.target.closest("[data-bw]");
-    if (bw) { LOG.bw[S.week] = bw.value; save(); renderChrome(); renderHistory(); return; }
+    if (bw) { LOG.bw[S.week] = bw.value; save(); refreshBwNote(); renderHistory(); return; }
     const loadEl = e.target.closest("[data-load]");
     if (loadEl) { LOG.loads[C.loadKey(loadEl.dataset.load, S.week, S.day)] = loadEl.value; save(); renderHistory(); return; }
     const reps = e.target.closest("[data-reps]");
     if (reps) { LOG.reps[C.loadKey(reps.dataset.reps, S.week, S.day)] = reps.value; save(); renderHistory(); return; }
     const rpe = e.target.closest("[data-rpe]");
-    if (rpe) { LOG.rpe[C.loadKey(rpe.dataset.rpe, S.week, S.day)] = rpe.value; save(); renderSession(); return; }
+    if (rpe) { LOG.rpe[C.loadKey(rpe.dataset.rpe, S.week, S.day)] = rpe.value; save(); refreshRpeWarn(rpe.dataset.rpe); return; }
+    const cell = e.target.closest("[data-setlog]");
+    if (cell) {
+      const [id, i, field] = cell.dataset.setlog.split(":");
+      writeSet(id, +i, field, cell.value);
+      save();
+      if (field === "rpe") refreshRpeWarn(id);
+      if (field !== "rpe") renderHistory();
+      return;
+    }
     const sub = e.target.closest("[data-sub]");
     if (sub) { LOG.subs[C.loadKey(sub.dataset.sub, S.week, S.day)] = sub.value; save(); return; }
     const burn = e.target.closest("[data-burn]");
@@ -957,6 +1049,12 @@
     if (reps) { LOG.reps[C.loadKey(reps.dataset.reps, S.week, S.day)] = reps.value; save(); }
     const rpe = e.target.closest("[data-rpe]");
     if (rpe) { LOG.rpe[C.loadKey(rpe.dataset.rpe, S.week, S.day)] = rpe.value; save(); }
+    const cell = e.target.closest("[data-setlog]");
+    if (cell) {
+      const [id, i, field] = cell.dataset.setlog.split(":");
+      writeSet(id, +i, field, cell.value);
+      save();
+    }
     const sub = e.target.closest("[data-sub]");
     if (sub) { LOG.subs[C.loadKey(sub.dataset.sub, S.week, S.day)] = sub.value; save(); }
     const burn = e.target.closest("[data-burn]");
