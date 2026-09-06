@@ -1,0 +1,45 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures — Motion
+   ───────────────────────────────────────────────────────────────────
+   The brand's visual code is "transitions of colour transparency" —
+   motion here means opacity and hairline, not bounce and lift. SV
+   surfaces do not spring, and cards do not rise on hover: they are
+   printed matter that happens to be on a screen.
+
+   Every motion token is wrapped by the reduced-motion guard at the
+   bottom of this file. Do not write a transition that escapes it.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --sv-duration-instant: 80ms;
+  --sv-duration-fast:    140ms;   /* hover, focus, tint changes */
+  --sv-duration-base:    220ms;   /* disclosure open, tab slide */
+  --sv-duration-slow:    380ms;   /* modal, page-level reveal */
+
+  /* Restrained curves. No overshoot anywhere in the system. */
+  --sv-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --sv-ease-out:      cubic-bezier(0, 0, 0, 1);
+  --sv-ease-in:       cubic-bezier(0.3, 0, 1, 1);
+
+  --sv-transition-color:  color var(--sv-duration-fast) var(--sv-ease-standard),
+                          background-color var(--sv-duration-fast) var(--sv-ease-standard),
+                          border-color var(--sv-duration-fast) var(--sv-ease-standard);
+  --sv-transition-opacity: opacity var(--sv-duration-fast) var(--sv-ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sv-duration-instant: 0ms;
+    --sv-duration-fast:    0ms;
+    --sv-duration-base:    0ms;
+    --sv-duration-slow:    0ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

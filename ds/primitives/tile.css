@@ -1,0 +1,69 @@
+/* ═══ .svt — Vital tile ═════════════════════════════════════════════
+   One number and what it means. The densest unit in the system, and
+   the one that carries the most weight on an operator surface.
+
+   <div class="svt">
+     <p class="svt-label">Runway</p>
+     <p class="svt-value">14.2<span class="svt-unit">mo</span></p>
+     <p class="svt-note svt-up">+1.4 vs last close</p>
+   </div>
+
+   The value is ALWAYS mono and tabular — a column of tiles whose
+   digits do not line up is the fastest way to look unserious.
+   ══════════════════════════════════════════════════════════════════ */
+
+.svt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-2);
+  padding: var(--sv-space-4);
+  background: var(--sv-surface-panel);
+  border: 1px solid var(--sv-border-default);
+  border-radius: var(--sv-radius-none);
+}
+
+.svt-label {
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  font-weight: var(--sv-weight-medium);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
+
+.svt-value {
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xl);
+  font-weight: var(--sv-weight-light);
+  font-variant-numeric: var(--sv-numeric);
+  line-height: var(--sv-leading-snug);
+  color: var(--sv-text-strong);
+}
+
+.svt-unit {
+  margin-left: 0.15em;
+  font-size: 0.6em;
+  color: var(--sv-text-muted);
+}
+
+.svt-note {
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  font-variant-numeric: var(--sv-numeric);
+  color: var(--sv-text-muted);
+}
+
+/* Direction, not judgement: up is not automatically good. Pick the
+   class that matches what the number MEANS for the business. */
+.svt-up   { color: var(--sv-status-success); }
+.svt-down { color: var(--sv-status-danger); }
+.svt-flat { color: var(--sv-text-muted); }
+
+.svt-strip {
+  display: grid;
+  gap: var(--sv-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+}

@@ -1,0 +1,83 @@
+/* ═══ .svdt — Data table ════════════════════════════════════════════
+   Horizontal rules only. No zebra striping, no vertical grid lines,
+   no rounded container — the brand's line vocabulary is uniform and
+   thin, and a striped table breaks it immediately.
+
+   <table class="svdt">
+     <thead><tr><th>Ledger</th><th class="svdt-num">Movement</th></tr></thead>
+     <tbody><tr><td>Operating</td><td class="svdt-num">-12,480</td></tr></tbody>
+   </table>
+
+   Every numeric column takes .svdt-num — mono, tabular, right-aligned.
+   ══════════════════════════════════════════════════════════════════ */
+
+.svdt {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sv-font-sans);
+  font-size: var(--sv-text-sm);
+  color: var(--sv-text-body);
+}
+
+.svdt caption {
+  padding-bottom: var(--sv-space-3);
+  text-align: left;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
+
+.svdt thead th {
+  padding: var(--sv-space-3) var(--sv-space-3);
+  background: var(--sv-surface-raised);
+  border-bottom: 1px solid var(--sv-border-default);
+  text-align: left;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  font-weight: var(--sv-weight-medium);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+  white-space: nowrap;
+}
+
+.svdt tbody td {
+  padding: var(--sv-space-3);
+  border-bottom: 1px solid var(--sv-border-subtle);
+  vertical-align: baseline;
+}
+
+.svdt tbody tr:last-child td { border-bottom: 0; }
+
+/* Hover is a tint, not a stripe. */
+.svdt tbody tr:hover td { background: var(--sv-action-tint); }
+
+.svdt tfoot td {
+  padding: var(--sv-space-3);
+  border-top: 1px solid var(--sv-border-default);
+  font-weight: var(--sv-weight-medium);
+  color: var(--sv-text-strong);
+}
+
+/* ── Numerics ──────────────────────────────────────────────────── */
+.svdt-num {
+  text-align: right;
+  font-family: var(--sv-font-mono);
+  font-variant-numeric: var(--sv-numeric);
+  white-space: nowrap;
+}
+.svdt-num.svdt-up   { color: var(--sv-status-success); }
+.svdt-num.svdt-down { color: var(--sv-status-danger); }
+
+/* Wide tables scroll inside their own box; the page never scrolls sideways. */
+.svdt-scroll { overflow-x: auto; }
+
+/* Honest empty. A table with no rows says so — it does not render blank. */
+.svdt-empty {
+  padding: var(--sv-space-8) var(--sv-space-3);
+  text-align: center;
+  color: var(--sv-text-muted);
+  font-size: var(--sv-text-sm);
+}

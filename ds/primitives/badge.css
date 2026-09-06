@@ -1,0 +1,47 @@
+/* ═══ .svbg — Badge ═════════════════════════════════════════════════
+   A state label. Tinted ground, hairline, mono uppercase — never a
+   solid block of colour, which would compete with the copper accent.
+
+   <span class="svbg svbg-warn">Needs review</span>
+   <span class="svbg svbg-ok"><i class="svbg-dot"></i>Cleared</span>
+
+   Mode N has no status vocabulary: these all render flat there, by
+   design. See tokens/semantic.css.
+   ══════════════════════════════════════════════════════════════════ */
+
+.svbg {
+  --svbg-fg: var(--sv-status-neutral);
+  --svbg-bg: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sv-space-2);
+  padding: 0.15rem var(--sv-space-2);
+  background: var(--svbg-bg);
+  border: 1px solid currentColor;
+  border-radius: var(--sv-radius-sm);
+  color: var(--svbg-fg);
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-2xs);
+  font-weight: var(--sv-weight-medium);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.svbg-ok      { --svbg-fg: var(--sv-status-success); --svbg-bg: var(--sv-status-success-tint); }
+.svbg-warn    { --svbg-fg: var(--sv-status-warning); --svbg-bg: var(--sv-status-warning-tint); }
+.svbg-bad     { --svbg-fg: var(--sv-status-danger);  --svbg-bg: var(--sv-status-danger-tint); }
+.svbg-info    { --svbg-fg: var(--sv-status-info);    --svbg-bg: var(--sv-status-info-tint); }
+.svbg-accent  { --svbg-fg: var(--sv-text-accent);    --svbg-bg: var(--sv-action-tint); }
+
+/* Pill form — the one place --sv-radius-full is sanctioned. */
+.svbg-pill { border-radius: var(--sv-radius-full); padding-inline: var(--sv-space-3); }
+
+.svbg-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--sv-radius-full);
+  background: currentColor;
+  flex: none;
+}

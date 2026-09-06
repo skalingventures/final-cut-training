@@ -1,0 +1,38 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures Design System — Token bundle
+   ───────────────────────────────────────────────────────────────────
+   The single entry point. Load this once at the root of a page or app:
+
+       <link rel="stylesheet" href="/ds/tokens/index.css">
+
+   Order matters: primitives define the swatches, semantic maps them to
+   roles per mode, and everything else is mode-independent.
+
+   Then set the mode on <html>:  data-mode="graphite|bone|nevada|fog".
+   Omit it and you get Graphite.
+   ═══════════════════════════════════════════════════════════════════ */
+
+@import url('./color.css');
+@import url('./type.css');
+@import url('./space.css');
+@import url('./radius.css');
+@import url('./shadow.css');
+@import url('./motion.css');
+@import url('./semantic.css');
+
+/* ── Text selection ───────────────────────────────────────────────
+   Copper on the dark modes, copper on the light ones — the accent
+   follows the mode, so selection is a brand signal in all four. */
+::selection {
+  background: var(--sv-action-primary);
+  color: var(--sv-action-primary-text);
+}
+
+/* ── Focus ────────────────────────────────────────────────────────
+   One ring, every mode, every focusable thing. Never remove it; if it
+   collides with a layout, add scroll-margin, do not set outline:none. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--sv-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--sv-radius-none);
+}

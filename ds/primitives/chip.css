@@ -1,0 +1,36 @@
+/* ═══ .svch — Source chip ═══════════════════════════════════════════
+   An external citation. Every claim on an SV operator surface that
+   came from somewhere carries one of these; a number with no chip is
+   a number the reader cannot check.
+
+   <a class="svch" href="…" target="_blank" rel="noopener noreferrer">
+     <span class="svch-host">sec.gov</span>
+     <span class="svch-date">2026-08-14</span>
+   </a>
+   ══════════════════════════════════════════════════════════════════ */
+
+.svch {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sv-space-2);
+  padding: 0.1rem var(--sv-space-2);
+  border: 1px solid var(--sv-border-subtle);
+  border-radius: var(--sv-radius-sm);
+  background: transparent;
+  color: var(--sv-text-muted);
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-2xs);
+  text-decoration: none;
+  transition: var(--sv-transition-color);
+}
+
+.svch:hover {
+  border-color: var(--sv-border-default);
+  color: var(--sv-text-accent);
+}
+
+.svch-host { letter-spacing: var(--sv-tracking-label); text-transform: uppercase; }
+.svch-date { opacity: 0.7; font-variant-numeric: var(--sv-numeric); }
+
+/* Trailing ↗ marks it as leaving the page. Decorative, so hidden from AT. */
+.svch::after { content: "\2197"; opacity: 0.6; }

@@ -1,0 +1,146 @@
+/* ═══ .svr / .sveb — The line vocabulary ════════════════════════════
+   The brand guide states its own graphic rules outright:
+
+       "The brand's graphics are built on regular and abstract
+        geometry with thin lines.
+        - Minimalistic geometry;
+        - Uniform line thickness;
+        - Transitions of colour transparency"
+
+   That is the SV equivalent of another system's shadows, gradients or
+   badges. Structure is carried by a 1px line and by where it stops —
+   never by a filled block, never by a glow.
+
+   .svr    rule / divider          .sveb   eyebrow label
+   .svlede narrow light intro      .svq    pull quote
+   .svfig  intersection field (decorative background)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Rules ─────────────────────────────────────────────────────── */
+
+.svr {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--sv-border-default);
+}
+
+/* The transparency transition, straight from the guide: a rule that
+   fades out rather than stopping. Use it to close a section. */
+.svr-fade {
+  background: linear-gradient(90deg,
+    var(--sv-rule-ink) 0%,
+    var(--sv-rule-ink) 35%,
+    transparent 100%);
+}
+
+.svr-strong { background: var(--sv-text-strong); }
+.svr-accent { background: var(--sv-action-primary); }
+
+/* Section head: title, then the rule. The 36px uppercase title over a
+   full-bleed hairline is the guide's own plate header. */
+.svr-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding-bottom: var(--sv-space-4);
+  border-bottom: 1px solid var(--sv-border-default);
+  margin-bottom: var(--sv-section-gap);
+}
+
+.svr-section-title {
+  margin: 0;
+  font-family: var(--sv-font-sans);
+  font-size: var(--sv-text-2xl);
+  font-weight: var(--sv-weight-light);
+  letter-spacing: var(--sv-tracking-title);
+  line-height: var(--sv-leading-snug);
+  text-transform: uppercase;
+  color: var(--sv-text-strong);
+}
+
+/* ── Eyebrow ───────────────────────────────────────────────────────
+   Mono, uppercase, tracked, with a leading rule. The rule is the SV
+   signature here — not a dot, not a pill, not a coloured chip. */
+
+.sveb {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  font-weight: var(--sv-weight-medium);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
+
+.sveb::before {
+  content: "";
+  flex: none;
+  width: var(--sv-space-6);
+  height: 1px;
+  background: var(--sv-action-primary);
+}
+
+.sveb-plain::before { display: none; }
+
+/* ── Editorial copy ────────────────────────────────────────────── */
+
+/* The guide sets its intros light, large and narrow. */
+.svlede {
+  max-width: var(--sv-measure-lede);
+  margin: 0;
+  font-size: var(--sv-text-md);
+  font-weight: var(--sv-weight-light);
+  line-height: var(--sv-leading-normal);
+  color: var(--sv-text-body);
+}
+
+.svq {
+  margin: 0;
+  padding-left: var(--sv-space-6);
+  border-left: 1px solid var(--sv-action-primary);
+  font-size: var(--sv-text-xl);
+  font-weight: var(--sv-weight-light);
+  line-height: var(--sv-leading-snug);
+  letter-spacing: var(--sv-tracking-tight);
+  color: var(--sv-text-strong);
+}
+
+.svq-cite {
+  display: block;
+  margin-top: var(--sv-space-3);
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  font-weight: var(--sv-weight-regular);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
+
+/* ── Intersection field ────────────────────────────────────────────
+   The guide's hero texture: uniform thin lines crossing at a point,
+   fading out. Purely decorative — always mark it aria-hidden.
+
+   <div class="svfig" aria-hidden="true"></div>                    */
+
+.svfig {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.7;
+  background-image:
+    linear-gradient(74deg,  transparent calc(50% - 0.5px), var(--sv-rule-ink) 50%, transparent calc(50% + 0.5px)),
+    linear-gradient(-58deg, transparent calc(50% - 0.5px), var(--sv-rule-ink) 50%, transparent calc(50% + 0.5px)),
+    linear-gradient(96deg,  transparent calc(50% - 0.5px), var(--sv-rule-ink) 50%, transparent calc(50% + 0.5px));
+  -webkit-mask-image: radial-gradient(120% 90% at 70% 40%, #000 20%, transparent 78%);
+          mask-image: radial-gradient(120% 90% at 70% 40%, #000 20%, transparent 78%);
+}
+
+/* Anything sitting on the field needs its own stacking context. */
+.svfig-host { position: relative; }
+.svfig-host > :not(.svfig) { position: relative; z-index: 1; }

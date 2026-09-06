@@ -1,0 +1,37 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures — Elevation
+   ───────────────────────────────────────────────────────────────────
+   SV separates surfaces with a HAIRLINE, not a shadow. The brand's
+   own vocabulary is "regular and abstract geometry with thin lines,
+   uniform line thickness" — a drop shadow is the opposite of that,
+   and a soft-shadowed card is the most common way this system gets
+   diluted into generic dashboard UI.
+
+   So: three of the four tokens here are rules, not shadows. Only the
+   overlay step casts anything, because a modal genuinely has to sit
+   above the page rather than beside it.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Flat: no separation at all. Sections on a page. */
+  --sv-elevation-flat: none;
+
+  /* Raised: a hairline. This is what a card gets. */
+  --sv-elevation-raised: inset 0 0 0 1px var(--sv-border-default);
+
+  /* Sunken: a hairline plus a marginally recessed ground. Table heads,
+     toolbars, code blocks. Pair with --sv-surface-raised. */
+  --sv-elevation-sunken: inset 0 -1px 0 0 var(--sv-border-default);
+
+  /* Overlay: the one real shadow. Modals and popovers only.
+     Tuned dark because Graphite is the default mode. */
+  --sv-elevation-overlay: 0 1px 0 0 var(--sv-border-default),
+                          0 16px 48px -12px rgb(0 0 0 / 0.55);
+}
+
+[data-mode="bone"],
+[data-mode="fog"] {
+  /* Lighter grounds need a softer, shorter cast or it reads as dirt. */
+  --sv-elevation-overlay: 0 1px 0 0 var(--sv-border-default),
+                          0 12px 36px -12px rgb(31 31 31 / 0.22);
+}

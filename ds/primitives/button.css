@@ -1,0 +1,97 @@
+/* ═══ .svb — Button ═════════════════════════════════════════════════
+   Square, hairline, no lift. Hover changes tint and border, never
+   position: the brand's motion vocabulary is transparency, not travel.
+
+   <button class="svb svb-md svb-primary">Run the close</button>
+
+   Variants: .svb-primary · .svb-secondary · .svb-ghost · .svb-danger
+   Sizes:    .svb-sm · .svb-md (default) · .svb-lg
+   ══════════════════════════════════════════════════════════════════ */
+
+.svb {
+  /* Component-local tokens — override per instance with
+     style="--svb-bg: ..." rather than writing a new rule. */
+  --svb-bg: transparent;
+  --svb-fg: var(--sv-text-body);
+  --svb-border: var(--sv-border-default);
+  --svb-bg-hover: var(--sv-action-tint);
+  --svb-fg-hover: var(--sv-text-strong);
+  --svb-border-hover: var(--sv-border-strong);
+  --svb-height: 2.5rem;
+  --svb-pad: 0 var(--sv-space-5);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sv-space-2);
+  height: var(--svb-height);
+  padding: var(--svb-pad);
+  border: 1px solid var(--svb-border);
+  border-radius: var(--sv-radius-none);
+  background: var(--svb-bg);
+  color: var(--svb-fg);
+  font-family: var(--sv-font-sans);
+  font-size: var(--sv-text-sm);
+  font-weight: var(--sv-weight-medium);
+  line-height: 1;
+  letter-spacing: var(--sv-tracking-title);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--sv-transition-color);
+}
+
+.svb:hover:not(:disabled) {
+  background: var(--svb-bg-hover);
+  color: var(--svb-fg-hover);
+  border-color: var(--svb-border-hover);
+}
+
+.svb:active:not(:disabled) { transform: none; }   /* explicitly: nothing moves */
+
+.svb:disabled,
+.svb[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Variants ──────────────────────────────────────────────────── */
+
+.svb-primary {
+  --svb-bg: var(--sv-action-primary);
+  --svb-fg: var(--sv-action-primary-text);
+  --svb-border: var(--sv-action-primary);
+  --svb-bg-hover: var(--sv-action-primary-hover);
+  --svb-fg-hover: var(--sv-action-primary-text);
+  --svb-border-hover: var(--sv-action-primary-hover);
+}
+
+.svb-secondary {
+  --svb-bg: transparent;
+  --svb-fg: var(--sv-text-strong);
+  --svb-border: var(--sv-border-default);
+}
+
+.svb-ghost {
+  --svb-bg: transparent;
+  --svb-fg: var(--sv-text-muted);
+  --svb-border: transparent;
+  --svb-border-hover: transparent;
+}
+
+.svb-danger {
+  --svb-bg: transparent;
+  --svb-fg: var(--sv-status-danger);
+  --svb-border: var(--sv-status-danger);
+  --svb-bg-hover: var(--sv-status-danger-tint);
+  --svb-fg-hover: var(--sv-status-danger);
+  --svb-border-hover: var(--sv-status-danger);
+}
+
+/* ── Sizes ─────────────────────────────────────────────────────── */
+
+.svb-sm { --svb-height: 2rem;    --svb-pad: 0 var(--sv-space-3); font-size: var(--sv-text-xs); }
+.svb-md { --svb-height: 2.5rem;  --svb-pad: 0 var(--sv-space-5); }
+.svb-lg { --svb-height: 3rem;    --svb-pad: 0 var(--sv-space-8); font-size: var(--sv-text-base); }
+
+/* Icon-only: keep it square, not round. */
+.svb-icon { --svb-pad: 0; width: var(--svb-height); }

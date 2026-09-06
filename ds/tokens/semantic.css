@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures — Semantic roles across the four modes
+   ───────────────────────────────────────────────────────────────────
+   Tier 2 of three, and the layer component code should reach for
+   first. A primitive writes `var(--sv-surface-panel)`, never
+   `var(--sv-graphite-800)` — that is what lets one primitive serve
+   all four modes without a single mode-specific rule.
+
+   Modes switch on the root element:
+       <html data-mode="graphite">   ← the default; omit it and you get this
+       <html data-mode="bone">
+       <html data-mode="nevada">
+       <html data-mode="fog">
+
+   Graphite is the bare-`:root` default because the operator surfaces
+   (the ones read every week) are Graphite. Bone is an explicit choice,
+   not a fallback. Which mode a surface gets is not a taste call —
+   README.md has the decision tree.
+
+   Requires color.css to be loaded first.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═════ MODE G — GRAPHITE ══════════════════════════════════════════
+   The operator reading room. Editorial darkness, warm undertone.
+   Internal reports, dashboards, the weekly digest, long-read analysis. */
+:root,
+[data-mode="graphite"] {
+  --sv-mode: "graphite";
+
+  --sv-surface-page:    var(--sv-graphite-900);
+  --sv-surface-panel:   var(--sv-graphite-800);
+  --sv-surface-raised:  var(--sv-graphite-700);
+  --sv-surface-overlay: var(--sv-graphite-800);
+
+  --sv-text-strong:  var(--sv-bone);            /* 15.88:1 */
+  --sv-text-body:    var(--sv-bone-200);        /* 12.79:1 — the same swatch
+                                                   that is a raised surface in Mode B.
+                                                   Tier 1 is shared; the roles differ. */
+  --sv-text-muted:   var(--sv-graphite-300);    /*  6.19:1 */
+  --sv-text-accent:  var(--sv-nevada-400);      /*  5.95:1 */
+  --sv-text-link:       var(--sv-nevada-400);
+  --sv-text-link-hover: var(--sv-nevada-300);
+
+  --sv-action-primary:       var(--sv-nevada-400);
+  --sv-action-primary-hover: var(--sv-nevada-300);
+  --sv-action-primary-text:  var(--sv-graphite-900);
+  --sv-action-tint:          rgb(137 82 59 / 0.14);
+
+  --sv-status-success: var(--sv-moss-400);
+  --sv-status-warning: var(--sv-amber-400);
+  --sv-status-danger:  var(--sv-rust-400);
+  --sv-status-info:    var(--sv-fog-500);
+  --sv-status-neutral: var(--sv-sage-400);
+  --sv-status-success-tint: rgb(120 172 120 / 0.10);
+  --sv-status-warning-tint: rgb(196 149 106 / 0.10);
+  --sv-status-danger-tint:  rgb(220 128 124 / 0.10);
+  --sv-status-info-tint:    rgb(163 177 192 / 0.08);
+
+  --sv-border-default: var(--sv-graphite-500);  /* 4.07:1 */
+  --sv-border-subtle:  rgb(232 226 216 / 0.12);
+  --sv-border-strong:  var(--sv-graphite-300);
+
+  --sv-focus-ring: var(--sv-nevada-300);
+  --sv-rule-ink:   rgb(255 250 244 / 0.55);     /* the thin-line motif */
+}
+
+/* ═════ MODE B — BONE ══════════════════════════════════════════════
+   Warm daylight, approachable authority. Prospect-facing pages,
+   pitch decks, blog posts, anything that gets printed. */
+[data-mode="bone"] {
+  --sv-mode: "bone";
+
+  --sv-surface-page:    var(--sv-bone-000);
+  --sv-surface-panel:   var(--sv-bone-100);
+  --sv-surface-raised:  var(--sv-bone-200);
+  --sv-surface-overlay: var(--sv-bone-000);
+
+  --sv-text-strong:  var(--sv-graphite-900);    /* 15.88:1 */
+  --sv-text-body:    var(--sv-bone-800);        /* 11.25:1 */
+  --sv-text-muted:   var(--sv-bone-700);        /*  6.43:1 */
+  --sv-text-accent:  var(--sv-nevada-600);      /*  6.07:1 */
+  --sv-text-link:       var(--sv-nevada-600);
+  --sv-text-link-hover: var(--sv-nevada-700);
+
+  --sv-action-primary:       var(--sv-nevada-600);
+  --sv-action-primary-hover: var(--sv-nevada-700);
+  --sv-action-primary-text:  var(--sv-bone-000);
+  --sv-action-tint:          rgb(137 82 59 / 0.06);
+
+  --sv-status-success: var(--sv-moss-700);
+  --sv-status-warning: var(--sv-amber-700);
+  --sv-status-danger:  var(--sv-rust-700);
+  --sv-status-info:    var(--sv-fog-800);
+  --sv-status-neutral: var(--sv-bone-700);
+  --sv-status-success-tint: rgb(45 94 45 / 0.06);
+  --sv-status-warning-tint: rgb(122 88 40 / 0.06);
+  --sv-status-danger-tint:  rgb(139 32 32 / 0.06);
+  --sv-status-info-tint:    rgb(78 92 106 / 0.06);
+
+  --sv-border-default: var(--sv-bone-500);      /* 4.34:1 */
+  --sv-border-subtle:  rgb(31 31 31 / 0.14);
+  --sv-border-strong:  var(--sv-bone-700);
+
+  --sv-focus-ring: var(--sv-nevada-700);
+  --sv-rule-ink:   rgb(31 31 31 / 0.55);
+}
+
+/* ═════ MODE N — NEVADA ════════════════════════════════════════════
+   Warm copper immersion. DISPLAY ONLY — social cards, pull quotes,
+   conference title slides, stat callouts. Never body copy, never a
+   data table. If you need copper with paragraphs, use Mode G with
+   copper accents instead. Mode N is display-only. */
+[data-mode="nevada"] {
+  --sv-mode: "nevada";
+
+  --sv-surface-page:    var(--sv-nevada-600);
+  --sv-surface-panel:   var(--sv-nevada-800);
+  --sv-surface-raised:  var(--sv-nevada-500);
+  --sv-surface-overlay: var(--sv-nevada-800);
+
+  --sv-text-strong:  var(--sv-bone);            /* 6.07:1 */
+  --sv-text-body:    var(--sv-sand-100);        /* 5.60:1 — display text, short runs */
+  --sv-text-muted:   var(--sv-sand-300);        /* NON-TEXT ONLY — 4.22:1 on page,
+                                                   3.46:1 on raised. Category tags and
+                                                   chrome, never readable content. */
+  --sv-text-accent:  var(--sv-bone);            /* Bone is the accent on copper */
+  --sv-text-link:       var(--sv-bone);
+  --sv-text-link-hover: var(--sv-sand-100);
+
+  --sv-action-primary:       var(--sv-bone);
+  --sv-action-primary-hover: var(--sv-sand-100);
+  --sv-action-primary-text:  var(--sv-nevada-600);
+  --sv-action-tint:          rgb(255 250 244 / 0.12);
+
+  /* Mode N carries NO status vocabulary. These resolve to flat bone so a
+     stray badge stays legible instead of turning invisible — but it will
+     read as signal-free, which is the point. Needing to show state means
+     you are in the wrong mode. */
+  --sv-status-success: var(--sv-sand-100);
+  --sv-status-warning: var(--sv-sand-100);
+  --sv-status-danger:  var(--sv-sand-100);
+  --sv-status-info:    var(--sv-sand-100);
+  --sv-status-neutral: var(--sv-sand-100);
+  --sv-status-success-tint: rgb(255 250 244 / 0.10);
+  --sv-status-warning-tint: rgb(255 250 244 / 0.10);
+  --sv-status-danger-tint:  rgb(255 250 244 / 0.10);
+  --sv-status-info-tint:    rgb(255 250 244 / 0.10);
+
+  --sv-border-default: var(--sv-nevada-200);    /* 3.16:1 on raised */
+  --sv-border-subtle:  rgb(255 250 244 / 0.22);
+  --sv-border-strong:  var(--sv-bone);
+
+  --sv-focus-ring: var(--sv-bone);
+  --sv-rule-ink:   rgb(255 250 244 / 0.65);
+}
+
+/* ═════ MODE F — BLUE FOG ══════════════════════════════════════════
+   Cool analytical, data-forward. Chart grounds, analytical panels,
+   secondary panels inside another mode. */
+[data-mode="fog"] {
+  --sv-mode: "fog";
+
+  --sv-surface-page:    var(--sv-fog-500);
+  --sv-surface-panel:   var(--sv-fog-600);
+  --sv-surface-raised:  var(--sv-fog-400);
+  --sv-surface-overlay: var(--sv-fog-400);
+
+  --sv-text-strong:  var(--sv-graphite-900);    /* 7.54:1 */
+  --sv-text-body:    var(--sv-slate-900);       /* 6.64:1 */
+  --sv-text-muted:   var(--sv-slate-800);       /* 5.34:1 */
+  --sv-text-accent:  var(--sv-nevada-900);      /* 5.38:1 — copper darkened for fog */
+  --sv-text-link:       var(--sv-nevada-900);
+  --sv-text-link-hover: var(--sv-graphite-900);
+
+  --sv-action-primary:       var(--sv-nevada-900);
+  --sv-action-primary-hover: var(--sv-graphite-900);
+  --sv-action-primary-text:  var(--sv-bone-000);
+  --sv-action-tint:          rgb(80 48 32 / 0.08);
+
+  --sv-status-success: var(--sv-moss-900);
+  --sv-status-warning: var(--sv-amber-900);
+  --sv-status-danger:  var(--sv-rust-900);
+  --sv-status-info:    var(--sv-fog-950);
+  --sv-status-neutral: var(--sv-slate-800);
+  --sv-status-success-tint: rgb(26 62 26 / 0.10);
+  --sv-status-warning-tint: rgb(76 44 28 / 0.10);
+  --sv-status-danger-tint:  rgb(110 21 21 / 0.10);
+  --sv-status-info-tint:    rgb(68 82 96 / 0.10);
+
+  --sv-border-default: var(--sv-fog-900);       /* 3.66:1 */
+  --sv-border-subtle:  rgb(31 31 31 / 0.18);
+  --sv-border-strong:  var(--sv-slate-800);
+
+  --sv-focus-ring: var(--sv-nevada-900);
+  --sv-rule-ink:   rgb(31 31 31 / 0.55);
+}
