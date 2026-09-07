@@ -8,7 +8,7 @@ window.PROGRAM = {
 
   weeks: [
     { n: 1, main: "4 × 6", rpe: "RPE 7", acc: "Accessories moderate", burn: "80%", intent: "Establish", heat: "easy", mob: "Start at the level you can control 100%. Default Level 1." },
-    { n: 2, main: "4 × 6", rpe: "slightly heavier", acc: "Add reps where clean", burn: "85%", intent: "Build", heat: "moderate", mob: "Earn the next level only when today's level is clean. Do not skip." },
+    { n: 2, main: "4 × 6", rpe: "RPE 7.5", acc: "Add reps where clean · slightly heavier than W1", burn: "85%", intent: "Build", heat: "moderate", mob: "Earn the next level only when today's level is clean. Do not skip." },
     { n: 3, main: "5 × 5", rpe: "RPE 8", acc: "Accessories stable", burn: "90%", intent: "Build hard", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
     { n: 4, main: "5 × 4", rpe: "RPE 8–8.5", acc: "Accessories slightly reduced", burn: "85–90%", intent: "Intensify", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
     { n: 5, main: "5 × 3", rpe: "RPE 8.5–9", acc: "Minimal fluff", burn: "85–90%", intent: "Peak", heat: "hardest", mob: "Stay on a level you own. No new level." },

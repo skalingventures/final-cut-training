@@ -154,6 +154,11 @@ def check_program(p: dict) -> None:
         err("day 2 burnout missing achilles note")
     if p["days"][5].get("exclusive") is not True:
         err("day 6 should be exclusive")
+    # The RPE field is rendered in a numeric slot on every main lift. Prose
+    # there reads as "4 x 6 @ slightly heavier", which is not a prescription.
+    for w in p.get("weeks", []):
+        if not re.match(r"^RPE \d", str(w.get("rpe", ""))):
+            err(f"week {w.get('n')} rpe must start with an RPE number, got {w.get('rpe')!r}")
 
 
 def check_app_js() -> None:

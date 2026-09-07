@@ -393,7 +393,7 @@
       const done = arr.slice(0, total).filter(Boolean).length;
       const reps = ((log.reps || {})[Core.loadKey(lift.id, w, day)] || "").trim();
       const rpe = ((log.rpe || {})[Core.loadKey(lift.id, w, day)] || "").trim();
-      const scheme = lift.prog ? program.weeks[w - 1].main + " @ " + program.weeks[w - 1].rpe : (lift.rx || "");
+      const scheme = lift.prog ? program.weeks[w - 1].main + " \u00b7 " + program.weeks[w - 1].rpe : (lift.rx || "");
       prior.push({ w: w, v: v, done: done, total: total, reps: reps, rpe: rpe, scheme: scheme, clean: done >= total });
     }
     return prior;

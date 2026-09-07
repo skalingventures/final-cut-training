@@ -297,7 +297,7 @@
     const prior = C.priorLift(l, S.week, S.day, LOG, P);
     if (!prior.length) return `<div class="last" data-last="${esc(l.id)}">No prior weeks logged.</div>`;
     const recent = prior[prior.length - 1];
-    const nowScheme = l.prog ? `${weekObj().main} @ ${weekObj().rpe}` : (l.rx || "");
+    const nowScheme = l.prog ? `${weekObj().main} \u00b7 ${weekObj().rpe}` : (l.rx || "");
     const shifted = recent.scheme && nowScheme && recent.scheme !== nowScheme;
     const warnCarry = !recent.clean;
     return `<div class="last" data-last="${esc(l.id)}">
