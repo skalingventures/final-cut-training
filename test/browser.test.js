@@ -27,6 +27,9 @@ catch (e) {
   await p.evaluate(() => { try { localStorage.clear(); } catch (e) {} });
   await p.reload(); await p.waitForTimeout(500);
   await p.fill('#setup-start', '2026-08-31'); await p.click('#setup-go'); await p.waitForTimeout(400);
+  // Navigate explicitly rather than trusting where "today" lands: the block
+  // start is fixed but the clock is not, and these assertions name W1 D1.
+  await p.click('#week-btn'); await p.click('[data-w="1"]'); await p.waitForTimeout(400);
   await p.click('#week-btn'); await p.click('[data-d="1"]'); await p.waitForTimeout(500);
 
   const fail = [];
@@ -63,6 +66,8 @@ catch (e) {
   await p.reload(); await p.waitForTimeout(600);
   await p.click('#week-btn'); await p.click('[data-w="2"]'); await p.waitForTimeout(400);
   await p.click('#week-btn'); await p.click('[data-d="1"]'); await p.waitForTimeout(500);
+  ok('week 2 shows a real RPE number, not prose',
+    !/slightly heavier/i.test(await p.evaluate(() => document.querySelector('[data-lift="squat"]').textContent)));
   const carry = await p.evaluate(() => {
     const el = document.querySelector('[data-last="squat"]');
     return el ? el.textContent : '';
@@ -78,6 +83,7 @@ catch (e) {
     localStorage.setItem('final-cut:v3', JSON.stringify(legacy));
   });
   await p.reload(); await p.waitForTimeout(600);
+  await p.click('#week-btn'); await p.click('[data-w="1"]'); await p.waitForTimeout(400);
   await p.click('#week-btn'); await p.click('[data-d="1"]'); await p.waitForTimeout(500);
   ok('1.6.0 backup shows its load in row one',
     await p.evaluate(() => document.querySelector('[data-setlog="squat:0:load"]').value === '315'));
