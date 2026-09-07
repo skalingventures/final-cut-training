@@ -1,5 +1,12 @@
 # Final Cut — design and UX audit
 
+> **Status: executed.** This audit describes Final Cut **1.6.0**. Every P0 and P1
+> finding below was closed in the 2.0.0 rebuild, one work package per commit,
+> against [`EXECUTION_BRIEF.md`](EXECUTION_BRIEF.md). Before-and-after screenshots
+> are in [`audit/`](audit/) and [`audit/after/`](audit/after/). The findings are
+> kept as written so the reasoning stays legible; do not read them as the current
+> state of the app.
+
 **Date:** 2026-09-06 · **App version audited:** 1.6.0 · **Reference:** the Skaling Ventures brand system v1.0 (2026-09-05), vendored into this repo at [`../ds/`](../ds/README.md). Executable follow-up: [`EXECUTION_BRIEF.md`](EXECUTION_BRIEF.md).
 
 **Method.** Read the full brand system (tokens, thirteen primitives, mode and naming rules). Read every Final Cut source file. Rendered the app in headless Chromium at 390 px (iPhone) and 1280 px through eleven real states: setup, each day type, readiness set, flags set, a blocked lift, week-2 carry-forward, every drawer open. Measured computed type sizes, corner radii, tap targets and contrast on the live DOM. The app's own `validate.py` passes. One caveat: Google Fonts is blocked at the sandbox egress, so the screenshots render in fallback faces. Every finding about weight and family below is taken from the stylesheet, not from pixels.
