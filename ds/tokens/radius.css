@@ -1,0 +1,23 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures — Radius
+   ───────────────────────────────────────────────────────────────────
+   THE BRAND IS SQUARE. Every plate in the brand guide — colour blocks,
+   photography crops, social cards, business cards, outdoor ads — uses
+   hard 90° corners. There is not one rounded rectangle in it.
+
+   This is a deliberate correction. The superseded token spec carried
+   `--radius: 10px / --radius-lg: 14px`, which came from web-era
+   convention rather than from the guide, and rounding is the single
+   change that most quickly makes an SV surface stop looking like SV.
+
+   `--sv-radius-none` is the default for every surface. The two small
+   steps exist for controls where a hairline box at 1px reads as a
+   rendering artefact at small sizes; they are a ceiling, not a palette.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --sv-radius-none: 0;        /* cards, panels, tables, modals, images — everything */
+  --sv-radius-sm:   2px;      /* max softening for small controls (checkbox, chip) */
+  --sv-radius-md:   4px;      /* ceiling. Nothing in this system goes past 4px. */
+  --sv-radius-full: 9999px;   /* status dots and the pill badge only */
+}

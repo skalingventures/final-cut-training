@@ -1,0 +1,85 @@
+/* ═══ .svd — Disclosure ═════════════════════════════════════════════
+   Judgement first, evidence on demand. This is the core move of an
+   operator surface: the reader sees the call, and opens the drawer
+   only when they want to check it.
+
+   Built on native <details>/<summary>, so it works with no JS, is
+   keyboard- and screen-reader-correct by default, and survives being
+   printed. disclosure.js is optional sugar (open-all, deep links).
+
+   <details class="svd">
+     <summary class="svd-summary">
+       <span class="svd-title">Pass-through recovery ran 8 days late</span>
+       <span class="svd-meta">4 items</span>
+     </summary>
+     <div class="svd-body">…</div>
+   </details>
+   ══════════════════════════════════════════════════════════════════ */
+
+.svd {
+  border: 1px solid var(--sv-border-default);
+  border-radius: var(--sv-radius-none);
+  background: var(--sv-surface-panel);
+}
+
+.svd + .svd { border-top: 0; }
+
+.svd-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+  padding: var(--sv-space-4);
+  cursor: pointer;
+  list-style: none;
+  color: var(--sv-text-strong);
+  font-size: var(--sv-text-base);
+  transition: var(--sv-transition-color);
+}
+
+.svd-summary::-webkit-details-marker { display: none; }
+
+/* The marker is a rule that rotates — a line, in keeping with the
+   visual code, rather than a chevron glyph. */
+.svd-summary::before {
+  content: "";
+  flex: none;
+  width: 0.75rem;
+  height: 1px;
+  background: var(--sv-text-accent);
+  transition: transform var(--sv-duration-base) var(--sv-ease-standard);
+}
+.svd[open] > .svd-summary::before { transform: scaleX(1.6); }
+
+.svd-summary:hover { background: var(--sv-action-tint); }
+
+.svd-title { flex: 1 1 auto; font-weight: var(--sv-weight-regular); }
+
+.svd-meta {
+  flex: none;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+  font-variant-numeric: var(--sv-numeric);
+}
+
+.svd-body {
+  padding: 0 var(--sv-space-4) var(--sv-space-4);
+  border-top: 1px solid var(--sv-border-subtle);
+  padding-top: var(--sv-space-4);
+  font-size: var(--sv-text-base);
+  line-height: var(--sv-leading-normal);
+  color: var(--sv-text-body);
+}
+.svd-body > * + * { margin-top: var(--sv-space-3); }
+
+/* Printing: every drawer opens. A printed report has no affordances. */
+@media print {
+  /* The child must be un-hidden on the CLOSED case specifically — the
+     browser hides it via the details element, not via the body's own
+     display, so `.svd > .svd-body` alone is a no-op. */
+  .svd:not([open]) > .svd-body { display: block; }
+  .svd-summary { cursor: auto; }
+  .svd-summary::before { display: none; }
+}

@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "1.6.0";
+  const APP_VERSION = "2.0.0";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -59,7 +59,7 @@
   };
 
   Core.emptyLog = function emptyLog() {
-    return { checks: {}, loads: {}, reps: {}, rpe: {}, bw: {}, burn: {}, choice: {}, subs: {} };
+    return { checks: {}, loads: {}, reps: {}, rpe: {}, bw: {}, burn: {}, choice: {}, subs: {}, setlog: {} };
   };
 
   Core.emptySession = function emptySession() {
@@ -150,7 +150,8 @@
       bw: Core.cleanMap(out.bw),
       burn: Core.cleanMap(out.burn),
       choice: Core.cleanMap(out.choice),
-      subs: Core.cleanMap(out.subs)
+      subs: Core.cleanMap(out.subs),
+      setlog: Core.cleanMap(out.setlog)
     };
   };
 
@@ -158,7 +159,7 @@
     if (!data || typeof data !== "object") throw new Error("empty");
     if (data.v !== 2 && data.v !== 3) throw new Error("Missing or unknown version.");
     if (data.state && typeof data.state !== "object") throw new Error("state must be an object.");
-    ["checks", "loads", "reps", "rpe", "bw", "burn", "choice"].forEach(function (k) {
+    ["checks", "loads", "reps", "rpe", "bw", "burn", "choice", "setlog"].forEach(function (k) {
       if (data[k] != null && (typeof data[k] !== "object" || Array.isArray(data[k]))) {
         throw new Error(k + " must be an object.");
       }
@@ -303,6 +304,46 @@
     return { reps: null, sets: Core.nSets(lift, week, program), timed: false, logged: false, prescribed: nums.length > 1 ? (nums[0] + nums[1]) / 2 : nums[0] };
   };
 
+  /* Rows a lift logged set by set. Absent for legacy data and for
+     accessories, which still carry one value for the whole lift. */
+  Core.setRows = function setRows(log, id, week, day, n) {
+    const key = Core.loadKey(id, week, day);
+    const raw = (log.setlog || {})[key] || [];
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const r = raw[i] && typeof raw[i] === "object" ? raw[i] : {};
+      out.push({ load: r.load == null ? "" : String(r.load),
+                 reps: r.reps == null ? "" : String(r.reps),
+                 rpe: r.rpe == null ? "" : String(r.rpe) });
+    }
+    /* A log written before 2.0 carried one value for the whole lift. Show it
+       where it belongs — set one — instead of losing it. */
+    if (out.length && !raw.length) {
+      const legacy = { load: (log.loads || {})[key], reps: (log.reps || {})[key], rpe: (log.rpe || {})[key] };
+      ["load", "reps", "rpe"].forEach(function (f) {
+        if (!out[0][f] && legacy[f] != null) out[0][f] = String(legacy[f]);
+      });
+    }
+    return out;
+  };
+
+  /* Tonnage from what was actually lifted, set by set, counting only sets
+     ticked off. Falls back to the single-value estimate when a lift has no
+     per-set rows — which is every lift logged before 2.0. */
+  Core.tonnageFromSetlog = function tonnageFromSetlog(rows, checks) {
+    let total = 0;
+    let any = false;
+    (rows || []).forEach(function (r, i) {
+      if (checks && !checks[i]) return;
+      const load = Core.num(r && r.load);
+      const reps = Core.num(r && r.reps);
+      if (load == null || reps == null) return;
+      any = true;
+      total += load * reps;
+    });
+    return any ? total : null;
+  };
+
   Core.metricValue = function metricValue(mode, n, spec, setsDone) {
     if (n == null) return null;
     if (mode === "load") return n;
@@ -352,7 +393,7 @@
       const done = arr.slice(0, total).filter(Boolean).length;
       const reps = ((log.reps || {})[Core.loadKey(lift.id, w, day)] || "").trim();
       const rpe = ((log.rpe || {})[Core.loadKey(lift.id, w, day)] || "").trim();
-      const scheme = lift.prog ? program.weeks[w - 1].main + " @ " + program.weeks[w - 1].rpe : (lift.rx || "");
+      const scheme = lift.prog ? program.weeks[w - 1].main + " \u00b7 " + program.weeks[w - 1].rpe : (lift.rx || "");
       prior.push({ w: w, v: v, done: done, total: total, reps: reps, rpe: rpe, scheme: scheme, clean: done >= total });
     }
     return prior;

@@ -1,0 +1,85 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures — Colour primitives
+   ───────────────────────────────────────────────────────────────────
+   Tier 1 of three. Raw named swatches only: no roles, no modes.
+   Roles live in semantic.css; never reach for a token from this file
+   in component code when a semantic name exists.
+
+   The four brand colours are transcribed from the brand guide
+   (Figma "Style Guide | 2024", frame 03a Color Palette). Everything
+   else in this file is a tonal step derived from one of those four —
+   no hue is introduced that does not trace back to the guide.
+
+   Every value that carries text was measured, not estimated. See
+   the brand contrast audit.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── The four brand colours ──────────────────────────────────────
+     "Colours inspired by monumental nature and basic minimalism."
+     These four are the whole palette. Everything below is a step. */
+  --sv-graphite: #1F1F1F;   /* near-black, neutral undertone */
+  --sv-bone:     #FFFAF4;   /* warm off-white — the SV paper */
+  --sv-nevada:   #89523B;   /* copper-earth — the signature accent */
+  --sv-blue-fog: #A3B1C0;   /* cool steel-blue — analytical counterweight */
+
+  /* Secondary paper. Used in the guide as the ground for the colour
+     combination plate — a cooler, flatter alternative to Bone when
+     Bone reads too warm (print, dense data). */
+  --sv-chalk: #F2F0ED;
+
+  /* ── Graphite ramp (dark surfaces + light-on-dark text) ────────── */
+  --sv-graphite-900: #1F1F1F;   /* page */
+  --sv-graphite-800: #282726;   /* panel, card, sidebar */
+  --sv-graphite-700: #32312F;   /* raised: table head, toolbar */
+  --sv-graphite-500: #807E7A;   /* hairline on dark — 4.07:1 on 900 */
+  --sv-graphite-300: #A49E92;   /* muted text on dark — 6.19:1 on 900 */
+
+  /* ── Bone ramp (light surfaces + dark-on-light text) ───────────── */
+  --sv-bone-000: #FFFAF4;   /* page */
+  --sv-bone-100: #F2ECE2;   /* panel, card */
+  --sv-bone-200: #E8E2D8;   /* raised: table head, highlight */
+  --sv-bone-500: #7C766C;   /* hairline on light — 4.34:1 on 000 */
+  --sv-bone-700: #5E5C58;   /* muted text on light — 6.43:1 on 000 */
+  --sv-bone-800: #3A3836;   /* body text on light — 11.25:1 on 000 */
+
+  /* ── Nevada ramp ───────────────────────────────────────────────── */
+  --sv-nevada-700: #6E4230;   /* heavy emphasis on light — 8.14:1 on bone */
+  --sv-nevada-600: #89523B;   /* the brand copper — 6.07:1 on bone */
+  --sv-nevada-500: #96604A;   /* raised copper surface (Mode N) */
+  --sv-nevada-400: #D08B68;   /* text-safe copper on dark — 5.95:1 on graphite */
+  --sv-nevada-300: #D49470;   /* hover / active copper on dark — 6.49:1 */
+  --sv-nevada-200: #E0C6B0;   /* hairline on copper — 3.16:1 on nevada-500 */
+  --sv-nevada-900: #503020;   /* text-safe copper on Blue Fog — 5.38:1 */
+  --sv-nevada-800: #7A4832;   /* recessed copper panel (Mode N) */
+
+  /* ── Blue Fog ramp ─────────────────────────────────────────────── */
+  --sv-fog-500: #A3B1C0;   /* the brand fog — 7.54:1 on graphite */
+  --sv-fog-600: #97A5B5;   /* recessed fog panel (Mode F) */
+  --sv-fog-400: #B0BCC8;   /* raised fog surface (Mode F) */
+  --sv-fog-800: #4E5C6A;   /* text-safe fog on light — 6.61:1 on bone */
+  --sv-fog-900: #445260;   /* hairline on fog — 3.66:1 on fog-500 (non-text) */
+  --sv-fog-950: #2C3640;   /* text-safe deep fog — 4.90:1 on fog-600 */
+
+  /* ── Warm neutrals for light-on-copper text (Mode N) ───────────── */
+  --sv-sand-100: #F5F1EA;   /* body on copper — 4.58:1 on nevada-500 */
+  --sv-sand-300: #DCD2C5;   /* decorative label on copper — non-text only */
+
+  /* ── Cool neutrals for dark-on-fog text (Mode F) ───────────────── */
+  --sv-slate-900: #2A2928;   /* body on fog — 6.64:1 */
+  --sv-slate-800: #3A3836;   /* muted on fog — 5.34:1 */
+
+  /* ── Status ───────────────────────────────────────────────────────
+     Muted, earth-adjacent. These are signal colours, not brand
+     colours: they never appear as decoration, only to carry state. */
+  --sv-moss-400:  #78AC78;   /* success on dark  — 6.26:1 */
+  --sv-moss-700:  #2D5E2D;   /* success on light — 7.36:1 */
+  --sv-moss-900:  #1A3E1A;   /* success on fog   — 5.50:1 */
+  --sv-amber-400: #C4956A;   /* warning on dark  — 6.16:1 */
+  --sv-amber-700: #7A5828;   /* warning on light — 6.22:1 */
+  --sv-amber-900: #4C2C1C;   /* warning on fog   — 5.70:1 */
+  --sv-rust-400:  #DC807C;   /* danger on dark   — 5.83:1 */
+  --sv-rust-700:  #8B2020;   /* danger on light  — 8.70:1 */
+  --sv-rust-900:  #6E1515;   /* danger on fog    — 5.39:1 */
+  --sv-sage-400:  #8E9E82;   /* tertiary / neutral series — 5.78:1 on dark */
+}

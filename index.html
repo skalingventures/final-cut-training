@@ -1,58 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="graphite">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1F1F1F">
 <meta name="description" content="Skaling Ventures Final Cut — six-week home gym strength, mobility, and burnout block.">
-<meta name="app-version" content="1.6.0">
+<meta name="app-version" content="2.0.0">
 <title>Final Cut — Block 01 · Skaling Ventures</title>
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./ds/tokens/index.css">
+<link rel="stylesheet" href="./ds/primitives/a11y.css">
+<link rel="stylesheet" href="./ds/primitives/rule.css">
+<link rel="stylesheet" href="./ds/primitives/mark.css">
+<link rel="stylesheet" href="./ds/primitives/button.css">
+<link rel="stylesheet" href="./ds/primitives/card.css">
+<link rel="stylesheet" href="./ds/primitives/tile.css">
+<link rel="stylesheet" href="./ds/primitives/badge.css">
+<link rel="stylesheet" href="./ds/primitives/table.css">
+<link rel="stylesheet" href="./ds/primitives/disclosure.css">
+<link rel="stylesheet" href="./ds/primitives/field.css">
+<link rel="stylesheet" href="./ds/primitives/input.css">
+<link rel="stylesheet" href="./ds/primitives/check.css">
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<a class="skip-link" href="#main-content">Skip to content</a>
+<a class="sv-skip" href="#main-content">Skip to content</a>
 <div class="sr-live" id="save-live" aria-live="polite"></div>
 
 <div class="setup" id="setup" hidden>
   <div class="setup-card">
     <div class="setup-mark" id="setup-mark"></div>
-    <p class="setup-brand">Skaling Ventures</p>
     <h1>Final Cut · Block 01</h1>
     <p>Six weeks of strength, mobility, and burnouts. Everything you log stays on this phone. Nothing is uploaded.</p>
-    <div class="field">
-      <label for="setup-start">Block start Monday</label>
-      <input id="setup-start" type="date">
-      <span class="bw-note">Today will open the matching week and day from this date.</span>
+    <div class="svf-field">
+      <label class="svf-label" for="setup-start">Block start Monday</label>
+      <input class="svf-input" id="setup-start" type="date">
+      <p class="svf-message">Today will open the matching week and day from this date.</p>
     </div>
-    <button type="button" class="primary" id="setup-go">Start the block</button>
+    <button type="button" class="svb svb-lg svb-primary fc-block-start" id="setup-go">Start the block</button>
   </div>
 </div>
 
 <header class="sticky">
   <div class="sticky-inner">
-    <div id="mark"></div>
-    <button type="button" class="brand-copy week-btn" id="week-btn" aria-expanded="false" aria-controls="nav-drawer">
-      <div class="brand-name" id="save-chip">Saved locally</div>
-      <div class="brand-block" id="sticky-week">W1 · Mon</div>
+    <span class="fc-mark" id="mark"></span>
+    <button type="button" class="fc-where" id="week-btn" aria-expanded="false" aria-controls="nav-drawer">
+      <span id="sticky-week">W1 · Mon</span>
     </button>
-    <div class="sticky-meta">
-      <a class="ready-chip" id="sticky-ready" href="#ready-card">Ready?</a>
-      <button type="button" class="today-btn" id="today-btn">Today</button>
-      <div class="phase-progress" id="phase-progress" aria-label="Phase progress"></div>
-      <div class="prog-ring" id="prog-ring" aria-label="Session progress">
-        <svg width="38" height="38" viewBox="0 0 38 38">
-          <circle class="track" cx="19" cy="19" r="15"></circle>
-          <circle class="fill" id="prog-fill" cx="19" cy="19" r="15" stroke-dasharray="0 94.2"></circle>
-        </svg>
-        <span class="prog-pct" id="prog-pct">—</span>
-      </div>
-    </div>
+    <button type="button" class="svb svb-sm svb-ghost" id="today-btn">Today</button>
+    <span class="fc-prog" id="prog-text" aria-label="Session progress">—</span>
   </div>
   <div class="nav-drawer" id="nav-drawer" hidden>
     <div class="nav-drawer-inner">
@@ -64,52 +64,49 @@
 </header>
 
 <div class="wrap" id="app">
+  <p class="fc-savewarn" id="save-chip" hidden></p>
   <div class="save-banner" id="savestate"></div>
   <div class="save-banner" id="update-banner" hidden></div>
-  <div class="toast" id="toast" hidden></div>
-
-  <section class="ready" id="ready-card" aria-labelledby="ready-h">
-    <div class="ready-top">
-      <h2 id="ready-h">Today</h2>
-      <span class="ready-lead" id="ready-lead">How do you feel?</span>
-    </div>
+  <section class="svc svc-accent ready" id="ready-card" aria-labelledby="ready-h">
+    <p class="sveb" id="ready-h">Readiness <span id="ready-lead">How do you feel?</span></p>
+    <p class="fc-rx-text" id="rx-card" hidden></p>
     <div class="ready-row" id="ready"></div>
     <div class="flags" id="flags" aria-label="Situational flags"></div>
-    <p class="ready-note" id="ready-note"></p>
-    <div class="rx-card" id="rx-card" hidden></div>
   </section>
 
   <main class="session" id="main-content">
     <div id="session"></div>
   </main>
 
-  <section class="finish" id="finish-wrap">
-    <button type="button" class="primary" id="finish-btn">Finish session</button>
-    <p class="finish-recap" id="finish-recap" hidden></p>
-  </section>
+  <div class="fc-foot">
+    <button type="button" class="svb svb-md svb-ghost" id="prev-day">‹ Prev</button>
+    <button type="button" class="svb svb-lg svb-primary" id="finish-btn">Finish session</button>
+    <button type="button" class="svb svb-md svb-ghost" id="next-day">Next ›</button>
+  </div>
+  <div id="finish-recap-host"><p class="fc-recap" id="finish-recap" hidden></p></div>
 
-  <details class="ref utility" id="utility-wrap">
-    <summary><span>Setup, backup, history</span></summary>
-    <div class="hist-body">
+  <details class="svd fc-drawer" id="utility-wrap">
+    <summary class="svd-summary"><span class="svd-title">Setup</span><span class="svd-meta" id="status-meta"></span></summary>
+    <div class="svd-body">
       <div class="meta-row">
-        <div class="field">
-          <label for="start-in">Block start (Monday)</label>
-          <input id="start-in" type="date">
-          <span class="bw-note" id="start-note"></span>
+        <div class="svf-field">
+          <label class="svf-label" for="start-in">Block start (Monday)</label>
+          <input class="svf-input" id="start-in" type="date">
+          <p class="svf-message" id="start-note"></p>
         </div>
-        <div class="field">
-          <label for="bw-in">Bodyweight · Week <span id="bw-wk">1</span></label>
-          <input id="bw-in" class="short" data-bw type="text" inputmode="decimal" placeholder="lb" aria-label="Bodyweight this week">
-          <span class="bw-note" id="bw-note"></span>
+        <div class="svf-field">
+          <label class="svf-label" for="bw-in">Bodyweight · Week <span id="bw-wk">1</span></label>
+          <input class="svf-input svf-input-num" id="bw-in" data-bw type="text" inputmode="decimal" placeholder="lb" aria-label="Bodyweight this week">
+          <p class="svf-message" id="bw-note"></p>
         </div>
       </div>
       <p class="status-line" id="status-line"></p>
     </div>
   </details>
 
-  <details class="ref">
-    <summary><span>Load history</span></summary>
-    <div class="hist-body">
+  <details class="svd fc-drawer">
+    <summary class="svd-summary"><span class="svd-title">Load history</span></summary>
+    <div class="svd-body">
       <div class="week-sum" id="week-sum"></div>
       <div class="metrics" id="metrics"></div>
       <p class="hist-key" id="hist-key"></p>
@@ -117,153 +114,34 @@
     </div>
   </details>
 
-  <details class="ref" id="backup-wrap">
-    <summary><span>Backup</span></summary>
-    <div class="hist-body">
-      <p class="hist-empty">This log lives on this phone only. Export weekly to Files or iCloud. Paste a backup here only when you need to recover.</p>
-      <textarea id="backup-json" spellcheck="false" aria-label="Log data"></textarea>
-      <div class="bk-row three">
-        <button type="button" class="mbtn" id="bk-export">Export file</button>
-        <button type="button" class="mbtn" id="bk-copy">Copy log</button>
-        <button type="button" class="mbtn" id="bk-restore">Restore</button>
+  <details class="svd fc-drawer" id="backup-wrap">
+    <summary class="svd-summary"><span class="svd-title">Backup</span></summary>
+    <div class="svd-body">
+      <p>This log lives on this phone only. Export weekly to Files or iCloud. Paste a backup here only when you need to recover.</p>
+      <div class="fc-bk">
+        <button type="button" class="svb svb-md svb-primary" id="bk-export">Export file</button>
+        <button type="button" class="svb svb-md svb-secondary" id="bk-copy">Copy log</button>
       </div>
+      <details class="svd fc-raw">
+        <summary class="svd-summary"><span class="svd-title">Raw log</span><span class="svd-meta">restore from a paste</span></summary>
+        <div class="svd-body">
+          <textarea class="svf-input svf-input-area" id="backup-json" spellcheck="false" aria-label="Log data"></textarea>
+          <button type="button" class="svb svb-md svb-secondary" id="bk-restore">Restore from this text</button>
+        </div>
+      </details>
       <p class="bk-msg" id="bk-msg"></p>
     </div>
   </details>
 
-  <details class="ref">
-    <summary><span>Reference</span></summary>
-    <div class="ref-body">
-      <h4>Operating intent</h4>
-      <p>Built around the home setup, GBRS-style training, the daily mobility programming, a WHOOP goal of more Zone 4/5 exposure, and the need to stay durable rather than cooked. Training identity: strong, mobile, athletic, durable, hard to break.</p>
-      <p>Mobility opens the pattern. Main lifts drive strength. Accessory pairings create density. Burnouts add the edge. Recovery protects the adaptation.</p>
-
-      <h4>Canon</h4>
-      <p>Ranked sources: GBRS / Vernon Griffith first, then Elastaboy, Functional Bodybuilding, Functional Patterns last and narrow.</p>
-      <dl>
-        <dt>Main lift protected</dt><dd>Squat, bench (floor press if no bench), deadlift. Straight sets, full rest, never supersetted. Dips are an accessory.</dd>
-        <dt>Athletic dose</dt><dd>The hardest day includes a small jump / land / elastic slot right after the deadlift. No extra hinge or lunge volume on deadlift day.</dd>
-        <dt>Mobility ladder</dt><dd>Same drills, Level 1 / 2 / 3. Earn the next level when control is clean. Recovery days stay unloaded.</dd>
-        <dt>Burnout complementarity</dt><dd>Do not repeat the day’s main lift or its heaviest accessories. Condition with the leftover patterns.</dd>
-        <dt>Recovery stays clean</dt><dd>No sneaky lift on Day 3 or 6. Day 5 stays submaximal.</dd>
-      </dl>
-      <dl>
-        <dt>1. Mobility</dt><dd>Daily pattern prep and joint/tissue restoration.</dd>
-        <dt>2. Main lift</dt><dd>Clean strength signal; never supersetted.</dd>
-        <dt>3. Accessory pairings</dt><dd>Efficient volume without corrupting the main lift.</dd>
-        <dt>4. Burnout</dt><dd>10-minute conditioning dose, not a second workout.</dd>
-        <dt>5. Recovery</dt><dd>Controls whether the block compounds or cooks you.</dd>
-      </dl>
-
-      <h4>Daily session template</h4>
-      <dl>
-        <dt>Targeted myofascial release</dt><dd>3–5 minutes. Only hit areas that improve today's mobility or lifting. 10–15 minutes on recovery days.</dd>
-        <dt>Mobility programming</dt><dd>6–15 minutes. Same drills, Level 1 / 2 / 3. Earn the next level when control is clean. Recovery days stay unloaded.</dd>
-        <dt>Main lift</dt><dd>15–25 minutes. Straight sets, full rest.</dd>
-        <dt>Accessory pairings</dt><dd>15–25 minutes. Efficient, non-competing supersets.</dd>
-        <dt>Burnout</dt><dd>10 minutes. Zone 4/5 exposure on hard days. Three hard burnouts plus one optional moderate each week.</dd>
-        <dt>Downshift</dt><dd>2–5 minutes. Breathing, easy walk, light rolling.</dd>
-      </dl>
-      <p>Typical total: 60–75 minutes.</p>
-
-      <h4>Programming rules</h4>
-      <dl>
-        <dt>Never superset the main lift</dt><dd>Squat, bench, and deadlift get full rest and clean RPE readings. Floor press if no bench.</dd>
-        <dt>Pair accessories intelligently</dt><dd>Pair non-competing movements after the main lift.</dd>
-        <dt>Avoid spine-loaded pairings</dt><dd>No RDL + row, deadlift + heavy carry, or heavy hinge + heavy trunk pairing.</dd>
-        <dt>Avoid grip bottlenecks</dt><dd>Do not stack pull-ups, RDLs, hanging core, and carries so the forearms fail first.</dd>
-        <dt>Burnouts support the block</dt><dd>They build work capacity; they do not steal from strength progression.</dd>
-        <dt>Athletic dose</dt><dd>Hardest day gets a small jump / land / elastic slot right after the deadlift. Mobility already covers the split lunge — do not pile lunges on deadlift day.</dd>
-        <dt>Burnout complementarity</dt><dd>Do not repeat the day’s main lift pattern or its heaviest accessories.</dd>
-        <dt>Day 5 stays submaximal</dt><dd>Durability / chassis day, not a fourth hard strength day.</dd>
-        <dt>Recovery days stay clean</dt><dd>No sneaky “quick lift” on Day 3 or Day 6.</dd>
-      </dl>
-
-      <h4>Main lift rule</h4>
-      <p>Add load only when the reps are clean. No grinders. No ego reps. No conditioning disguised as strength. Strength should progress, but the program should never become a daily test of willpower.</p>
-
-      <h4>Myofascial rule</h4>
-      <p>Release only what improves the next movement. Do not roll for 20 minutes out of obligation, and do not hit every area every day — take the areas that match the session.</p>
-
-      <h4>What the terms mean</h4>
-      <dl>
-        <dt>Rectus femoris</dt><dd>Front thigh / hip-flexor quad area.</dd>
-        <dt>Iliotibial band</dt><dd>Outer thigh, outer quad, side-hip area.</dd>
-        <dt>Gluteus maximus</dt><dd>Big glute, the back pocket area.</dd>
-        <dt>Gluteus minimus</dt><dd>Side glute, the deep side-hip pocket.</dd>
-        <dt>Gluteal fold</dt><dd>The crease where glute meets hamstring.</dd>
-        <dt>Adductors</dt><dd>Inner thighs.</dd>
-        <dt>Quadratus lumborum</dt><dd>Low-back side wall, between the bottom rib and the pelvis.</dd>
-        <dt>Calves / Achilles line</dt><dd>Calves and soleus, from the Achilles up toward the back of the knee.</dd>
-        <dt>Upper abdominals and serratus anterior</dt><dd>Upper side abs, rib-side, under-armpit area.</dd>
-        <dt>Pectoralis major</dt><dd>The broad chest muscle.</dd>
-      </dl>
-
-      <h4>Burnout rules</h4>
-      <dl>
-        <dt>Duration</dt><dd>10 minutes.</dd>
-        <dt>Goal</dt><dd>Zone 4 by minute 4–6; occasional Zone 5 near the end.</dd>
-        <dt>Frequency</dt><dd>Three hard burnouts plus one optional moderate.</dd>
-        <dt>Technique</dt><dd>Never chase WHOOP at the expense of form.</dd>
-        <dt>Scaling</dt><dd>Reduce reps or load before stopping.</dd>
-        <dt>Week 5</dt><dd>One chaotic expression: Day 4 benchmark at 85–90%. Other burnouts that week are 85–90% and not benchmarks. Deadlift stays a clean 5 × 3.</dd>
-        <dt>Week 6</dt><dd>No redline conditioning.</dd>
-        <dt>Red recovery day</dt><dd>Skip the burnout or perform a 60–70% easy version.</dd>
-      </dl>
-
-      <h4>Burnout effort</h4>
-      <dl>
-        <dt>Day 1</dt><dd>Hinge / Push / Carry Engine · 85–90%.</dd>
-        <dt>Day 2</dt><dd>Swing / Crawl / Sprawl · 85–90%.</dd>
-        <dt>Day 4</dt><dd>Light Squat + Burpee Couplet · 90–95% in Weeks 1–4; 85–90% benchmark in Week 5.</dd>
-        <dt>Day 5</dt><dd>Carry / Crawl / Swing · optional, 70–85%.</dd>
-      </dl>
-
-      <h4>Burnout scaling</h4>
-      <dl>
-        <dt>Grip fails before breathing</dt><dd>Reduce pull-ups and carries.</dd>
-        <dt>Legs fail before heart rate climbs</dt><dd>Reduce squat and lunge volume.</dd>
-        <dt>Push-ups become singles</dt><dd>Elevate hands or reduce reps.</dd>
-        <dt>Barbell technique degrades</dt><dd>Drop load immediately.</dd>
-        <dt>Heart rate never climbs</dt><dd>Reduce transitions, pick faster movements.</dd>
-        <dt>Heart rate spikes but movement gets sloppy</dt><dd>Slow slightly and keep moving.</dd>
-      </dl>
-
-      <h4>Readiness rules</h4>
-      <dl>
-        <dt>Green</dt><dd>Full session + full burnout. Add load or reps if clean, not chaos.</dd>
-        <dt>Average</dt><dd>Full strength, moderate burnout.</dd>
-        <dt>Red</dt><dd>Strength only or recovery day. Burnout off. Heavy hinge off.</dd>
-        <dt>Achilles cranky</dt><dd>Keep strength, reduce jumps and burpees, emphasize carries and swings.</dd>
-        <dt>Back feels cooked</dt><dd>Avoid heavy hinge; swap deadlift for RDL or goblet work.</dd>
-        <dt>Shoulder feels pinchy</dt><dd>Skip dips, use push-ups or DB press, increase scap work.</dd>
-        <dt>Motivation low but body okay</dt><dd>Start the session; cut the burnout if needed.</dd>
-      </dl>
-
-      <h4>Redundancy guardrails</h4>
-      <p>The mobility program already carries real strengthening volume. Extra calf work stays on Day 5. No extra tib block unless the Achilles is cranky. Petersons stay but lower. Keep the deadlift clean and reduce hinge accessories. Carries cover the glute work — no extra fluff. Never lift heavy upper body on Day 3.</p>
-
-      <h4>Week at a glance</h4>
-      <dl>
-        <dt>Day 1</dt><dd>Ankles &amp; Knees. Squat. Pull-ups + Petersons; RDL separate, straps if needed. Hinge / push / carry engine.</dd>
-        <dt>Day 2</dt><dd>Hips &amp; Glutes. Bench (floor press if no bench). Row + DB OHP; dips/push-ups + farmer carry. Swing / crawl / sprawl.</dd>
-        <dt>Day 3</dt><dd>Spine &amp; Shoulders. No lift. Zone 2 + tissue + breath. Mobility ladder without Level 3 load. No burnout.</dd>
-        <dt>Day 4</dt><dd>Ankles &amp; posterior chain. Deadlift, then elastic / landing. Push press + chin-ups; suitcase. Light squat + burpees.</dd>
-        <dt>Day 5</dt><dd>Full-body light reset. No heavy main lift. Controlled chassis circuit. Optional carry / crawl / swing.</dd>
-        <dt>Day 6</dt><dd>Follow-me flow, 3 rounds × 60 sec. Walk / tissue / breath. No burnout.</dd>
-        <dt>Day 7</dt><dd>Optional easy mobility. Rest. No lift.</dd>
-      </dl>
-
-      <h4>Progression</h4>
-      <dl id="ref-prog"></dl>
-
-      <p class="closer">Protect the main lift. Pair the accessories. Condition with intent. <b>Recover like adaptation depends on it.</b></p>
-    </div>
+  <details class="svd fc-drawer">
+    <summary class="svd-summary"><span class="svd-title">Week at a glance</span><span class="svd-meta">Block 01</span></summary>
+    <div class="svd-body"><div class="svdt-scroll"><table class="svdt" id="ref-prog"></table></div></div>
   </details>
 
   <footer class="colophon">
-    <div class="colophon-brand">Skaling Ventures</div>
+    <div class="colophon-mark" id="colophon-mark"></div>
     <div class="colophon-tagline">For the Love of the Game</div>
+    <a class="fc-ref-link" href="./reference.html">Reference</a>
     <div class="colophon-ver" id="app-ver"></div>
   </footer>
 </div>

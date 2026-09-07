@@ -1,0 +1,53 @@
+/* ═══ .svf-input — Text input, select, textarea ═════════════════════
+   Square, hairline, transparent ground. The field is a ruled box on
+   the page, not a filled well.
+
+   <input class="svf-input" type="text" />
+   <textarea class="svf-input svf-input-area"></textarea>
+   ══════════════════════════════════════════════════════════════════ */
+
+.svf-input {
+  --svf-border: var(--sv-border-default);
+
+  width: 100%;
+  height: 2.5rem;
+  padding: 0 var(--sv-space-3);
+  background: transparent;
+  border: 1px solid var(--svf-border);
+  border-radius: var(--sv-radius-none);
+  color: var(--sv-text-strong);
+  font-family: var(--sv-font-sans);
+  font-size: var(--sv-text-base);
+  line-height: 1.2;
+  transition: var(--sv-transition-color);
+}
+
+.svf-input::placeholder { color: var(--sv-text-muted); opacity: 1; }
+
+.svf-input:hover:not(:disabled) { --svf-border: var(--sv-border-strong); }
+
+.svf-input:focus-visible {
+  --svf-border: var(--sv-focus-ring);
+  outline: 2px solid var(--sv-focus-ring);
+  outline-offset: 1px;
+}
+
+.svf-input:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.svf-field[data-state="error"] .svf-input   { --svf-border: var(--sv-status-danger); }
+.svf-field[data-state="success"] .svf-input { --svf-border: var(--sv-status-success); }
+
+/* Multi-line and numeric variants. */
+.svf-input-area { height: auto; min-height: 6rem; padding: var(--sv-space-3); resize: vertical; }
+.svf-input-num  { font-family: var(--sv-font-mono); font-variant-numeric: var(--sv-numeric); text-align: right; }
+
+/* Native select needs its own arrow once appearance is reset. */
+select.svf-input {
+  appearance: none;
+  padding-right: var(--sv-space-8);
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 1.1rem center, right 0.8rem center;
+  background-size: 0.3rem 0.3rem, 0.3rem 0.3rem;
+  background-repeat: no-repeat;
+}

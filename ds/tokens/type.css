@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Skaling Ventures — Typography
+   ───────────────────────────────────────────────────────────────────
+   The brand guide specifies ONE typeface: Neue Haas Grotesk Display
+   Pro. Across every plate in the guide it is set in exactly two
+   weights — 45 Light and 55 Roman. Bold appears in one place only:
+   the wordmark.
+
+   That is the single most important rule in this file, and the one
+   most often broken. SV display type is LIGHT. A 700-weight headline
+   is not a Skaling Ventures headline; it reads as a generic SaaS
+   landing page and is the fastest way to make a surface look off-brand.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Web fallbacks for the licensed face. Neue Haas Grotesk is a Linotype
+   commercial licence: when the org has it, self-host and it wins the
+   stack automatically. Helvetica Neue sits second because it is the
+   same skeleton and is already on every Mac, which is where these
+   surfaces are read. Inter and DM Sans are the Linux/Windows floor. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=DM+Serif+Display&display=swap');
+
+:root {
+  /* ── Families ────────────────────────────────────────────────────
+     --sv-font-sans is the whole brand. There is no second voice. */
+  --sv-font-sans: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue',
+                  Inter, 'DM Sans', system-ui, -apple-system, sans-serif;
+  --sv-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* QUARANTINED. The Operating Newspaper, and nothing else. It is not
+     a brand typeface — it appears in no plate of the guide — and it
+     must never reach a prospect-facing or social surface. */
+  --sv-font-editorial: 'DM Serif Display', Georgia, serif;
+
+  /* ── Weights ─────────────────────────────────────────────────────
+     Light and regular carry the brand. Medium is the ceiling for UI
+     emphasis. Bold is the wordmark's alone. */
+  --sv-weight-light:   300;   /* NHG 45 Light  — display, lede, large copy */
+  --sv-weight-regular: 400;   /* NHG 55 Roman  — body, titles, labels */
+  --sv-weight-medium:  500;   /* UI emphasis: active tab, table head, button */
+  --sv-weight-bold:    700;   /* WORDMARK ONLY — see ../assets */
+
+  /* ── Scale ───────────────────────────────────────────────────────
+     16px body floor per the type floor. The display
+     steps carry the guide's proportions (its plates run 36 / 64 / 96
+     on a 1920 frame) rendered fluid so they hold at 375px. */
+  --sv-text-2xs:  0.6875rem;  /* 11px — colophon, fine print */
+  --sv-text-xs:   0.75rem;    /* 12px — mono eyebrow, table micro-label */
+  --sv-text-sm:   0.875rem;   /* 14px — labels, captions, dense table cells */
+  --sv-text-base: 1rem;       /* 16px — body copy. The floor. */
+  --sv-text-md:   1.125rem;   /* 18px — lede, card title */
+  --sv-text-lg:   1.3125rem;  /* 21px — section subhead */
+  --sv-text-xl:   1.625rem;   /* 26px — card headline, stat value */
+  --sv-text-2xl:  2rem;       /* 32px — section title */
+  --sv-text-3xl:  clamp(2rem,    3.2vw, 2.75rem);   /* 32→44 page title */
+  --sv-text-4xl:  clamp(2.5rem,  4.4vw, 3.75rem);   /* 40→60 hero */
+  --sv-text-5xl:  clamp(3rem,    6vw,   5.5rem);    /* 48→88 display / social */
+
+  /* ── Line height ─────────────────────────────────────────────────
+     1.4 is the guide's body value and the system default. */
+  --sv-leading-tight:   1.04;   /* --sv-text-4xl and up */
+  --sv-leading-snug:    1.2;    /* section + card titles */
+  --sv-leading-normal:  1.4;    /* body — the guide's own setting */
+  --sv-leading-relaxed: 1.6;    /* long-read paragraphs */
+
+  /* ── Tracking ────────────────────────────────────────────────────
+     The guide sets uppercase titles with air. Large display tightens. */
+  --sv-tracking-tight:    -0.02em;  /* 4xl / 5xl display only */
+  --sv-tracking-normal:   0;
+  --sv-tracking-title:    0.01em;   /* uppercase section titles */
+  --sv-tracking-label:    0.06em;   /* mono uppercase eyebrows + data labels */
+  --sv-tracking-wordmark: 0.16em;   /* the lockup's letterspacing */
+
+  /* ── Numerics ────────────────────────────────────────────────────
+     Every number in an SV surface is mono and tabular. A figure that
+     shifts column between rows is a defect, not a style choice. */
+  --sv-numeric: tabular-nums lining-nums;
+}

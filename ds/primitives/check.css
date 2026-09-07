@@ -1,0 +1,79 @@
+/* ═══ .svf-check — Checkbox and radio ═══════════════════════════════
+   One primitive, two shapes. The box is square (brand default); the
+   radio is the only circle, because a square radio is unreadable.
+
+   <label class="svf-check">
+     <input type="checkbox" />
+     <span class="svf-check-box"></span>
+     <span class="svf-check-label">Include pass-through lines</span>
+   </label>
+   ══════════════════════════════════════════════════════════════════ */
+
+.svf-check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--sv-space-3);
+  cursor: pointer;
+  font-size: var(--sv-text-base);
+  color: var(--sv-text-body);
+}
+
+/* Kept in the a11y tree and focusable; visually replaced by the box. */
+.svf-check input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.svf-check-box {
+  flex: none;
+  position: relative;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.15rem;
+  border: 1px solid var(--sv-border-default);
+  border-radius: var(--sv-radius-sm);
+  background: transparent;
+  transition: var(--sv-transition-color);
+}
+
+.svf-check input[type="radio"] ~ .svf-check-box { border-radius: var(--sv-radius-full); }
+
+.svf-check:hover .svf-check-box { border-color: var(--sv-border-strong); }
+
+.svf-check input:checked ~ .svf-check-box {
+  background: var(--sv-action-primary);
+  border-color: var(--sv-action-primary);
+}
+
+/* Checkmark: two rules, in keeping with the line vocabulary. */
+.svf-check input[type="checkbox"]:checked ~ .svf-check-box::after {
+  content: "";
+  position: absolute;
+  inset: 0.18rem 0.28rem 0.28rem;
+  border-left: 1.5px solid var(--sv-action-primary-text);
+  border-bottom: 1.5px solid var(--sv-action-primary-text);
+  transform: rotate(-45deg);
+}
+
+.svf-check input[type="radio"]:checked ~ .svf-check-box::after {
+  content: "";
+  position: absolute;
+  inset: 0.25rem;
+  border-radius: var(--sv-radius-full);
+  background: var(--sv-action-primary-text);
+}
+
+.svf-check input:focus-visible ~ .svf-check-box {
+  outline: 2px solid var(--sv-focus-ring);
+  outline-offset: 2px;
+}
+
+.svf-check input:disabled ~ * { opacity: 0.45; cursor: not-allowed; }
+
+.svf-check-label { line-height: var(--sv-leading-normal); }

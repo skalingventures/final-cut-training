@@ -1,0 +1,59 @@
+/* ═══ .svm — Brand mark and lockups ═════════════════════════════════
+   The mark is a vector. "SKALING VENTURES" is NEVER typed as text in
+   a heading — the wordmark is a drawn asset with its own letterspacing
+   and it is the one place weight 700 appears in the whole system.
+
+   <a class="svm" href="/"><svg class="svm-glyph">…</svg></a>
+
+   Lockups:  .svm-vertical (mark over wordmark)
+             .svm-horizontal (mark beside wordmark)
+             .svm-glyph-only
+
+   Safe space: the guide reserves clear space around the mark equal to
+   the height of one peak step. --svm-safe encodes it; do not crowd it.
+   ══════════════════════════════════════════════════════════════════ */
+
+.svm {
+  --svm-size: 2rem;          /* height of the glyph */
+  --svm-safe: 0.5em;         /* clear space, proportional to the mark */
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+  padding: var(--svm-safe);
+  color: var(--sv-text-strong);
+  text-decoration: none;
+}
+
+.svm-glyph {
+  display: block;
+  height: var(--svm-size);
+  width: auto;
+  flex: none;
+  /* The mark is a line drawing: it inherits the ink of its context and
+     holds a true hairline at every size. */
+  fill: none;
+  stroke: currentColor;
+}
+
+/* The wordmark, when set from the drawn asset. */
+.svm-word { display: block; height: calc(var(--svm-size) * 0.28); width: auto; fill: currentColor; }
+
+.svm-vertical   { flex-direction: column; align-items: flex-start; gap: var(--sv-space-2); }
+.svm-horizontal { flex-direction: row; align-items: center; }
+
+/* Text fallback — ONLY where an SVG cannot be embedded (plain-text
+   email, a hostile CMS). It is a fallback, not a lockup. */
+.svm-fallback {
+  font-family: var(--sv-font-sans);
+  font-size: var(--sv-text-sm);
+  font-weight: var(--sv-weight-bold);
+  letter-spacing: var(--sv-tracking-wordmark);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Minimum size. Below this the peaks collide and the mark reads as a
+   smudge — use the glyph alone, never a shrunk lockup. */
+.svm-sm { --svm-size: 1.25rem; }
+.svm-lg { --svm-size: 3.5rem; }

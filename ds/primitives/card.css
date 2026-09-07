@@ -1,0 +1,79 @@
+/* ═══ .svc — Card ═══════════════════════════════════════════════════
+   A hairline box on the panel surface. It does NOT lift on hover and
+   it casts no shadow — SV cards are printed matter, and the whole
+   separation budget is one 1px rule.
+
+   <article class="svc">
+     <header class="svc-head">
+       <p class="sveb">Runway</p>
+       <h3 class="svc-title">Reserve floor holds to March</h3>
+     </header>
+     <div class="svc-body">…</div>
+     <footer class="svc-foot">…</footer>
+   </article>
+
+   Variants: .svc-accent (copper edge) · .svc-quiet (no border, panel only)
+             .svc-link (whole card is a link target)
+   ══════════════════════════════════════════════════════════════════ */
+
+.svc {
+  --svc-bg: var(--sv-surface-panel);
+  --svc-border: var(--sv-border-default);
+  --svc-pad: var(--sv-space-6);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-4);
+  padding: var(--svc-pad);
+  background: var(--svc-bg);
+  border: 1px solid var(--svc-border);
+  border-radius: var(--sv-radius-none);
+  color: var(--sv-text-body);
+  transition: var(--sv-transition-color);
+}
+
+.svc-head { display: flex; flex-direction: column; gap: var(--sv-space-2); }
+
+.svc-title {
+  margin: 0;
+  font-family: var(--sv-font-sans);
+  font-size: var(--sv-text-md);
+  font-weight: var(--sv-weight-regular);
+  line-height: var(--sv-leading-snug);
+  color: var(--sv-text-strong);
+}
+
+.svc-body { margin: 0; font-size: var(--sv-text-base); line-height: var(--sv-leading-normal); }
+.svc-body > * + * { margin-top: var(--sv-space-3); }
+
+.svc-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--sv-space-3);
+  padding-top: var(--sv-space-4);
+  border-top: 1px solid var(--sv-border-subtle);
+  font-size: var(--sv-text-sm);
+  color: var(--sv-text-muted);
+}
+
+/* ── Variants ──────────────────────────────────────────────────── */
+
+/* Copper edge. This is how an SV card signals emphasis — a 2px rule on
+   the leading edge, not a coloured background and not a glow. */
+.svc-accent {
+  border-left: 2px solid var(--sv-action-primary);
+  padding-left: calc(var(--svc-pad) - 1px);
+}
+
+.svc-quiet { --svc-border: transparent; }
+
+.svc-link { cursor: pointer; text-decoration: none; }
+.svc-link:hover { --svc-border: var(--sv-border-strong); }
+.svc-link:hover .svc-title { color: var(--sv-text-accent); }
+
+/* Grid helper: cards in a row, equal height, brand-generous gap. */
+.svc-grid {
+  display: grid;
+  gap: var(--sv-space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+}

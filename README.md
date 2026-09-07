@@ -10,8 +10,8 @@ This is a **one-phone app**. The log lives in that browser’s `localStorage`. T
 
 1. First open: confirm the **block start Monday**, then Start the block. Later visits open today’s session.
 2. Set readiness for *this* session. Green / Average / Red and the soreness flags stay on that day only.
-3. Work top to bottom. Log load, actual reps, and RPE. Hide finished tissue/mobility if you want a shorter screen.
-4. Finish session when you are done. Export a backup weekly.
+3. Work top to bottom. Each phase is a drawer that closes itself when you finish it. Main lifts log **set by set** — load, reps and RPE per row, with `=` to copy the row above. Accessories keep one entry for the lift.
+4. Finish session sits under the last phase, with the previous and next day either side of it. Export a backup weekly.
 
 ## Backup and recovery
 
@@ -35,14 +35,34 @@ git add -A && git commit -m "Update Final Cut" && git push origin main
 
 After a deploy, bump is automatic via `CACHE` in `sw.js` when that file changes.
 
+`ds/` is the Skaling Ventures brand system, vendored. It is never edited here —
+a brand change arrives as a fresh copy of that folder. Everything Final Cut
+styles for itself is `--fc-*` and `.fc-*` in `styles.css`, layered on top.
+
 ## Tests
 
 ```bash
 node test/core.test.js
+node test/persist.test.js
 python3 validate.py
 ```
 
-GitHub Actions runs both on push to `main`.
+GitHub Actions runs these on push to `main`. There is also a browser suite that
+drives the whole logging path, including the set-tap regression:
+
+```bash
+python3 -m http.server 8123 --bind 127.0.0.1 &
+node test/browser.test.js
+```
+
+It skips cleanly when playwright is absent; `docs/audit/CHECKLIST.md` is the
+same list to walk by hand.
+
+## Reference
+
+The canon, the programming rules and the week at a glance live on
+[`reference.html`](reference.html), linked from the colophon. The session screen
+carries only what you open mid-workout.
 
 ## Privacy
 

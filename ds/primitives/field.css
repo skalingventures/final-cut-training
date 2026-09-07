@@ -1,0 +1,47 @@
+/* ═══ .svf-field — Field wrapper ════════════════════════════════════
+   Label + control + hint + message. Always use the wrapper: it is what
+   makes the error state, the hint association and the required marker
+   consistent across every form in the system.
+
+   <div class="svf-field" data-state="error">
+     <label class="svf-label" for="email">Work email</label>
+     <input class="svf-input" id="email" aria-describedby="email-msg" />
+     <p class="svf-message" id="email-msg">Use your company domain.</p>
+   </div>
+   ══════════════════════════════════════════════════════════════════ */
+
+.svf-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sv-space-2);
+}
+
+.svf-label {
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  font-weight: var(--sv-weight-medium);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
+
+.svf-label[data-required]::after {
+  content: "*";
+  margin-left: 0.25em;
+  color: var(--sv-text-accent);
+}
+
+/* Hint and message sit at 14px, not 12px: this is content the reader
+   has to act on, and shrinking it is a legibility bug, not density. */
+.svf-hint,
+.svf-message {
+  margin: 0;
+  font-size: var(--sv-text-sm);
+  line-height: var(--sv-leading-normal);
+  color: var(--sv-text-body);
+}
+
+.svf-message { color: var(--sv-text-muted); }
+
+.svf-field[data-state="error"] .svf-message   { color: var(--sv-status-danger); }
+.svf-field[data-state="success"] .svf-message { color: var(--sv-status-success); }
