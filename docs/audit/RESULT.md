@@ -35,14 +35,11 @@ U11 rest-day chrome.
 **P2** — U4 the truncated placeholder, U6 unstyled native inputs, U7 tap
 targets, U10 raw JSON as the face of Backup, and the history panel rebuilt on
 vital tiles and a segmented control. B8, hover-only phase counts, was closed by
-deleting the pips in WP2.
+deleting the pips in WP2. The PNG and Apple launcher icons were regenerated
+from the official five-peak vector after the rebuild.
 
 ## Deferred, with reasons
 
-- **Regenerating `icons/*` from the five-peak mark.** No rasteriser is available
-  in this environment, and the icons are PNGs. The in-app mark, the manifest and
-  the favicon SVG are all correct; only the two PNG launcher icons still carry
-  the three-peak drawing. One `rsvg-convert` run closes it.
 - **Self-hosting Inter and IBM Plex Mono.** The app fetched fonts from Google
   before this change and still does, through the brand system's `type.css`.
   Offline the fallback stack carries it. Changing that is a separate decision
