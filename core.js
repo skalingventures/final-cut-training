@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.0.0";
+  const APP_VERSION = "2.1.0";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -186,6 +186,36 @@
     return m ? Math.max.apply(null, m.map(Number)) : null;
   };
 
+  /* Week-aware burnout. Prefer burn.byWeek[week], else a menu row whose
+     weeks include this week, else the base burn object. Old days with a
+     single burn object keep rendering as they always have. */
+  Core.resolveBurn = function resolveBurn(day, week) {
+    const raw = day && day.burn;
+    if (!raw) return null;
+    const w = +week;
+    let overlay = null;
+    const byWeek = raw.byWeek;
+    if (byWeek && typeof byWeek === "object" && !Array.isArray(byWeek)) {
+      overlay = byWeek[w] || byWeek[String(w)] || null;
+    } else if (Array.isArray(raw.menu) && raw.menu.length) {
+      overlay = raw.menu.find(function (m) {
+        return m && Array.isArray(m.weeks) && m.weeks.indexOf(w) >= 0;
+      }) || null;
+      if (!overlay && !raw.nm) {
+        overlay = raw.menu.find(function (m) {
+          return m && (!m.weeks || !m.weeks.length);
+        }) || raw.menu[0];
+      }
+    }
+    const resolved = Object.assign({}, raw, overlay || {});
+    delete resolved.byWeek;
+    delete resolved.menu;
+    delete resolved.id;
+    delete resolved.label;
+    delete resolved.weeks;
+    return resolved;
+  };
+
   Core.sessionItems = function sessionItems(day, week, sess, log, program) {
     const items = [];
     const key = Core.wd(week, day.n);
@@ -193,6 +223,9 @@
     const choice = log.choice[key] || "";
     const ready = sess.ready || "green";
     if (day.tissue) day.tissue.items.forEach(function (_, i) { items.push(["tissue", i]); });
+    if (day.prepPump && day.prepPump.items) {
+      day.prepPump.items.forEach(function (_, i) { items.push(["preppump", i]); });
+    }
     if (day.mob) day.mob.forEach(function (_, i) { items.push(["mob", i]); });
     if (day.exclusive) {
       items.push(["choice", 0]);
@@ -204,9 +237,10 @@
         for (let i = 0; i < n; i++) items.push([l.id, i]);
       });
     }
-    if (day.burn) {
+    const burn = Core.resolveBurn(day, week);
+    if (burn) {
       if (ready === "red") items.push(["walkOrEasy", 0]);
-      else if (day.burn.optional && checks.burnskip && checks.burnskip[0]) items.push(["burnskip", 0]);
+      else if (burn.optional && checks.burnskip && checks.burnskip[0]) items.push(["burnskip", 0]);
       else items.push(["burn", 0]);
     }
     if (day.down) items.push(["down", 0]);
@@ -223,6 +257,7 @@
     const items = pack.items;
     const byPhase = {
       tissue: { done: 0, total: 0 },
+      prep: { done: 0, total: 0 },
       mobility: { done: 0, total: 0 },
       work: { done: 0, total: 0 },
       burnout: { done: 0, total: 0 },
@@ -230,6 +265,7 @@
     };
     function phaseFor(id) {
       if (id === "tissue") return "tissue";
+      if (id === "preppump") return "prep";
       if (id === "mob") return "mobility";
       if (id === "burn" || id === "burnskip" || id === "burneasy" || id === "walk" || id === "walkOrEasy") return "burnout";
       if (id === "down") return "downshift";
@@ -367,12 +403,13 @@
       const prog = Core.progress(d, week, sess, log, program);
       if (prog.done > 0 || sess.finished) started++;
       if (prog.state === "done" || sess.finished) completed++;
-      const burn = (log.burn || {})[key] || {};
+      const burnLog = (log.burn || {})[key] || {};
       const checks = (log.checks || {})[key] || {};
-      if (d.burn && !d.burn.optional && checks.burn && checks.burn[0]) hard++;
-      if (d.burn && d.burn.optional && checks.burn && checks.burn[0]) optional++;
-      if (burn.scaled === "yes") scaled++;
-      if (burn.zone === "Z4" || burn.zone === "Z5") z45++;
+      const burn = Core.resolveBurn(d, week);
+      if (burn && !burn.optional && checks.burn && checks.burn[0]) hard++;
+      if (burn && burn.optional && checks.burn && checks.burn[0]) optional++;
+      if (burnLog.scaled === "yes") scaled++;
+      if (burnLog.zone === "Z4" || burnLog.zone === "Z5") z45++;
       if (checks.burnskip && checks.burnskip[0]) skipped++;
     });
     return { started: started, completed: completed, hard: hard, optional: optional, scaled: scaled, z45: z45, skipped: skipped };

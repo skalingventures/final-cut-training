@@ -156,6 +156,36 @@
 
   function chk(id, i) { return C.chk(LOG.checks, S.week, S.day, id, i); }
 
+  function liftJob(l) { return (l && (l.job || l.role)) || ""; }
+
+  function jobLine(l) {
+    const job = liftJob(l);
+    return job ? `<p class="fc-job">${esc(job)}</p>` : "";
+  }
+
+  function cousinsList(l) {
+    if (!l || !l.cousins || !l.cousins.length) return "";
+    return `<p class="fc-cousins">Cousins · ${l.cousins.map(c => esc(c)).join(" · ")}</p>`;
+  }
+
+  function itemRow(id, t, i) {
+    const meta = [t.tool, t.d].filter(Boolean).join(" \u00b7 ");
+    return `<div class="fc-row">
+      <button type="button" class="fc-check" data-id="${esc(id)}" data-i="${i}" aria-pressed="${chk(id, i)}" aria-label="${esc(t.a)}"></button>
+      <div class="fc-row-body">
+        <p class="fc-row-name">${esc(t.a)}${meta ? ` <span class="fc-row-meta">${esc(meta)}</span>` : ""}</p>
+        ${t.cue ? `<p class="fc-row-cue">${esc(t.cue)}</p>` : ""}
+      </div>
+    </div>`;
+  }
+
+  function burnAlts(raw, resolved) {
+    if (!raw || !Array.isArray(raw.menu) || !resolved) return "";
+    const others = raw.menu.filter(m => m && (m.nm || m.label) && m.nm !== resolved.nm);
+    if (!others.length) return "";
+    return `<div class="note">Green alts · ${others.map(m => esc(m.label || m.nm)).join(" · ")}</div>`;
+  }
+
   function setChk(id, i, on) {
     const k = C.wd(S.week, S.day);
     LOG.checks[k] = LOG.checks[k] || {};
@@ -388,10 +418,12 @@
     const amber = se.ready === "amber";
     const rpeMax = C.rpeTarget(W);
     const tissuePhase = phaseStatus("tissue");
+    const prepPhase = phaseStatus("prep");
     const mobilityPhase = phaseStatus("mobility");
     const workPhase = phaseStatus("work");
     const burnPhase = phaseStatus("burnout");
     const downPhase = phaseStatus("downshift");
+    const burn = C.resolveBurn(D, S.week);
     let h = `<div class="svr-section fc-day">
       <p class="sveb">W${W.n} ${esc(W.intent)} \u00b7 ${esc(D.weekday)}
         <span class="svbg" style="--svbg-fg: var(--fc-heat-${esc(D.heat)})">${esc(D.tag)}</span></p>
@@ -403,16 +435,18 @@
     if (D.tissue) {
       h += sec("Tissue", D.tissue.dose, `
         ${D.tissue.goal ? `<div class="sec-goal">${esc(D.tissue.goal)}</div>` : ""}
-        ${D.tissue.items.map((t, i) => `
-          <div class="fc-row">
-            <button type="button" class="fc-check" data-id="tissue" data-i="${i}" aria-pressed="${chk("tissue", i)}" aria-label="${esc(t.a)}"></button>
-            <div class="fc-row-body">
-              <p class="fc-row-name">${esc(t.a)} <span class="fc-row-meta">${esc(t.tool)} \u00b7 ${esc(t.d)}</span></p>
-              <p class="fc-row-cue">${esc(t.cue)}</p>
-            </div>
-          </div>`).join("")}
+        ${D.tissue.items.map((t, i) => itemRow("tissue", t, i)).join("")}
         ${D.tissue.note ? `<div class="guard callout callout--coach"><span>${esc(D.tissue.note)}</span></div>` : ""}`,
         "tissue", tissuePhase.done, "tissue", tissuePhase.progress);
+    }
+
+    if (D.prepPump) {
+      const pp = D.prepPump;
+      h += sec("Prep pump", pp.dose || "", `
+        ${pp.goal ? `<div class="sec-goal">${esc(pp.goal)}</div>` : ""}
+        ${(pp.items || []).map((t, i) => itemRow("preppump", t, i)).join("")}
+        ${pp.note ? `<div class="guard callout callout--coach"><span>${esc(pp.note)}</span></div>` : ""}`,
+        "preppump", prepPhase.done, "prep", prepPhase.progress);
     }
 
     if (D.mob && D.mob.length) {
@@ -455,8 +489,10 @@
               <input type="radio" name="fc-choice" ${chosen === l.id ? "checked" : ""} tabindex="-1" aria-hidden="true">
               <span class="svf-check-box"></span>
               <span class="svf-check-label">
+                ${liftJob(l) ? `<span class="fc-job">${esc(liftJob(l))}</span>` : ""}
                 <span class="fc-choice-name">${esc(l.nm)}${l.rx && l.rx !== "—" ? ` <span class="fc-row-meta">${esc(l.rx)}</span>` : ""}</span>
                 ${l.note ? `<span class="fc-row-cue">${esc(l.note)}</span>` : ""}
+                ${cousinsList(l)}
               </span>
             </label>`).join("")}
         </div>
@@ -521,11 +557,13 @@
 
         return `<article class="svc fc-lift${l.prog ? " svc-accent" : ""}${blocked ? " fc-lift-blocked" : ""}" data-lift="${esc(l.id)}">
           <header class="svc-head">
+            ${jobLine(l)}
             <h4 class="svc-title">${slot}${esc(l.nm)}</h4>
             <p class="fc-rx">${rx}${W.n === 6 && !l.prog && (l.sets || 1) > 1 ? ` \u00b7 deload ${n} sets` : ""}</p>
           </header>
           ${l.prog ? `<p class="fc-lift-meta">Straight sets \u00b7 full rest \u00b7 never supersetted</p>` : ""}
           ${l.note ? `<p class="note">${esc(l.note)}</p>` : ""}
+          ${cousinsList(l)}
           ${swap && blocked ? `<p class="guard">${esc(swap)}</p>` : ""}
           ${swap && !blocked ? `<p class="note">Substitution active: ${esc((LOG.subs[key] || ov.as || swap))}</p>` : ""}
           ${l.guard ? `<p class="guard">${esc(l.guard)}</p>` : ""}
@@ -555,7 +593,7 @@
       }).join(""), "", workPhase.done, "strength", workPhase.progress);
     }
 
-    if (D.burn) {
+    if (burn) {
       if (red) {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
         h += sec("Burnout", "cut or easy", `<div class="cut callout callout--cut"><b>Hard burnout is off.</b> Walk, or run a 60–70% easy version.</div>
@@ -574,21 +612,23 @@
           </div>`, "", burnPhase.done, "burnout", burnPhase.progress);
       } else {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
-        const effort = D.n === 4 && D.burn.benchmark && W.n <= 4 ? "90–95%" : W.burn;
+        const effort = D.n === 4 && burn.benchmark && W.n <= 4 ? "90–95%" : W.burn;
         const pct = amber ? "moderate / scaled" : `at ${effort}`;
-        const bench = W.n === 5 && D.burn.benchmark ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
-        const achillesNote = se.flags.achilles && D.burn.achilles ? `<div class="guard"><span>${esc(D.burn.achilles)}</span></div>` : "";
+        const bench = W.n === 5 && burn.benchmark ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
+        const achillesNote = se.flags.achilles && burn.achilles ? `<div class="guard"><span>${esc(burn.achilles)}</span></div>` : "";
         const motNote = se.flags.motivation ? `<div class="guard"><span>Motivation is low — skipping the burnout is allowed.</span></div>` : "";
-        h += sec(`Burnout${D.burn.optional ? " — optional" : ""}`, `${D.burn.fmt.split(" ")[0]} · ${pct}`,
+        const fmtHead = String(burn.fmt || "10 min").split(" ")[0];
+        h += sec(`Burnout${burn.optional ? " — optional" : ""}`, `${fmtHead} · ${pct}`,
           `<div class="conditioning-deck"><div class="body">
-            <div class="burn-meta"><span>${esc(D.burn.fmt)}</span><span>Z4 by minute 4–6</span></div>
-            <div class="nm">${esc(D.burn.nm)}${W.n === 5 && D.burn.benchmark ? " · benchmark" : ""}</div>
-            <ol class="burn-stack">${D.burn.items.map(item => `<li>${esc(item)}</li>`).join("")}</ol>
-            <div class="guard callout callout--coach"><span>${esc(D.burn.adj)}</span></div>
+            <div class="burn-meta"><span>${esc(burn.fmt || "")}</span><span>Z4 by minute 4–6</span></div>
+            <div class="nm">${esc(burn.nm || "")}${W.n === 5 && burn.benchmark ? " · benchmark" : ""}</div>
+            <ol class="burn-stack">${(burn.items || []).map(item => `<li>${esc(item)}</li>`).join("")}</ol>
+            ${burn.adj ? `<div class="guard callout callout--coach"><span>${esc(burn.adj)}</span></div>` : ""}
+            ${burnAlts(D.burn, burn)}
             ${achillesNote}${motNote}${bench}
             <div class="fc-sets">
               <button type="button" class="fc-set fc-set-wide" data-id="burn" data-i="0" aria-pressed="${chk("burn", 0)}" aria-label="Burnout done">Done</button>
-              ${D.burn.optional || se.flags.motivation ? `<button type="button" class="fc-set fc-set-wide" data-id="burnskip" data-i="0" aria-pressed="${chk("burnskip", 0)}" aria-label="Skip burnout">Skip</button>` : ""}
+              ${burn.optional || se.flags.motivation ? `<button type="button" class="fc-set fc-set-wide" data-id="burnskip" data-i="0" aria-pressed="${chk("burnskip", 0)}" aria-label="Skip burnout">Skip</button>` : ""}
             </div>
             <div class="burn-log">
               <div class="svf-field"><label class="svf-label" for="burn-rounds">Rounds / score</label><input class="svf-input" id="burn-rounds" data-burn="rounds" value="${esc(b.rounds || "")}" placeholder="e.g. 4+8"></div>

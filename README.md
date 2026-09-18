@@ -61,8 +61,12 @@ same list to walk by hand.
 ## Reference
 
 The canon, the programming rules and the week at a glance live on
-[`reference.html`](reference.html), linked from the colophon. The session screen
-carries only what you open mid-workout.
+[`reference.html`](reference.html), linked from the colophon. Editorial rules
+live in [`CANON.md`](CANON.md). Mid-block calibration is
+[`docs/MIDBLOCK_CALIBRATION.md`](docs/MIDBLOCK_CALIBRATION.md), with pillars in
+[`docs/ACCESSORIES.md`](docs/ACCESSORIES.md), [`docs/TISSUE.md`](docs/TISSUE.md),
+and [`docs/FINISHERS.md`](docs/FINISHERS.md). The session screen carries only
+what you open mid-workout.
 
 ## Privacy
 

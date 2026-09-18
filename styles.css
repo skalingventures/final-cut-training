@@ -234,6 +234,22 @@ input, textarea, select {
   font-size: var(--sv-text-xs);
   color: var(--sv-text-muted);
 }
+.fc-job {
+  margin: 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
+.fc-cousins {
+  margin: var(--sv-space-1) 0 0;
+  font-size: var(--sv-text-sm);
+  line-height: var(--sv-leading-normal);
+  color: var(--sv-text-muted);
+}
+.fc-choice-row .fc-job { display: block; }
+.fc-choice-row .fc-cousins { display: block; }
 .fc-lift-blocked { opacity: 0.72; }
 .fc-swap { display: grid; gap: var(--sv-space-3); margin-top: var(--sv-space-2); }
 
