@@ -233,6 +233,85 @@ def check_program(p: dict) -> None:
                 err(f"day {day.get('n')} week {week} resolved burn needs nm and fmt")
             elif not resolved.get("items"):
                 err(f"day {day.get('n')} week {week} resolved burn needs items")
+    check_midblock_content(p)
+
+
+def check_midblock_content(p: dict) -> None:
+    """Block 01 mid-block musts — optional fields become required on the days that use them."""
+    days = {d["n"]: d for d in p.get("days", [])}
+
+    for n, day in days.items():
+        has = bool(day.get("prepPump"))
+        if n in (1, 2, 4) and not has:
+            err(f"day {n} must have prepPump")
+        if n not in (1, 2, 4) and has:
+            err(f"day {n} must not have prepPump")
+
+    for n in (1, 2, 4):
+        for lift in days.get(n, {}).get("lifts") or []:
+            if lift.get("prog") and lift.get("pair"):
+                err(f"day {n} main {lift.get('id')} must not be paired")
+
+    for n in (1, 2):
+        for lift in days.get(n, {}).get("lifts") or []:
+            if lift.get("prog"):
+                continue
+            if not (lift.get("job") or lift.get("role")):
+                err(f"day {n} accessory {lift.get('id')} missing job")
+            if not lift.get("cousins"):
+                err(f"day {n} accessory {lift.get('id')} missing cousins")
+
+    for n in (3, 6):
+        note = days.get(n, {}).get("mobNote") or ""
+        if not note:
+            err(f"day {n} missing mobNote")
+        elif not re.search(r"no level 3", note, re.I):
+            err(f"day {n} mobNote must forbid Level 3")
+
+    d4 = days.get(4) or {}
+    for week in range(1, 7):
+        resolved = resolve_burn(d4, week) or {}
+        if week == 5 and not resolved.get("benchmark"):
+            err("day 4 week 5 must be the sole chaotic benchmark")
+        if week != 5 and resolved.get("benchmark"):
+            err(f"day 4 week {week} must not be a benchmark")
+
+    def blob(day_n: int, week: int) -> str:
+        resolved = resolve_burn(days.get(day_n) or {}, week) or {}
+        return (" ".join(resolved.get("items") or []) + " " + (resolved.get("nm") or "")).lower()
+
+    for week in range(1, 7):
+        text = blob(1, week)
+        for banned in ("swing", "farmer", "squat", "pull-up", "pullup", "deadlift"):
+            if banned in text:
+                err(f"day 1 week {week} burn echoes {banned}")
+        text = blob(2, week)
+        for banned in ("press", "farmer", "bench", "dip"):
+            if banned in text:
+                err(f"day 2 week {week} burn echoes {banned}")
+        text = blob(4, week)
+        for banned in ("swing", "deadlift", "ohp", "overhead", "chin", "suitcase", "rdl"):
+            if banned in text:
+                err(f"day 4 week {week} burn echoes {banned}")
+
+    d5 = days.get(5, {}).get("burn") or {}
+    r5 = resolve_burn(days.get(5) or {}, 1) or {}
+    if not r5.get("optional"):
+        err("day 5 burn must stay optional")
+    if not re.search(r"aerobic|pump|cyclical|walk|bike|row", (r5.get("nm") or "") + " " + (r5.get("fmt") or ""), re.I):
+        err("day 5 default burn should be an aerobic pump")
+    menu = d5.get("menu") or []
+    if not any(re.search(r"carry|ccs|swing", str(m.get("nm", "") + m.get("label", "")), re.I) for m in menu if isinstance(m, dict)):
+        err("day 5 should keep CCS as a green alt in burn.menu")
+
+    accs = [w.get("acc", "") for w in p.get("weeks", [])]
+    if len(accs) == 6:
+        if not all(re.search(r"cousin", accs[i], re.I) for i in range(4)):
+            err("weeks 1–4 acc should mention cousin variety")
+        if not re.search(r"own", accs[4], re.I):
+            err("week 5 acc should stay on owned cousins")
+        if not re.search(r"easy|drop|reduce|30", accs[5], re.I):
+            err("week 6 acc should be easy / reduced")
 
 
 def check_app_js() -> None:

@@ -7,12 +7,12 @@ window.PROGRAM = {
   calendar: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
 
   weeks: [
-    { n: 1, main: "4 × 6", rpe: "RPE 7", acc: "Accessories moderate", burn: "80%", intent: "Establish", heat: "easy", mob: "Start at the level you can control 100%. Default Level 1." },
-    { n: 2, main: "4 × 6", rpe: "RPE 7.5", acc: "Add reps where clean · slightly heavier than W1", burn: "85%", intent: "Build", heat: "moderate", mob: "Earn the next level only when today's level is clean. Do not skip." },
-    { n: 3, main: "5 × 5", rpe: "RPE 8", acc: "Accessories stable", burn: "90%", intent: "Build hard", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
-    { n: 4, main: "5 × 4", rpe: "RPE 8–8.5", acc: "Accessories slightly reduced", burn: "85–90%", intent: "Intensify", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
-    { n: 5, main: "5 × 3", rpe: "RPE 8.5–9", acc: "Minimal fluff", burn: "85–90%", intent: "Peak", heat: "hardest", mob: "Stay on a level you own. No new level." },
-    { n: 6, main: "3 × 5", rpe: "RPE 6–7", acc: "Reduce accessories 30–40%", burn: "60–70%", intent: "Deload / absorb", heat: "easy", mob: "Drop one level or unload." }
+    { n: 1, main: "4 × 6", rpe: "RPE 7", acc: "Cousin variety — pick the implement you own today", burn: "80%", intent: "Establish", heat: "easy", mob: "Start at the level you can control 100%. Default Level 1." },
+    { n: 2, main: "4 × 6", rpe: "RPE 7.5", acc: "Cousin variety — same job, different implement if last week was clean", burn: "85%", intent: "Build", heat: "moderate", mob: "Earn the next level only when today's level is clean. Do not skip." },
+    { n: 3, main: "5 × 5", rpe: "RPE 8", acc: "Cousin variety — stay on the job; swap the cousin if the first pick is stale", burn: "90%", intent: "Build hard", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
+    { n: 4, main: "5 × 4", rpe: "RPE 8–8.5", acc: "Cousin variety — slightly reduced volume; keep the job, pick the cleanest cousin", burn: "85–90%", intent: "Intensify", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
+    { n: 5, main: "5 × 3", rpe: "RPE 8.5–9", acc: "Owned only — no new cousins, no new levels", burn: "85–90%", intent: "Peak", heat: "hardest", mob: "Stay on a level you own. No new level." },
+    { n: 6, main: "3 × 5", rpe: "RPE 6–7", acc: "Easy cousins — drop 30–40%, stay on the implement you own", burn: "60–70%", intent: "Deload / absorb", heat: "easy", mob: "Drop one level or unload." }
   ],
 
   sets: { 1: 4, 2: 4, 3: 5, 4: 5, 5: 5, 6: 3 },
@@ -34,6 +34,7 @@ window.PROGRAM = {
     {
       n: 1, heat: "hard", tag: "Hard", weekday: "Monday",
       theme: "Ankles & Knees", sub: "Squat strength + pull",
+      mobNote: "Elastaboy ladder. Start at Level 1. Earn Level 2, then Level 3 only when today's level is clean. Do not skip.",
       tissue: {
         dose: "3–5 min",
         goal: "Prep squatting, knee travel, ankle range.",
@@ -44,7 +45,16 @@ window.PROGRAM = {
           { a: "Glutes", tool: "Hard medicine ball", d: "60 sec / side", cue: "Sit on the ball and search the big glute and side-glute pocket." },
           { a: "Inner thighs", tool: "Roller", d: "45 sec / side", cue: "Gentle pressure before squats and Petersons." }
         ],
-        note: "Don't try to destroy the IT band. Work the surrounding outer quad, hip, and glute instead."
+        note: "Priority order for squat day: calves and front thigh first, then outer quad and glute. Skip the last item if time is short. Don't smash the IT band — work outer quad, hip, and glute instead."
+      },
+      prepPump: {
+        dose: "4–6 min",
+        goal: "Prime squat and knee-over-toe without stealing the main.",
+        items: [
+          { a: "Goblet squat pulse", tool: "Light KB", d: "2 × 8", cue: "Heels down, knees track, no bounce." },
+          { a: "Split-stance lean", d: "6 / side", cue: "Front knee over the toe, heel stays." }
+        ],
+        note: "Warm the pattern. This is not a working set."
       },
       mob: [
         { nm: "Knee-to-toe ankle rockers", why: "Dorsiflexion, knee-over-toe comfort.", levels: ["Hands-guided, heel down.", "More knee travel.", "Light load on the knee."] },
@@ -54,22 +64,30 @@ window.PROGRAM = {
         { nm: "Slant-board squats", why: "Knee confidence, squat tolerance.", levels: ["Bodyweight, no bounce.", "Light load.", "Hindu / self-elevated heels only if Level 2 is owned."] }
       ],
       lifts: [
-        { id: "squat", nm: "Back squat or front squat", prog: true, note: "Main lower-body strength lift.", load: true },
-        { id: "pullup", nm: "Pull-ups or weighted pull-ups", rx: "4 × 4–8", sets: 4, pair: "2", slot: "A", note: "Upper pull. Add weight if 8 strict reps are easy.", load: true, bw: true },
-        { id: "peterson", nm: "Peterson step-ups", rx: "2–3 × 6–8 / side", sets: 3, pair: "2", slot: "B", note: "Controlled knee-over-toe strength.", guard: "Mobility already covers knee-over-toe with slant-board squats — keep this volume low." },
-        { id: "rdl", nm: "Romanian deadlift", rx: "3 × 6–8", sets: 3, note: "Separate. Use straps if grip would fail before the posterior chain.", load: true }
+        { id: "squat", nm: "Back squat or front squat", prog: true, note: "Main lower-body strength lift. Straight sets, full rest, never supersetted.", load: true },
+        { id: "pullup", nm: "Pull-ups or weighted pull-ups", job: "Vertical pull", cousins: ["Chin-up", "Lat pulldown", "Band-assisted pull-up"], rx: "4 × 4–8", sets: 4, pair: "2", slot: "A", note: "Upper pull. Pick a cousin you can own for 4–8 clean reps. Add weight if 8 strict are easy.", load: true, bw: true },
+        { id: "peterson", nm: "Peterson step-ups", job: "Knee-over-toe", cousins: ["Heels-elevated goblet squat", "Slant-board step-down"], rx: "2–3 × 6–8 / side", sets: 3, pair: "2", slot: "B", note: "Controlled knee-over-toe strength. Low volume — mobility already covers slant-board squats." },
+        { id: "rdl", nm: "Romanian deadlift", job: "Hinge accessory", cousins: ["DB RDL", "Good morning", "Single-leg RDL"], rx: "3 × 6–8", sets: 3, note: "Separate from the squat — not a superset. Use straps if grip would fail first.", load: true }
       ],
       burn: {
-        nm: "Hinge / Push / Carry Engine", fmt: "10-minute AMRAP", hard: true,
-        items: ["Kettlebell swings × 15", "Push-ups × 10–12", "Farmer carry or farmer march × 40 sec"],
-        adj: "Avoids more squat volume on squat day while staying hard, athletic, and GBRS-adjacent.",
-        achilles: "If Achilles is cranky, keep swings and the farmer carry or march. Drop nothing else unless form goes."
+        nm: "Push / Crawl / March", fmt: "10-minute AMRAP", hard: true,
+        items: ["Push-ups × 8–12", "Bear crawl × 8–10 steps", "March or easy cyclical × 40 sec"],
+        adj: "No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.",
+        achilles: "If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay.",
+        byWeek: {
+          2: { nm: "Ascending Push-Crawl Ladder", fmt: "10-minute ascending ladder", items: ["1 push-up + 2 crawl steps", "2 + 4, 3 + 6 — climb", "March 40 sec between rungs if you need it"], adj: "Ladder novelty. Same family, different clock." },
+          3: { nm: "Slam / Crawl / Bike", fmt: "10-minute AMRAP", items: ["Med-ball slam × 8", "Bear crawl × 8 steps", "Easy bike or march × 40 sec"], adj: "Build-hard week. Slams stay athletic, not a max." },
+          4: { nm: "Push / Crawl / March", fmt: "10-minute AMRAP", items: ["Push-ups × 8–10", "Bear crawl × 6–8 steps", "March × 40 sec"], adj: "Slightly reduced. Keep the quality." },
+          5: { nm: "Owned Push-Crawl", fmt: "10-minute AMRAP", items: ["Push-ups × 8–10", "Bear crawl × 6–8 steps", "March × 40 sec"], adj: "Owned only. Not the chaotic expression — that is Day 4 this week." },
+          6: { nm: "Easy Push-March", fmt: "8-minute easy", items: ["Push-ups × 6–8", "Easy march or bike × 45 sec"], adj: "Deload. 60–70%. Leave some in the tank." }
+        }
       },
       down: "2–5 min breathing or easy walk."
     },
     {
       n: 2, heat: "hard", tag: "Hard", weekday: "Tuesday",
       theme: "Hips & Glutes", sub: "Upper strength + carries",
+      mobNote: "Elastaboy ladder. Start at Level 1. Earn Level 2, then Level 3 only when today's level is clean. Do not skip.",
       tissue: {
         dose: "3–5 min",
         goal: "Open hips, improve bracing, prep shoulders and chest for pressing and carries.",
@@ -79,7 +97,17 @@ window.PROGRAM = {
           { a: "Chest", tool: "Hard ball against wall", d: "60 sec / side", cue: "Work across the broad chest from the sternum side toward the shoulder." },
           { a: "Rib-side / under armpit", tool: "Ball or roller", d: "45–60 sec / side", cue: "Just below the armpit and along the side ribs — helps overhead position and breathing." },
           { a: "Lats / side back", tool: "Roller", d: "60 sec / side", cue: "Roll from the armpit down the side of the back." }
-        ]
+        ],
+        note: "Priority order for press day: glutes and hip crease first, then chest and rib-side. Skip the last item if time is short."
+      },
+      prepPump: {
+        dose: "4–6 min",
+        goal: "Brace and groove the press without a second press session.",
+        items: [
+          { a: "Dead-bug brace", d: "2 × 6 / side", cue: "Ribs down, exhale, then reach." },
+          { a: "Scap push-up", d: "2 × 8", cue: "Lock the elbows. Move the shoulder blades only." }
+        ],
+        note: "Warm the press. This is not a working set."
       },
       mob: [
         { nm: "90/90 hip switches", why: "Hip rotation.", levels: ["Hands for support.", "No hands.", "Light weight held in front."] },
@@ -89,11 +117,11 @@ window.PROGRAM = {
         { nm: "Lateral band walks", why: "Side-glute stability.", levels: ["Band above the knees.", "Lower squat.", "Band at the ankles, stay low."] }
       ],
       lifts: [
-        { id: "bench", nm: "Bench press", prog: true, note: "Floor press if no bench. Dips are the accessory, never the main.", load: true },
-        { id: "row", nm: "Barbell row or chest-supported DB row", rx: "4 × 6–10", sets: 4, pair: "2", slot: "A", note: "Horizontal pull. Heavy but controlled.", load: true },
-        { id: "ohp", nm: "Standing DB overhead press", rx: "3–4 × 6–8", sets: 4, pair: "2", slot: "B", note: "Vertical push. Strict reps, ribs down.", load: true },
-        { id: "dips", nm: "Dips or close-grip push-ups", rx: "2–3 × 8–12", sets: 3, pair: "3", slot: "A", note: "Secondary push. Shoulder-dependent.", swapPinch: "Skip dips. Use push-ups or DB press and add scap work." },
-        { id: "farmer", nm: "Farmer carry", rx: "4 × 40–60 sec", sets: 4, pair: "3", slot: "B", note: "Heavy, tall, braced.", load: true }
+        { id: "bench", nm: "Bench press", prog: true, note: "Floor press if no bench. Dips are the accessory, never the main. Straight sets, never supersetted.", load: true },
+        { id: "row", nm: "Barbell row or chest-supported DB row", job: "Horizontal pull", cousins: ["Chest-supported DB row", "Seal row", "Cable or band row"], rx: "4 × 6–10", sets: 4, pair: "2", slot: "A", note: "Horizontal pull. Heavy but controlled. Swap the cousin if last week's implement is stale.", load: true },
+        { id: "ohp", nm: "Standing DB overhead press", job: "Strict vertical push", cousins: ["Landmine press", "Half-kneeling DB press", "Seated DB press"], rx: "3–4 × 6–8", sets: 4, pair: "2", slot: "B", note: "Strict reps, ribs down. Pick a cousin you can own overhead.", load: true },
+        { id: "dips", nm: "Dips or close-grip push-ups", job: "Secondary push", cousins: ["Close-grip push-up", "Bench dip", "Decline push-up"], rx: "2–3 × 8–12", sets: 3, pair: "3", slot: "A", note: "Secondary push. Shoulder-dependent.", swapPinch: "Skip dips. Use push-ups or DB press and add scap work." },
+        { id: "farmer", nm: "Farmer carry", job: "Loaded carry", cousins: ["Trap-bar carry", "Front-rack carry", "Sandbag carry"], rx: "4 × 40–60 sec", sets: 4, pair: "3", slot: "B", note: "Heavy, tall, braced. Cousin is a different implement, not a lighter farmer.", load: true }
       ],
       burn: {
         nm: "Swing / Crawl / Sprawl", fmt: "40 sec work / 20 sec transition × 10 min", hard: true,
@@ -109,8 +137,14 @@ window.PROGRAM = {
           "9 · Air squats or step-overs",
           "10 · Easy walk, nasal breathing"
         ],
-        adj: "Dense upper + carry day. This burnout is hinge / crawl / cyclical / squat — 85–90%, not a second press or farmer.",
-        achilles: "If Achilles is cranky, swap burpees for extra walk or step-overs. Keep air squats."
+        adj: "Dense upper + carry day. Hinge / crawl / cyclical — not a second press or farmer.",
+        achilles: "If Achilles is cranky, swap burpees for extra walk or step-overs. Keep air squats.",
+        byWeek: {
+          2: { nm: "Swing-Crawl Ladder", fmt: "10-minute ascending ladder", items: ["KB swings × 8", "Bear crawl × 6 steps", "Add 2 swings and 2 steps each rung", "Nasal walk 20 sec if you need it"], adj: "Ladder novelty on the same family. Still no press or farmer." },
+          4: { nm: "Swing / Crawl / Sprawl", fmt: "40 sec work / 20 sec transition × 8 min", items: ["1 · Kettlebell swings", "2 · Bear crawl or plank shoulder taps", "3 · Burpees or sprawls", "4 · Air squats or step-overs", "5 · Easy walk, nasal breathing", "6 · Kettlebell swings", "7 · Bear crawl", "8 · Easy walk"], adj: "Slightly reduced clock. Keep the quality." },
+          5: { nm: "Owned Swing-Crawl", fmt: "40 sec work / 20 sec transition × 10 min", items: ["1 · Kettlebell swings", "2 · Bear crawl", "3 · Step-overs or sprawls", "4 · Air squats", "5 · Easy walk", "6 · Kettlebell swings", "7 · Bear crawl", "8 · Step-overs", "9 · Air squats", "10 · Easy walk"], adj: "Owned only. Not the chaotic expression — that is Day 4 this week." },
+          6: { nm: "Easy Swing-Walk", fmt: "8-minute easy 40/20", items: ["1 · Easy KB swings", "2 · Plank shoulder taps", "3 · Step-overs", "4 · Easy walk", "5 · Easy walk", "6 · Easy KB swings", "7 · Easy walk", "8 · Easy walk"], adj: "Deload. 60–70%. Nasal if you can." }
+        }
       },
       down: "2–5 min breathing or easy walk."
     },
@@ -151,6 +185,7 @@ window.PROGRAM = {
     {
       n: 4, heat: "hardest", tag: "Hardest", weekday: "Thursday",
       theme: "Ankles & Posterior Chain", sub: "Athletic full body",
+      mobNote: "Elastaboy ladder. Start at Level 1. Earn Level 2, then Level 3 only when today's level is clean. Do not skip.",
       tissue: {
         dose: "3–5 min",
         goal: "Prep the hinge, deadlift, and a small athletic landing dose.",
@@ -161,7 +196,17 @@ window.PROGRAM = {
           { a: "Inner thighs", tool: "Roller", d: "45 sec / side", cue: "Helps before adductor rock-backs and the athletic slot." },
           { a: "Front thigh / hip-flexor quad", tool: "Roller", d: "45 sec / side", cue: "Keep it moderate — enough to open the front of the hip." },
           { a: "T-spine / upper back", tool: "Roller", d: "60 sec", cue: "Helps the front rack and push-press position." }
-        ]
+        ],
+        note: "Priority for hinge and land: calves and glute-fold first, then hamstrings. T-spine last if time is short."
+      },
+      prepPump: {
+        dose: "4–6 min",
+        goal: "Groove the hinge and a light landing before the deadlift.",
+        items: [
+          { a: "KB deadlift groove", tool: "Light KB", d: "2 × 5", cue: "Wedge, brace, stand tall. Not a set." },
+          { a: "Pogo or step-over", d: "2 × 6", cue: "Quiet feet. Skip jumps if Achilles is cranky." }
+        ],
+        note: "Prime the hinge and land. Save the jump dose for after the deadlift."
       },
       mob: [
         { nm: "Bent-knee calf raisers", why: "Soleus and Achilles prep.", levels: ["Two-leg, shallow bend.", "Deeper bend.", "Single-leg on a ledge."] },
@@ -171,17 +216,23 @@ window.PROGRAM = {
         { nm: "Long split lunge", why: "Hip extension, unilateral control.", levels: ["Front foot elevated, hold for balance. Hamstring covers the calf.", "Lower the box, less hand support.", "Floor. Dumbbells only if the calf-cover standard is met."] }
       ],
       lifts: [
-        { id: "dead", nm: "Deadlift", prog: true, note: "Heavy but clean. No grinders.", load: true, swapRed: "Swap for RDL or goblet work today." },
-        { id: "elastic", nm: "Broad jumps, pogo bounds, or med-ball slam", rx: "3 × 3–5 jumps or 3 × 8–10 pogos", sets: 3, note: "Crisp landings, not a max-out. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
-        { id: "pp", nm: "Push press", rx: "4 × 4–6", sets: 4, pair: "2", slot: "A", note: "Athletic overhead power.", load: true },
-        { id: "chin", nm: "Chin-ups", rx: "4 × 5–8", sets: 4, pair: "2", slot: "B", note: "Clean reps. Add weight only if crisp.", load: true, bw: true },
-        { id: "suit", nm: "Suitcase carry", rx: "3 × 40 sec / side", sets: 3, note: "Anti-rotation and chassis work.", load: true }
+        { id: "dead", nm: "Deadlift", prog: true, note: "Heavy but clean. No grinders. Straight sets, never supersetted.", load: true, swapRed: "Swap for RDL or goblet work today." },
+        { id: "elastic", nm: "Broad jumps, pogo bounds, or med-ball slam", job: "Elastic / land", rx: "3 × 3–5 jumps or 3 × 8–10 pogos", sets: 3, note: "Crisp landings, not a max-out. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
+        { id: "pp", nm: "Push press", job: "Athletic overhead", rx: "4 × 4–6", sets: 4, pair: "2", slot: "A", note: "Athletic overhead power.", load: true },
+        { id: "chin", nm: "Chin-ups", job: "Vertical pull", rx: "4 × 5–8", sets: 4, pair: "2", slot: "B", note: "Clean reps. Add weight only if crisp.", load: true, bw: true },
+        { id: "suit", nm: "Suitcase carry", job: "Anti-rotation carry", rx: "3 × 40 sec / side", sets: 3, note: "Anti-rotation and chassis work.", load: true }
       ],
       burn: {
-        nm: "Light Squat + Burpee Couplet", fmt: "10-minute AMRAP", hard: true, benchmark: true,
-        items: ["Goblet squat × 10", "Push-ups × 10–12", "Burpees over bar × 5"],
-        adj: "Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press.",
-        achilles: "If Achilles is cranky, drop burpees for farmer march or step-overs."
+        nm: "Light Squat + Horizontal Push", fmt: "10-minute AMRAP", hard: true,
+        items: ["Goblet squat × 8–10", "Push-ups × 10–12", "Burpees or bar step-overs × 5"],
+        adj: "Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, or suitcase here.",
+        achilles: "If Achilles is cranky, drop burpees for step-overs or a short march.",
+        byWeek: {
+          2: { nm: "Goblet / Push-up / Step-over", fmt: "10-minute AMRAP", items: ["Goblet squat × 8", "Push-ups × 10", "Bar step-overs × 6"], adj: "Same family. Step-overs if you want less sprawl." },
+          4: { nm: "Light Squat + Horizontal Push", fmt: "10-minute AMRAP", items: ["Goblet squat × 8", "Push-ups × 8–10", "Burpees or bar step-overs × 4"], adj: "Slightly reduced. Keep landings quiet." },
+          5: { nm: "Chaotic Light Squat Couplet", fmt: "10-minute AMRAP", benchmark: true, items: ["Goblet squat × 10", "Push-ups × 10–12", "Burpees over bar × 5"], adj: "Week 5 sole chaotic benchmark. Log rounds honestly." },
+          6: { nm: "Easy Goblet + Push-up", fmt: "8-minute easy", items: ["Goblet squat × 6–8", "Push-ups × 6–8", "Step-overs × 4"], adj: "Deload. 60–70%. No redline." }
+        }
       },
       down: "2–5 min breathing or easy walk."
     },
@@ -189,6 +240,7 @@ window.PROGRAM = {
       n: 5, heat: "moderate", tag: "Moderate", weekday: "Friday",
       theme: "Full Body Light Reset", sub: "Chassis · durability · pump",
       restTitle: "Three controlled rounds — not for time · RPE 7",
+      mobNote: "Elastaboy ladder. Chassis day. Start at Level 1; Level 3 only if you already own it.",
       tissue: {
         dose: "3–5 min",
         goal: "Posture, tissue quality, joint-friendly durability.",
@@ -218,9 +270,25 @@ window.PROGRAM = {
         { id: "hang", nm: "Dead hang", rx: "30–45 sec", sets: 3, note: "Grip and shoulder decompression." }
       ],
       burn: {
-        optional: true, nm: "Carry / Crawl / Swing", fmt: "Every 2 min for 10 min — 5 rounds",
-        items: ["Farmer carry or march — 40 sec", "Kettlebell swings × 12", "Bear crawl × 20 steps", "Rest the remainder"],
-        adj: "Optional, 70–85%. Day 5 should leave you better, not depleted. If fatigue has accumulated, replace with a 10-minute easy incline walk, easy loaded carry, or nasal breathing walk."
+        optional: true,
+        nm: "Aerobic pump",
+        fmt: "10-minute easy cyclical",
+        items: [
+          "Bike, row, or incline walk — nasal, conversational",
+          "Stay about RPE 7",
+          "Stand up if you need; do not chase heart rate"
+        ],
+        adj: "Day 5 should leave you better, not depleted. Default is an aerobic pump. Old CCS is a green-day alt only.",
+        menu: [
+          {
+            id: "ccs",
+            label: "Carry / Crawl / Swing (green alt)",
+            nm: "Carry / Crawl / Swing",
+            fmt: "Every 2 min for 10 min — 5 rounds",
+            items: ["Farmer carry or march — 40 sec", "Kettlebell swings × 12", "Bear crawl × 20 steps", "Rest the remainder"],
+            adj: "Green-day alt only. Skip if the week already cooked you."
+          }
+        ]
       },
       down: "2–5 min breathing or easy walk."
     },
@@ -229,6 +297,7 @@ window.PROGRAM = {
       theme: "Follow-Me Flow", sub: "Walk · tissue · breath",
       restTitle: "Pick one",
       exclusive: true,
+      mobNote: "Follow-me flow. Level 1 default. Level 2 if owned. No Level 3.",
       tissue: {
         dose: "10–15 min",
         goal: "Low-intensity restoration.",
