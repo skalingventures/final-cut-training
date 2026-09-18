@@ -62,9 +62,10 @@ same list to walk by hand.
 
 The canon, the programming rules and the week at a glance live on
 [`reference.html`](reference.html), linked from the colophon. Editorial rules
-for the block live in [`CANON.md`](CANON.md); finishers and mid-block intent
-are in [`docs/FINISHERS.md`](docs/FINISHERS.md) and
-[`docs/MIDBLOCK_01.md`](docs/MIDBLOCK_01.md). The session screen carries only
+live in [`CANON.md`](CANON.md). Mid-block calibration is
+[`docs/MIDBLOCK_CALIBRATION.md`](docs/MIDBLOCK_CALIBRATION.md), with pillars in
+[`docs/ACCESSORIES.md`](docs/ACCESSORIES.md), [`docs/TISSUE.md`](docs/TISSUE.md),
+and [`docs/FINISHERS.md`](docs/FINISHERS.md). The session screen carries only
 what you open mid-workout.
 
 ## Privacy

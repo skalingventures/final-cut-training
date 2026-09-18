@@ -1,6 +1,8 @@
 # Finisher library
 
-Editorial source of truth for Block 01 burnouts. `program.js` is what the day view paints. This page is why those burns look the way they do, and how to write the next one without inventing a new station list every week.
+One of five equal mid-block pillars — complementary burns — not the whole memorial. Start at [`MIDBLOCK_CALIBRATION.md`](MIDBLOCK_CALIBRATION.md). Accessories, tissue, Elastaboy openers, and prep pump live in their own pages.
+
+This page is clocks, movement-family tags, the anti-echo picker, and week rules. `program.js` encodes what this page already decided.
 
 Do not copy paid GBRS, Filly, Functional Patterns, or Elastaboy daily workouts into this file or into the program. Take the spirit: short gritty finishes, built-not-burnt density, complementary patterns. Write original clocks.
 
