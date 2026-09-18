@@ -27,6 +27,8 @@ Do not copy paid daily workouts from any of these. Take the principles.
 
 **Burnout complementarity.** The 10-minute burnout must not repeat the day's main lift pattern or its heaviest accessories. It drives Zone 4/5 with non-competing patterns so the strength signal stays clean. Three hard burnouts plus one optional moderate. Week 5 has one chaotic expression: the Day 4 benchmark at 85–90%. Other Week 5 burnouts are 85–90% and not benchmarks. Week 6 has no redline.
 
+**Finishers library.** Variety is format rotation plus anti-echo, not an infinite list of station cousins. [`docs/FINISHERS.md`](docs/FINISHERS.md) is the editorial source of truth for clocks, movement-family tags, and the Day 1 / 2 / 4 / 5 picker. `program.js` only encodes what that page already decided. Mid-block pillars and non-goals live in [`docs/MIDBLOCK_01.md`](docs/MIDBLOCK_01.md).
+
 **Recovery stays clean.** No sneaky lift on Day 3 or Day 6. Day 5 is submaximal durability, not a fourth hard strength day.
 
 ## How to judge a change

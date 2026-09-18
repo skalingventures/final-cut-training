@@ -61,8 +61,11 @@ same list to walk by hand.
 ## Reference
 
 The canon, the programming rules and the week at a glance live on
-[`reference.html`](reference.html), linked from the colophon. The session screen
-carries only what you open mid-workout.
+[`reference.html`](reference.html), linked from the colophon. Editorial rules
+for the block live in [`CANON.md`](CANON.md); finishers and mid-block intent
+are in [`docs/FINISHERS.md`](docs/FINISHERS.md) and
+[`docs/MIDBLOCK_01.md`](docs/MIDBLOCK_01.md). The session screen carries only
+what you open mid-workout.
 
 ## Privacy
 
