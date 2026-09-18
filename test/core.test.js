@@ -191,4 +191,109 @@ function emptyLog() { return C.emptyLog(); }
 // Week 2 carries a real RPE number, not prose.
 assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a number");
 
+// resolveBurn — single object, byWeek overlay, menu fallback
+{
+  const plain = { n: 1, burn: { nm: "Base", fmt: "10-minute AMRAP", items: ["a"], optional: false } };
+  const resolved = C.resolveBurn(plain, 3);
+  assert.strictEqual(resolved.nm, "Base");
+  assert.ok(!("byWeek" in resolved));
+  assert.strictEqual(C.resolveBurn({ n: 3, burn: null }, 1), null);
+
+  const weekly = {
+    n: 1,
+    burn: {
+      nm: "Base", fmt: "10-minute AMRAP", items: ["base"], adj: "base adj",
+      byWeek: {
+        2: { nm: "Ladder", fmt: "10-minute ladder", items: ["rung"] },
+        6: { nm: "Easy", fmt: "8-minute easy", items: ["walk"], optional: true }
+      }
+    }
+  };
+  assert.strictEqual(C.resolveBurn(weekly, 1).nm, "Base", "missing byWeek key falls back to base");
+  assert.strictEqual(C.resolveBurn(weekly, 2).nm, "Ladder");
+  assert.deepStrictEqual(C.resolveBurn(weekly, 2).items, ["rung"]);
+  assert.strictEqual(C.resolveBurn(weekly, 2).adj, "base adj", "overlay keeps base fields");
+  assert.strictEqual(C.resolveBurn(weekly, 6).optional, true);
+  assert.ok(!C.resolveBurn(weekly, 2).byWeek);
+
+  const menuDay = {
+    n: 5,
+    burn: {
+      optional: true,
+      nm: "Aerobic pump",
+      fmt: "10-minute easy cyclical",
+      items: ["bike"],
+      menu: [
+        { id: "ccs", label: "CCS green alt", nm: "Carry / Crawl / Swing", fmt: "E2MOM", items: ["carry"] },
+        { id: "chaos", label: "W5 only", weeks: [5], nm: "Chaotic", fmt: "AMRAP", items: ["go"] }
+      ]
+    }
+  };
+  assert.strictEqual(C.resolveBurn(menuDay, 1).nm, "Aerobic pump", "menu without weeks does not steal a complete base");
+  assert.strictEqual(C.resolveBurn(menuDay, 5).nm, "Chaotic", "week-matched menu row wins");
+
+  const menuOnly = {
+    n: 2,
+    burn: {
+      menu: [
+        { id: "a", label: "Default", nm: "Default", fmt: "AMRAP", items: ["x"] },
+        { id: "b", weeks: [4], nm: "W4", fmt: "ladder", items: ["y"] }
+      ]
+    }
+  };
+  assert.strictEqual(C.resolveBurn(menuOnly, 1).nm, "Default");
+  assert.strictEqual(C.resolveBurn(menuOnly, 4).nm, "W4");
+}
+
+// prepPump counts as its own phase; old days without it stay unchanged
+{
+  const day = {
+    n: 1,
+    exclusive: false,
+    tissue: { items: [{}] },
+    prepPump: { items: [{ a: "pulse" }, { a: "lean" }] },
+    mob: ["a"],
+    lifts: [{ id: "squat", prog: true }],
+    burn: { hard: true },
+    down: "x"
+  };
+  const log = emptyLog();
+  const sess = C.emptySession();
+  sess.ready = "green";
+  const p = C.progress(day, 1, sess, log, program);
+  assert.deepStrictEqual(p.byPhase.prep, { done: 0, total: 2 });
+  log.checks.w1d1 = { preppump: [true, false] };
+  const p2 = C.progress(day, 1, sess, log, program);
+  assert.deepStrictEqual(p2.byPhase.prep, { done: 1, total: 2 });
+  const plain = C.progress(program.days[0], 1, sess, emptyLog(), program);
+  assert.deepStrictEqual(plain.byPhase.prep, { done: 0, total: 0 });
+}
+
+// weekSummary uses the resolved optional flag
+{
+  const weekly = {
+    sets: program.sets,
+    progReps: program.progReps,
+    weeks: program.weeks,
+    days: [
+      { n: 1, exclusive: false, lifts: [], burn: { optional: false, byWeek: { 6: { optional: true } } } },
+      { n: 2, exclusive: false, lifts: [] },
+      { n: 3, exclusive: false, lifts: [] },
+      { n: 4, exclusive: false, lifts: [] },
+      { n: 5, exclusive: false, lifts: [] },
+      { n: 6, exclusive: true, lifts: [{ id: "f1" }] },
+      { n: 7, exclusive: true, lifts: [{ id: "r1" }] }
+    ]
+  };
+  const log = emptyLog();
+  log.checks.w1d1 = { burn: [true] };
+  log.checks.w6d1 = { burn: [true] };
+  const w1 = C.weekSummary(1, log, weekly, {});
+  const w6 = C.weekSummary(6, log, weekly, {});
+  assert.strictEqual(w1.hard, 1);
+  assert.strictEqual(w1.optional, 0);
+  assert.strictEqual(w6.hard, 0);
+  assert.strictEqual(w6.optional, 1);
+}
+
 console.log("PASS core tests");

@@ -140,6 +140,70 @@ def load_program() -> dict:
     return json.loads(r.stdout)
 
 
+def resolve_burn(day: dict, week: int) -> dict | None:
+    """Mirror Core.resolveBurn — byWeek, else week-matched menu, else base."""
+    raw = day.get("burn")
+    if not raw:
+        return None
+    overlay = None
+    by_week = raw.get("byWeek")
+    if isinstance(by_week, dict):
+        overlay = by_week.get(week) or by_week.get(str(week))
+    elif isinstance(raw.get("menu"), list) and raw["menu"]:
+        overlay = next(
+            (m for m in raw["menu"] if isinstance(m, dict) and week in (m.get("weeks") or [])),
+            None,
+        )
+        if overlay is None and not raw.get("nm"):
+            overlay = next(
+                (m for m in raw["menu"] if isinstance(m, dict) and not m.get("weeks")),
+                raw["menu"][0],
+            )
+    resolved = dict(raw)
+    if overlay:
+        resolved.update(overlay)
+    for k in ("byWeek", "menu", "id", "label", "weeks"):
+        resolved.pop(k, None)
+    return resolved
+
+
+def check_optional_shapes(day: dict) -> None:
+    n = day.get("n")
+    for lift in day.get("lifts") or []:
+        job = lift.get("job") or lift.get("role")
+        if job is not None and not isinstance(job, str):
+            err(f"day {n} lift {lift.get('id')} job/role must be a string")
+        cousins = lift.get("cousins")
+        if cousins is not None:
+            if not isinstance(cousins, list) or not all(isinstance(c, str) for c in cousins):
+                err(f"day {n} lift {lift.get('id')} cousins must be a string list")
+    pp = day.get("prepPump")
+    if pp is not None:
+        if not isinstance(pp, dict):
+            err(f"day {n} prepPump must be an object")
+        else:
+            items = pp.get("items") or []
+            if not isinstance(items, list):
+                err(f"day {n} prepPump.items must be a list")
+            for i, item in enumerate(items):
+                if not isinstance(item, dict) or not item.get("a"):
+                    err(f"day {n} prepPump item {i} needs an action name")
+    burn = day.get("burn")
+    if not burn:
+        return
+    if burn.get("byWeek") is not None and not isinstance(burn["byWeek"], dict):
+        err(f"day {n} burn.byWeek must be an object")
+    if burn.get("menu") is not None:
+        if not isinstance(burn["menu"], list):
+            err(f"day {n} burn.menu must be a list")
+        else:
+            for i, row in enumerate(burn["menu"]):
+                if not isinstance(row, dict):
+                    err(f"day {n} burn.menu[{i}] must be an object")
+                elif row.get("weeks") is not None and not isinstance(row["weeks"], list):
+                    err(f"day {n} burn.menu[{i}].weeks must be a list")
+
+
 def check_program(p: dict) -> None:
     if not p:
         return
@@ -159,11 +223,24 @@ def check_program(p: dict) -> None:
     for w in p.get("weeks", []):
         if not re.match(r"^RPE \d", str(w.get("rpe", ""))):
             err(f"week {w.get('n')} rpe must start with an RPE number, got {w.get('rpe')!r}")
+    for day in p.get("days", []):
+        check_optional_shapes(day)
+        if not day.get("burn"):
+            continue
+        for week in range(1, 7):
+            resolved = resolve_burn(day, week)
+            if not resolved or not resolved.get("nm") or not resolved.get("fmt"):
+                err(f"day {day.get('n')} week {week} resolved burn needs nm and fmt")
+            elif not resolved.get("items"):
+                err(f"day {day.get('n')} week {week} resolved burn needs items")
 
 
 def check_app_js() -> None:
     js = read("app.js")
-    for needle in ["FinalCutCore", "saveNow", "pagehide", "setupDone", "SESSIONS", "SKIP_WAITING"]:
+    for needle in [
+        "FinalCutCore", "saveNow", "pagehide", "setupDone", "SESSIONS",
+        "SKIP_WAITING", "resolveBurn", "prepPump", "fc-job", "fc-cousins",
+    ]:
         if needle not in js:
             err(f"app.js missing {needle!r}")
     if "window.storage" in js:
