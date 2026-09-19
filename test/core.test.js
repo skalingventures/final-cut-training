@@ -262,6 +262,24 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
     "Day 2 chip must not be a bare number next to 0/1");
 }
 
+// Live program formats must not produce a bare-number chip
+{
+  const fs = require("fs");
+  const path = require("path");
+  const vm = require("vm");
+  const ctx = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../program.js"), "utf8"), ctx);
+  ctx.window.PROGRAM.days.forEach(function (d) {
+    for (let w = 1; w <= 6; w++) {
+      const burn = C.resolveBurn(d, w);
+      if (!burn || !burn.fmt) continue;
+      const chip = C.burnFmtChip(burn.fmt);
+      assert.ok(!/^\d+$/.test(chip),
+        "W" + w + " D" + d.n + " chip " + JSON.stringify(chip) + " from " + JSON.stringify(burn.fmt));
+    }
+  });
+}
+
 // prepPump counts as its own phase; old days without it stay unchanged
 {
   const day = {
