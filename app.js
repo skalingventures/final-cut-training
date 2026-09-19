@@ -617,7 +617,7 @@
         const bench = W.n === 5 && burn.benchmark ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
         const achillesNote = se.flags.achilles && burn.achilles ? `<div class="guard"><span>${esc(burn.achilles)}</span></div>` : "";
         const motNote = se.flags.motivation ? `<div class="guard"><span>Motivation is low — skipping the burnout is allowed.</span></div>` : "";
-        const fmtHead = String(burn.fmt || "10 min").split(" ")[0];
+        const fmtHead = C.burnFmtChip(burn.fmt);
         h += sec(`Burnout${burn.optional ? " — optional" : ""}`, `${fmtHead} · ${pct}`,
           `<div class="conditioning-deck"><div class="body">
             <div class="burn-meta"><span>${esc(burn.fmt || "")}</span><span>Z4 by minute 4–6</span></div>

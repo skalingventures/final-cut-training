@@ -216,6 +216,18 @@
     return resolved;
   };
 
+  /* Short burnout header chip. First-word split is fine for
+     "10-minute AMRAP" but turns "40 sec / 20 sec × 10 min" into a
+     lone "40" next to the 0/1 progress count. */
+  Core.burnFmtChip = function burnFmtChip(fmt) {
+    const raw = String(fmt == null || fmt === "" ? "10 min" : fmt).trim();
+    const interval = raw.match(/(\d+)\s*s(?:ec(?:onds?)?)?\b[^/]*\/\s*(\d+)\s*s(?:ec(?:onds?)?)?/i);
+    if (interval) return interval[1] + "/" + interval[2];
+    const first = raw.split(/\s+/)[0];
+    if (first && !/^\d+$/.test(first)) return first;
+    return raw;
+  };
+
   Core.sessionItems = function sessionItems(day, week, sess, log, program) {
     const items = [];
     const key = Core.wd(week, day.n);

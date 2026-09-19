@@ -245,6 +245,23 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   assert.strictEqual(C.resolveBurn(menuOnly, 4).nm, "W4");
 }
 
+// burnFmtChip — interval clocks must not collapse to a lone number
+{
+  assert.strictEqual(C.burnFmtChip("40 sec work / 20 sec transition × 10 min"), "40/20");
+  assert.strictEqual(C.burnFmtChip("40 sec work / 20 sec transition × 8 min"), "40/20");
+  assert.strictEqual(C.burnFmtChip("40 sec / 20 sec × 10 min"), "40/20");
+  assert.strictEqual(C.burnFmtChip("10-minute AMRAP"), "10-minute");
+  assert.strictEqual(C.burnFmtChip("10-minute ascending ladder"), "10-minute");
+  assert.strictEqual(C.burnFmtChip("8-minute easy"), "8-minute");
+  assert.strictEqual(C.burnFmtChip("8-minute easy 40/20"), "8-minute");
+  assert.strictEqual(C.burnFmtChip("10-minute easy cyclical"), "10-minute");
+  assert.strictEqual(C.burnFmtChip("Every 2 min for 10 min — 5 rounds"), "Every");
+  assert.strictEqual(C.burnFmtChip(""), "10 min");
+  assert.strictEqual(C.burnFmtChip(null), "10 min");
+  assert.ok(!/^\d+$/.test(C.burnFmtChip("40 sec work / 20 sec transition × 10 min")),
+    "Day 2 chip must not be a bare number next to 0/1");
+}
+
 // prepPump counts as its own phase; old days without it stay unchanged
 {
   const day = {
