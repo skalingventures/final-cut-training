@@ -89,9 +89,10 @@ patterns: push-h, crawl, cyclical
 - Push-ups × 8–12
 - Bear crawl × 8–10 steps
 - March or easy cyclical × 40 sec
-antiEcho: No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.
-weekNote: Establish the family. Same anti-echo: no squat, hang-pull, swing, or max farmer.
-achilles: If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay. No swings on squat day.
+antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
+weekNote: Establish the family. Push, crawl, march. Same anti-echo: no squat, hang-pull, swing, or max farmer.
+achilles: If Achilles is cranky, keep strength, shorten the crawl, and prefer easy march or push-ups. No swings on squat day.
+achillesReady: Achilles: keep strength, shorten the crawl, prefer easy march or push-ups, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

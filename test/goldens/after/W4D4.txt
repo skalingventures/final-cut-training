@@ -32,7 +32,7 @@ note: Skip on Amber/Red or any flag. No loaded KB deadlift and no pogo here.
 
 == MOBILITY ==
 mobNote: Elastaboy opener for the hinge and the front rack. Same drills. Own today's level before you climb.
-weekMob: Own today's level before you climb. Do not skip.
+weekMob: Earn the next level only when today's level is clean. Do not skip.
 - Bent-knee calf raisers — Soleus and Achilles prep.
   levels: Two-leg, shallow bend. | Deeper bend. | Single-leg on a ledge.
 - Knee-to-toe ankle rockers — Dorsiflexion.
@@ -95,7 +95,8 @@ patterns: cyclical, squat, push-h, core
 - Min 3 · push-ups × 8 + mountain climbers × 12
 antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
 weekNote: Alternating EMOM, 9 min. Quality under a ceiling. Not a benchmark.
-achilles: If Achilles is cranky, drop burpees for step-overs or a short march.
+achilles: If Achilles is cranky, keep strength, and prefer bike or push-ups.
+achillesReady: Achilles: keep strength, prefer bike or push-ups.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

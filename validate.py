@@ -212,10 +212,10 @@ def check_program(p: dict) -> None:
     if len(p.get("days", [])) != 7:
         err("expected 7 days")
     burns = {d["n"]: d.get("burn") for d in p["days"]}
-    if not burns[1] or not burns[1].get("achilles"):
-        err("day 1 burnout missing achilles note")
-    if not burns[2] or not burns[2].get("achilles"):
-        err("day 2 burnout missing achilles note")
+    if not burns.get(1):
+        err("day 1 missing burnout")
+    if not burns.get(2):
+        err("day 2 missing burnout")
     if p["days"][5].get("exclusive") is not True:
         err("day 6 should be exclusive")
     # The RPE field is rendered in a numeric slot on every main lift. Prose
@@ -239,7 +239,7 @@ def check_program(p: dict) -> None:
 DAY_BANS = {
     1: {"squat", "pull-v", "hinge", "carry"},
     2: {"push-h", "push-v", "carry"},
-    4: {"hinge", "push-v", "pull-v", "carry"},
+    4: {"hinge", "push-v", "pull-v", "carry", "lunge"},
 }
 
 # Legal exception: squat thrust is an elastic sprawl, not a squat pattern.
@@ -250,6 +250,7 @@ PATTERN_ALIASES = {
     "pull-v": "pull-v",
     "hinge": "hinge",
     "squat": "squat",
+    "lunge": "lunge",
     "crawl": "crawl",
     "carry": "carry",
     "cyclical": "cyclical",
@@ -258,6 +259,65 @@ PATTERN_ALIASES = {
     "core": "core",
     "iso": "iso",
 }
+
+# Prefer deriving tags from movement names. Order: more specific first.
+# "squat thrust" is stripped before the squat pattern runs.
+MOVEMENT_PATTERNS = [
+    (re.compile(r"burpee|sprawl", re.I), "elastic"),
+    (re.compile(r"pogo|broad jump|\bjump|bound", re.I), "elastic"),
+    (re.compile(r"step-over|step over", re.I), "elastic"),
+    (re.compile(r"wall[- ]?ball|goblet|air squat", re.I), "squat"),
+    (re.compile(r"\blunge", re.I), "lunge"),
+    (re.compile(r"push-up|push up|pushup", re.I), "push-h"),
+    (re.compile(r"push press|overhead press|\bohp\b|(?<!floor/)(?<!floor )\bpress\b", re.I), "push-v"),
+    (re.compile(r"pull-up|pullup|chin-up|chinup", re.I), "pull-v"),
+    (re.compile(r"inverted|ring row", re.I), "pull-h"),
+    (re.compile(r"farmer|suitcase|rack carry|\bcarry\b", re.I), "carry"),
+    (re.compile(r"swing|deadlift|\brdl\b|good morning|\bhinge\b", re.I), "hinge"),
+    (re.compile(r"bear crawl|\bcrawl", re.I), "crawl"),
+    (re.compile(r"med-ball slam|med ball slam|\bslam", re.I), "slam"),
+    (re.compile(r"bike or row|easy row|assault bike|\bbike\b|\bmarch\b|\bwalk\b", re.I), "cyclical"),
+    (re.compile(r"mountain climber|plank|shoulder tap", re.I), "core"),
+]
+
+
+def tags_from_items(items: list) -> set[str]:
+    """Derive pattern tags from the written stations. Do not trust hand-written tags alone."""
+    tags: set[str] = set()
+    for raw in items or []:
+        text = str(raw)
+        if re.search(r"squat thrust", text, re.I):
+            tags.add("elastic")
+            text = re.sub(r"squat thrusts?", "", text, flags=re.I)
+        for rx, tag in MOVEMENT_PATTERNS:
+            if rx.search(text):
+                tags.add(tag)
+    return tags
+
+
+ABSENT_MENTION = [
+    ("crawl", re.compile(r"\bcrawl", re.I), re.compile(r"crawl", re.I)),
+    ("burpee", re.compile(r"burpee", re.I), re.compile(r"burpee", re.I)),
+    ("march", re.compile(r"\bmarch", re.I), re.compile(r"\bmarch", re.I)),
+    ("swing", re.compile(r"\bswing", re.I), re.compile(r"\bswing", re.I)),
+    ("push-up", re.compile(r"push-up|push up|pushup", re.I), re.compile(r"push-up|push up|pushup", re.I)),
+]
+
+
+def is_prohibition(note: str, word: str) -> bool:
+    return bool(re.search(rf"\b(?:no|not|never)\b[^.]*\b{word}", note, re.I))
+
+
+def notes_mention_absent(note: str, items_blob: str) -> list[str]:
+    hits = []
+    if re.search(r"push,\s*crawl,\s*march", note, re.I) and not (
+        re.search(r"crawl", items_blob, re.I) and re.search(r"\bmarch", items_blob, re.I)
+    ):
+        hits.append("push/crawl/march closer")
+    for label, in_note, in_items in ABSENT_MENTION:
+        if in_note.search(note) and not in_items.search(items_blob) and not is_prohibition(note, label):
+            hits.append(label)
+    return hits
 
 
 def lift_names(day: dict, week: int | None = None) -> list[str]:
@@ -355,6 +415,11 @@ def check_midblock_content(p: dict) -> None:
         note = days.get(n, {}).get("mobNote") or ""
         if re.search(r"earn level 3", note, re.I):
             err(f"day {n} mobNote must not tell the athlete to earn L3")
+    for w in p.get("weeks", []):
+        if w.get("n") in (2, 3, 4) and "Earn the next level only when today's level is clean" not in (w.get("mob") or ""):
+            err(f"week {w.get('n')} mob must keep the original W2–W4 line (D3/D6 may only add tissue notes)")
+        if w.get("n") in (5, 6) and re.search(r"climb", w.get("mob") or "", re.I):
+            err(f"week {w.get('n')} mob must not tell the athlete to climb")
 
     mob_notes = [days.get(n, {}).get("mobNote") or "" for n in (1, 2, 4, 5)]
     if len(set(mob_notes)) < 4:
@@ -387,20 +452,25 @@ def check_midblock_content(p: dict) -> None:
             if prev is not None and blob == prev:
                 err(f"day {n} week {week} burn must differ from week {week - 1}")
             prev = blob
-            tags = set()
-            for tag in resolved.get("patterns") or []:
-                tags.add(PATTERN_ALIASES.get(str(tag), str(tag)))
-            if not tags:
-                err(f"day {n} week {week} burn missing pattern tags")
+            handwritten = {PATTERN_ALIASES.get(str(tag), str(tag)) for tag in (resolved.get("patterns") or [])}
+            derived = tags_from_items(resolved.get("items") or [])
+            tags = derived | handwritten
+            if not derived:
+                err(f"day {n} week {week} burn: could not derive pattern tags from items")
             banned = DAY_BANS[n]
             hit = tags & banned
-            # D2 may use light squat; ban is press + farmer. D1 squat-thrust is elastic.
-            if n == 2:
-                hit = tags & {"push-v", "carry"}
-                if "push-h" in tags and not re.search(r"push-up|push up", " ".join(resolved.get("items") or []), re.I):
-                    hit = hit | ({"push-h"} & tags)
             if hit:
                 err(f"day {n} week {week} burn has banned pattern(s) {sorted(hit)}")
+            blob = " ".join(resolved.get("items") or [])
+            note = " ".join([
+                resolved.get("adj") or "",
+                resolved.get("achilles") or "",
+                (days.get(n) or {}).get("burn", {}).get("adj") or "",
+                (days.get(n) or {}).get("burn", {}).get("achilles") or "",
+            ])
+            absent = notes_mention_absent(note, blob)
+            if absent:
+                err(f"day {n} week {week} burnout note names {absent} missing from this week's card")
 
     formats = set()
     for n in (1, 2, 4):
@@ -467,6 +537,12 @@ def check_midblock_content(p: dict) -> None:
         if re.search(r"z4|redline|chaos", (resolved.get("nm") or "") + " " + (resolved.get("fmt") or "") + " " + (resolved.get("adj") or ""), re.I):
             if "no redline" not in (resolved.get("adj") or "").lower():
                 err(f"day 5 week {week} must stay soft / skip")
+    d5w6 = resolve_burn(days.get(5) or {}, 6) or {}
+    d5w6_effort = (d5w6.get("effort") or "").strip()
+    if re.fullmatch(r"RPE\s*~?\s*7", d5w6_effort):
+        err("day 5 week 6 must not show RPE 7 — use an easy/walk RPE")
+    if re.search(r"RPE\s*~?\s*7", (days.get(5) or {}).get("restTitleByWeek", {}).get(6) or (days.get(5) or {}).get("restTitleByWeek", {}).get("6") or ""):
+        err("day 5 week 6 restTitle must not show RPE 7")
 
     accs = [w.get("acc", "") for w in p.get("weeks", [])]
     if len(accs) == 6:
@@ -493,12 +569,21 @@ def check_midblock_content(p: dict) -> None:
             top_names = " ".join(it.get("a") or "" for it in top[:3]).lower()
             if "lat" not in top_names:
                 err("day 1 top 3 tissue must include lats")
-        for it in top:
+        for it in items:
+            for_id = it.get("forId")
             for_line = it.get("for") or ""
-            if not for_line:
-                err(f"day {n} tissue {it.get('a')!r} missing for-line")
-            elif not for_matches_lift(for_line, days[n]):
-                err(f"day {n} tissue {it.get('a')!r} for={for_line!r} does not name a real lift")
+            if for_id:
+                if not any(l.get("id") == for_id for l in (days[n].get("lifts") or [])):
+                    err(f"day {n} tissue {it.get('a')!r} forId={for_id!r} is not a lift on this day")
+            elif not it.get("optional"):
+                if not for_line:
+                    err(f"day {n} tissue {it.get('a')!r} missing for-line")
+                elif not for_matches_lift(for_line, days[n]):
+                    err(f"day {n} tissue {it.get('a')!r} for={for_line!r} does not name a real lift")
+        if n == 5:
+            for it in items:
+                if it.get("for") and not it.get("forId"):
+                    err(f"day 5 tissue {it.get('a')!r} must set forId so the for-line follows the weekly chassis swap")
 
     for n in (1, 2, 4):
         pp = (days.get(n) or {}).get("prepPump") or {}
@@ -526,6 +611,7 @@ def check_app_js() -> None:
         "FinalCutCore", "saveNow", "pagehide", "setupDone", "SESSIONS",
         "SKIP_WAITING", "resolveBurn", "resolveLift", "prepPump", "prepPumpGated",
         "burnEffort", "burnItemText", "fc-job", "fc-cousins", "fc-for",
+        "achillesReadiness", "resolveTissue", "resolveMobNote",
     ]:
         if needle not in js:
             err(f"app.js missing {needle!r}")

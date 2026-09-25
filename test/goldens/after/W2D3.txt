@@ -26,7 +26,7 @@ note: Restore after press and carry so Day 4 can rack and hinge. Chest, rib-side
 
 == MOBILITY ==
 mobNote: Recovery day. Default Level 1, Level 2 if owned. No Level 3 load.
-weekMob: Own today's level before you climb. Do not skip.
+weekMob: Earn the next level only when today's level is clean. Do not skip.
 - Cat cow — Spinal segmentation and downshift.
   levels: Short range. | Full range. | Add a slight circle / rotation.
 - Jefferson curl — Controlled spinal flexion. Stay conservative.

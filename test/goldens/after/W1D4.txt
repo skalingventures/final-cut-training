@@ -95,7 +95,8 @@ patterns: squat, push-h, elastic
 - Burpees or bar step-overs × 5
 antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
 weekNote: Establish the couplet. 90–95%.
-achilles: If Achilles is cranky, drop burpees for step-overs or a short march.
+achilles: If Achilles is cranky, keep strength, swap burpees for a low-impact station, and prefer step-overs or push-ups.
+achillesReady: Achilles: keep strength, swap burpees for a low-impact station, prefer step-overs or push-ups.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

@@ -31,7 +31,7 @@ gatedOnAmberRedOrFlag: yes
 note: Skip on Amber/Red or any flag. Then run the existing mob ladder. This is not a working set.
 
 == MOBILITY ==
-mobNote: Elastaboy opener for hip rotation and a quiet press brace. Same drills. Own today's level before you climb.
+mobNote: Elastaboy opener for hip rotation and a quiet press brace. Same drills.
 weekMob: Drop one level or unload.
 - 90/90 hip switches — Hip rotation.
   levels: Hands for support. | No hands. | Light weight held in front.
@@ -95,9 +95,10 @@ patterns: hinge, core, cyclical
 - Easy KB swings
 - Plank shoulder taps
 - Easy walk
-antiEcho: Dense upper + carry day. Hinge / crawl / cyclical — not a second press or farmer.
+antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
 weekNote: Deload. Easy 30/30. No redline.
-achilles: If Achilles is cranky, swap burpees for extra walk or step-overs. Prefer bike or row over jump-dense alts.
+achilles: If Achilles is cranky, keep strength, and prefer walk, slow taps, or easy swings.
+achillesReady: Achilles: keep strength, prefer walk, slow taps, or easy swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

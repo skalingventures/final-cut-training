@@ -322,7 +322,7 @@
     if (se.ready === "red") bits.push("Strength only. Heavy hinge off. Burnout cut or easy 60–70%.");
     if (se.flags.back) bits.push("Back: swap deadlift for RDL or goblet.");
     if (se.flags.shoulder) bits.push("Shoulder: skip dips, use push-ups or DB press.");
-    if (se.flags.achilles) bits.push("Achilles: keep strength, drop jumps/burpees, favor carries and swings.");
+    if (se.flags.achilles) bits.push(C.achillesReadiness(D, C.resolveBurn(D, S.week)));
     if (se.flags.motivation) bits.push("Motivation low: start strength, cut burnout if needed.");
     if (W.n === 6 && D.n <= 5 && !D.exclusive) bits.push("Deload week — accessories reduced 30–40%. No redline conditioning.");
     return bits.join(" ");
@@ -437,11 +437,12 @@
     </div>`;
     if (D.guardTop) h += `<div class="session-callout guard callout callout--warn"><span>${esc(D.guardTop)}</span></div>`;
 
-    if (D.tissue) {
-      h += sec("Tissue", D.tissue.dose, `
-        ${D.tissue.goal ? `<div class="sec-goal">${esc(D.tissue.goal)}</div>` : ""}
-        ${D.tissue.items.map((t, i) => itemRow("tissue", t, i)).join("")}
-        ${D.tissue.note ? `<div class="guard callout callout--coach"><span>${esc(D.tissue.note)}</span></div>` : ""}`,
+    const tissue = C.resolveTissue(D, S.week);
+    if (tissue) {
+      h += sec("Tissue", tissue.dose, `
+        ${tissue.goal ? `<div class="sec-goal">${esc(tissue.goal)}</div>` : ""}
+        ${tissue.items.map((t, i) => itemRow("tissue", t, i)).join("")}
+        ${tissue.note ? `<div class="guard callout callout--coach"><span>${esc(tissue.note)}</span></div>` : ""}`,
         "tissue", tissuePhase.done, "tissue", tissuePhase.progress);
     }
 
@@ -465,8 +466,9 @@
 
     if (D.mob && D.mob.length) {
       const showWave = D.n === 1 || D.n === 2 || D.n === 4 || D.n === 5;
+      const mobNote = C.resolveMobNote(D, S.week);
       const mobLead = [
-        D.mobNote ? `<div class="sec-goal">${esc(D.mobNote)}</div>` : "",
+        mobNote ? `<div class="sec-goal">${esc(mobNote)}</div>` : "",
         showWave && W.mob ? `<div class="sec-goal">${esc(W.mob)}</div>` : ""
       ].join("");
       h += sec("Mobility", D.n === 6 ? "5–15 min" : "6–15 min", mobLead + D.mob.map((m, i) => {
@@ -487,10 +489,10 @@
       }).join(""), "mob", mobilityPhase.done, "mobility", mobilityPhase.progress);
     }
 
-    const strengthTitle = D.restTitle || "Strength";
+    const strengthTitle = C.restTitle(D, S.week) || "Strength";
     const strengthDose = (D.n === 3 || D.n >= 6)
       ? ""
-      : (red ? "strength only" : (D.n === 5 ? "RPE 7" : "main 15–25 · pairings 15–25"));
+      : (red ? "strength only" : (D.n === 5 ? (W.n === 6 ? "easy walk · RPE 5–6" : "RPE 7") : "main 15–25 · pairings 15–25"));
     if (D.exclusive) {
       const chosen = LOG.choice[C.wd(S.week, S.day)] || "";
       /* A rest day wants one card and a choice, not a phase stack with a

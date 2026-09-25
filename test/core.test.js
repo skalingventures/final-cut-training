@@ -397,6 +397,12 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   assert.strictEqual(r3.weekNote, "week note");
   assert.ok(/no swings on squat day/i.test(C.achillesLine({ n: 1 }, {})));
   assert.ok(!/emphasize swings/i.test(C.achillesLine({ n: 1 }, {})), "D1 Achilles must not emphasize swings");
+  assert.ok(!/swing/i.test(C.achillesReadiness({ n: 1 }, {})) || /no swings/i.test(C.achillesReadiness({ n: 1 }, {})));
+  assert.ok(!/carry/i.test(C.achillesReadiness({ n: 4 }, { items: ["Goblet squat", "Push-ups", "Bike"] })));
+  assert.ok(!/swing/i.test(C.achillesLine({ n: 1 }, { items: ["Bike 40 s", "Push-ups × 8", "Med-ball slam × 8", "March as breaker"] })) || /no swings/i.test(C.achillesLine({ n: 1 }, { items: ["Bike 40 s", "Push-ups × 8", "Med-ball slam × 8", "March as breaker"] })));
+  assert.ok(!/crawl/i.test(C.achillesLine({ n: 1 }, { items: ["Bike 40 s", "Push-ups × 8", "Med-ball slam × 8", "March as breaker"] })));
+  assert.ok(!/burpee/i.test(C.achillesLine({ n: 2 }, { items: ["KB swings × 8", "Bear crawl × 6 steps"] })));
+  assert.ok(!/burpee/i.test(C.achillesLine({ n: 4 }, { items: ["Min 1 · bike 30 s", "Min 2 · goblet squat × 8", "Min 3 · push-ups × 8 + mountain climbers × 12"] })));
 }
 
 // Live program: W1–6 explicit, W3 D2 ≠ W1, only D4 W5 is a benchmark
@@ -447,6 +453,25 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   assert.ok(/lat/i.test(P.days[0].tissue.items.slice(0, 3).map(function (i) { return i.a; }).join(" ")));
   assert.ok(P.days[0].lifts.find(function (l) { return l.id === "pullup"; }).cousins.indexOf("Neutral-grip pull-up") >= 0);
   assert.ok((P.days[3].lifts.find(function (l) { return l.id === "pp"; }).cousins || []).length >= 3);
+  const d5w3 = C.resolveTissue(P.days[4], 3);
+  assert.ok(/front-foot elevated split squat/i.test(d5w3.items[0].for), "W3 D5 tissue for follows FFE split squat");
+  const d5w4 = C.resolveTissue(P.days[4], 4);
+  assert.ok(/incline press/i.test(d5w4.items[1].for), "W4 D5 tissue for follows incline press");
+  const d5w2 = C.resolveTissue(P.days[4], 2);
+  assert.ok(/chest-supported row/i.test(d5w2.items[2].for), "W2 D5 tissue for follows chest-supported row");
+  const elasticW5 = C.resolveLift(P.days[3].lifts.find(function (l) { return l.id === "elastic"; }), 5);
+  assert.ok(/slam/i.test(elasticW5.rx), "W5 D4 elastic owned option includes slam dose");
+  assert.ok(!/climb/i.test(C.resolveMobNote(P.days[0], 5)));
+  assert.ok(!/climb/i.test(C.resolveMobNote(P.days[0], 6)));
+  assert.ok(/climb/i.test(C.resolveMobNote(P.days[0], 3)));
+  assert.ok(/easy walk/i.test(C.restTitle(P.days[4], 6)));
+  assert.ok(!/RPE 7/.test(C.restTitle(P.days[4], 6)));
+  assert.ok(/8–9 min/.test(C.resolveBurn(P.days[1], 4).fmt));
+  assert.ok(!/crawl/i.test(C.achillesLine(P.days[0], d1w3)));
+  assert.ok(!/Push, crawl, march/i.test(d1w3.baseAdj));
+  assert.ok(!/RPE ~?7/.test(C.burnEffort(C.resolveBurn(P.days[4], 6), P.weeks[5], 5)) || /5/.test(C.burnEffort(C.resolveBurn(P.days[4], 6), P.weeks[5], 5)));
+  assert.ok(/carry|swing/i.test(C.achillesReadiness({ n: 2 }, { items: ["Kettlebell swings", "Bike or row"] })) === false || /swing/i.test(C.achillesReadiness({ n: 2 }, { items: ["Kettlebell swings", "Bike or row"] })));
+  assert.ok(!/favor carries and swings/i.test(C.achillesReadiness(P.days[0], C.resolveBurn(P.days[0], 3))));
 }
 
 console.log("PASS core tests");

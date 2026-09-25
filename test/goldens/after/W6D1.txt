@@ -33,7 +33,7 @@ gatedOnAmberRedOrFlag: yes
 note: Skip on Amber/Red or any flag. Then run the existing mob ladder. This is not a working set.
 
 == MOBILITY ==
-mobNote: Elastaboy opener for squat depth and knee-over-toe. Same drills. Own today's level before you climb.
+mobNote: Elastaboy opener for squat depth and knee-over-toe. Same drills.
 weekMob: Drop one level or unload.
 - Knee-to-toe ankle rockers — Dorsiflexion, knee-over-toe comfort.
   levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
@@ -89,9 +89,10 @@ patterns: core, cyclical
 - Plank shoulder taps 30 s
 - Easy bike 60 s
 - × 4 rounds
-antiEcho: No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.
+antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
 weekNote: Deload. No redline. Soft iso + easy bike.
-achilles: If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay. No swings on squat day.
+achilles: If Achilles is cranky, keep strength, and prefer bike or slow taps. No swings on squat day.
+achillesReady: Achilles: keep strength, prefer bike or slow taps, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

@@ -41,14 +41,16 @@ function dumpDay(program, week, dayN) {
   out.push("sub: " + day.sub);
   out.push("heat: " + day.heat);
   if (day.guardTop) out.push("guardTop: " + day.guardTop);
-  if (day.restTitle) out.push("restTitle: " + day.restTitle);
+  const restTitle = Core.restTitle(day, week);
+  if (restTitle) out.push("restTitle: " + restTitle);
   out.push("");
 
-  if (day.tissue) {
+  const tissue = Core.resolveTissue(day, week);
+  if (tissue) {
     out.push("== TISSUE ==");
-    out.push("dose: " + line(day.tissue.dose));
-    out.push("goal: " + line(day.tissue.goal));
-    (day.tissue.items || []).forEach(function (t, i) {
+    out.push("dose: " + line(tissue.dose));
+    out.push("goal: " + line(tissue.goal));
+    (tissue.items || []).forEach(function (t, i) {
       const bits = [t.a];
       if (t.for) bits.push("for " + t.for);
       if (t.optional) bits.push("optional");
@@ -57,7 +59,7 @@ function dumpDay(program, week, dayN) {
       out.push((i + 1) + ". " + bits.join(" · "));
       if (t.cue) out.push("   cue: " + t.cue);
     });
-    if (day.tissue.note) out.push("note: " + day.tissue.note);
+    if (tissue.note) out.push("note: " + tissue.note);
     out.push("");
   }
 
@@ -79,7 +81,8 @@ function dumpDay(program, week, dayN) {
 
   if (day.mob && day.mob.length) {
     out.push("== MOBILITY ==");
-    if (day.mobNote) out.push("mobNote: " + day.mobNote);
+    const mobNote = Core.resolveMobNote(day, week);
+    if (mobNote) out.push("mobNote: " + mobNote);
     if (weekObj.mob) out.push("weekMob: " + weekObj.mob);
     day.mob.forEach(function (m) {
       if (typeof m === "string") out.push("- " + m);
@@ -121,7 +124,8 @@ function dumpDay(program, week, dayN) {
     });
     if (burn.baseAdj) out.push("antiEcho: " + burn.baseAdj);
     if (burn.weekNote) out.push("weekNote: " + burn.weekNote);
-    if (burn.achilles) out.push("achilles: " + burn.achilles);
+    out.push("achilles: " + Core.achillesLine(day, burn));
+    out.push("achillesReady: " + Core.achillesReadiness(day, burn));
     if (burn.adj && burn.adj !== burn.baseAdj && burn.adj !== burn.weekNote) {
       out.push("adj: " + burn.adj);
     }

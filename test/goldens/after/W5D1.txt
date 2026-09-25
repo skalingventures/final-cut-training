@@ -33,7 +33,7 @@ gatedOnAmberRedOrFlag: yes
 note: Skip on Amber/Red or any flag. Then run the existing mob ladder. This is not a working set.
 
 == MOBILITY ==
-mobNote: Elastaboy opener for squat depth and knee-over-toe. Same drills. Own today's level before you climb.
+mobNote: Elastaboy opener for squat depth and knee-over-toe. Same drills.
 weekMob: Stay on a level you own. No new level.
 - Knee-to-toe ankle rockers — Dorsiflexion, knee-over-toe comfort.
   levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
@@ -89,9 +89,10 @@ patterns: slam, crawl, cyclical
 - Med-ball slam × 8
 - Bear crawl × 8–10 steps
 - March × 40 sec
-antiEcho: No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.
+antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
 weekNote: Owned Slam / Crawl / March. Not a benchmark — that is Day 4 this week.
-achilles: If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay. No swings on squat day.
+achilles: If Achilles is cranky, keep strength, shorten the crawl, ease slams, and prefer easy march. No swings on squat day.
+achillesReady: Achilles: keep strength, shorten the crawl, ease slams, prefer easy march, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

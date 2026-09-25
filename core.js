@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.2.0";
+  const APP_VERSION = "2.2.1";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -289,14 +289,129 @@
     });
   };
 
-  /* Day-aware Achilles line. D1 must not tell the athlete to emphasize swings. */
-  Core.achillesLine = function achillesLine(day, burn) {
-    if (burn && burn.achilles) return burn.achilles;
+  /* Movements actually written on this week's resolved card. */
+  Core.cardMoves = function cardMoves(burn) {
+    const t = ((burn && burn.items) || []).map(Core.burnItemText).join(" ").toLowerCase();
+    function has(rx) { return rx.test(t); }
+    return {
+      crawl: has(/crawl/),
+      march: has(/\bmarch\b/),
+      bike: has(/\bbike\b/),
+      walk: has(/\bwalk\b/),
+      push: has(/push-up|push up|pushup/),
+      slam: has(/\bslam/),
+      swing: has(/\bswing/),
+      burpee: has(/burpee/),
+      jump: has(/\bjump|pogo|bound/),
+      stepover: has(/step-over|step over/),
+      tap: has(/\btap/),
+      row: has(/inverted|ring row|bike or row|easy row|assault bike/),
+      carry: has(/\bcarry|farmer/),
+      squatThrust: has(/squat thrust/),
+      climber: has(/climber/)
+    };
+  };
+
+  function oxford(arr) {
+    if (!arr.length) return "";
+    if (arr.length === 1) return arr[0];
+    if (arr.length === 2) return arr[0] + " or " + arr[1];
+    return arr.slice(0, -1).join(", ") + ", or " + arr[arr.length - 1];
+  }
+
+  function achillesDropsAndPrefers(day, burn) {
     const n = day && day.n;
-    if (n === 1) return "If Achilles is cranky, keep strength, shorten crawls, and prefer march or bike. No swings on squat day.";
-    if (n === 2) return "If Achilles is cranky, keep strength, reduce burpees, and prefer bike, walk, or step-overs.";
-    if (n === 4) return "If Achilles is cranky, keep strength, reduce jumps and burpees, and prefer step-overs or bike.";
-    return "If Achilles is cranky, keep strength and reduce jumps and burpees.";
+    const m = Core.cardMoves(burn);
+    const hasCard = !!(burn && (burn.items || []).length);
+    const drops = [];
+    const prefer = [];
+    if (hasCard) {
+      if (m.jump) drops.push("drop jumps");
+      if (m.burpee) drops.push("swap burpees for a low-impact station");
+      if (m.crawl) drops.push("shorten the crawl");
+      if (m.slam) drops.push("ease slams");
+      if (m.squatThrust) drops.push("slow the squat thrusts");
+      if (m.march) prefer.push("easy march");
+      if (m.bike) prefer.push("bike");
+      if (m.walk) prefer.push("walk");
+      if (m.stepover) prefer.push("step-overs");
+      if (m.tap) prefer.push("slow taps");
+      if (m.push && n !== 2) prefer.push("push-ups");
+      if (m.row) prefer.push("easy row");
+      if (m.swing && n !== 1) prefer.push("easy swings");
+      if (m.carry && n !== 1 && n !== 4) prefer.push("easy carries");
+    } else {
+      if (n === 1) {
+        drops.push("drop jumps");
+        prefer.push("march or bike");
+      } else if (n === 2) {
+        drops.push("drop jumps/burpees");
+        prefer.push("bike or walk");
+      } else if (n === 4) {
+        drops.push("drop jumps/burpees");
+        prefer.push("step-overs or bike");
+      } else {
+        drops.push("drop jumps");
+        prefer.push("easy walk");
+      }
+    }
+    return { drops: drops, prefer: prefer, n: n };
+  }
+
+  /* Burnout Achilles note — only names movements on this week's card.
+     Never suggests swings on D1 or carries on D4. */
+  Core.achillesLine = function achillesLine(day, burn) {
+    const pack = achillesDropsAndPrefers(day, burn);
+    let s = "If Achilles is cranky, keep strength";
+    if (pack.drops.length) s += ", " + pack.drops.join(", ");
+    if (pack.prefer.length) s += ", and prefer " + oxford(pack.prefer);
+    s += ".";
+    if (pack.n === 1) s += " No swings on squat day.";
+    return s;
+  };
+
+  /* Readiness-card summary. Same movement rules as the burnout line. */
+  Core.achillesReadiness = function achillesReadiness(day, burn) {
+    const pack = achillesDropsAndPrefers(day, burn);
+    const bits = ["Achilles: keep strength"];
+    if (pack.drops.length) bits.push(pack.drops.join(", "));
+    if (pack.prefer.length) bits.push("prefer " + oxford(pack.prefer));
+    if (pack.n === 1) bits.push("no swings");
+    return bits.join(", ") + ".";
+  };
+
+  /* Strip climb language on W5/W6 so no view tells the athlete to climb. */
+  Core.resolveMobNote = function resolveMobNote(day, week) {
+    let note = (day && day.mobNote) || "";
+    if (+week >= 5) {
+      note = note.replace(/\s*Own today's level before you climb\.?/gi, "").trim();
+      note = note.replace(/\s*before you climb\.?/gi, "").trim();
+    }
+    return note;
+  };
+
+  Core.restTitle = function restTitle(day, week) {
+    if (!day) return "";
+    const by = day.restTitleByWeek;
+    if (by) {
+      const ov = by[+week] || by[String(week)];
+      if (ov) return ov;
+    }
+    return day.restTitle || "";
+  };
+
+  Core.resolveTissue = function resolveTissue(day, week) {
+    const tissue = day && day.tissue;
+    if (!tissue) return null;
+    const byId = {};
+    Core.resolveLifts(day, week).forEach(function (l) { byId[l.id] = l; });
+    const items = (tissue.items || []).map(function (it) {
+      const out = Object.assign({}, it);
+      const lift = it.forId ? byId[it.forId] : null;
+      if (lift && lift.nm) out.for = lift.nm;
+      return out;
+    });
+    return Object.assign({}, tissue, { items: items });
   };
 
   /* Short burnout header chip. First-word split is fine for

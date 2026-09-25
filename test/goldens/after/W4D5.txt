@@ -9,23 +9,23 @@ restTitle: Three controlled rounds — not for time · RPE 7
 == TISSUE ==
 dose: 3–5 min
 goal: Chassis texture for goblet, floor press, row, and the Copenhagen.
-1. Front thighs · for goblet squat · Roller · 45–60 sec / side
+1. Front thighs · for Goblet squat · Roller · 45–60 sec / side
    cue: Smooth passes so the goblet can sit.
-2. Chest · for DB floor press · Ball against wall · 60 sec / side
+2. Chest · for Incline press · Ball against wall · 60 sec / side
    cue: Broad chest work before pressing.
-3. Lats / rib-side · for one-arm DB row · Ball or roller · 45–60 sec / side
+3. Lats / rib-side · for One-arm DB row · Ball or roller · 45–60 sec / side
    cue: Side-back and rib-side so the row can pull.
-4. Inner thighs · for Copenhagen plank · Roller · 45 sec / side
+4. Inner thighs · for Copenhagen plank or side plank · Roller · 45 sec / side
    cue: Gentle adductor pressure before the Copenhagen.
-5. Glutes / side glutes · for goblet squat · optional · Ball · 60 sec / side
+5. Glutes / side glutes · for Goblet squat · optional · Ball · 60 sec / side
    cue: Work the big glute and the side-glute pocket. Optional overflow.
-6. Calves · for wall-sit calf raises · optional · Roller · 45 sec / side
+6. Calves · for Wall-sit calf raises · optional · Roller · 45 sec / side
    cue: Light maintenance only.
 note: Priority: front thigh, chest, lats/rib-side, plus inner thigh for the Copenhagen. Outer quad drops. Texture, not excavation.
 
 == MOBILITY ==
 mobNote: Elastaboy opener for chassis. Stay on Level 1–2. Day 5 does not climb to Level 3.
-weekMob: Own today's level before you climb. Do not skip.
+weekMob: Earn the next level only when today's level is clean. Do not skip.
 - Standing side bends — Lateral spine.
   levels: Fingertips toward the knees. | Wide stance, hands on head. | Feet together, dumbbell in one hand, no twist.
 - Cobra press-ups — Spinal extension and chest opening.
@@ -88,8 +88,10 @@ hard: no
 zoneCue: none
 - Nasal incline walk or easy bike — continuous
 - OR light DB complex: goblet × 8 → DB floor/press × 8 → one-arm row × 8 × 2–3 rounds, nasal, unbroken
-antiEcho: Optional aerobic pump ~RPE 7 — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.
+antiEcho: Optional aerobic pump — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.
 weekNote: Aerobic pump. Last week the green Carry / Crawl / Swing option is offered.
+achilles: If Achilles is cranky, keep strength, and prefer bike or walk.
+achillesReady: Achilles: keep strength, prefer bike or walk.
 greenOption: Carry / Crawl / Swing (green)
   - Farmer carry or march — 40 sec
   - Kettlebell swings × 12

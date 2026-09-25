@@ -8,9 +8,9 @@ window.PROGRAM = {
 
   weeks: [
     { n: 1, main: "4 × 6", rpe: "RPE 7", acc: "Cousin variety — pick the implement you own today", burn: "80%", intent: "Establish", heat: "easy", mob: "Start at the level you can control 100%. Default Level 1." },
-    { n: 2, main: "4 × 6", rpe: "RPE 7.5", acc: "Cousin variety — same job, different implement if last week was clean", burn: "85%", intent: "Build", heat: "moderate", mob: "Own today's level before you climb. Do not skip." },
-    { n: 3, main: "5 × 5", rpe: "RPE 8", acc: "Cousin variety — stay on the job; swap the cousin if the first pick is stale", burn: "90%", intent: "Build hard", heat: "hard", mob: "Own today's level before you climb. Do not skip." },
-    { n: 4, main: "5 × 4", rpe: "RPE 8–8.5", acc: "Cousin variety — slightly reduced volume; keep the job, pick the cleanest cousin", burn: "85–90%", intent: "Intensify", heat: "hard", mob: "Own today's level before you climb. Do not skip." },
+    { n: 2, main: "4 × 6", rpe: "RPE 7.5", acc: "Cousin variety — same job, different implement if last week was clean", burn: "85%", intent: "Build", heat: "moderate", mob: "Earn the next level only when today's level is clean. Do not skip." },
+    { n: 3, main: "5 × 5", rpe: "RPE 8", acc: "Cousin variety — stay on the job; swap the cousin if the first pick is stale", burn: "90%", intent: "Build hard", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
+    { n: 4, main: "5 × 4", rpe: "RPE 8–8.5", acc: "Cousin variety — slightly reduced volume; keep the job, pick the cleanest cousin", burn: "85–90%", intent: "Intensify", heat: "hard", mob: "Earn the next level only when today's level is clean. Do not skip." },
     { n: 5, main: "5 × 3", rpe: "RPE 8.5–9", acc: "Owned only — no new cousins, no new levels", burn: "85–90%", intent: "Peak", heat: "hardest", mob: "Stay on a level you own. No new level." },
     { n: 6, main: "3 × 5", rpe: "RPE 6–7", acc: "Easy cousins — drop 30–40%, stay on the implement you own", burn: "60–70%", intent: "Deload / absorb", heat: "easy", mob: "Drop one level or unload." }
   ],
@@ -73,14 +73,13 @@ window.PROGRAM = {
       burn: {
         nm: "Push / Crawl / March", fmt: "10-minute AMRAP", hard: true, effort: "80%",
         items: ["Push-ups × 8–12", "Bear crawl × 8–10 steps", "March or easy cyclical × 40 sec"],
-        adj: "No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.",
-        achilles: "If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay. No swings on squat day.",
+        adj: "No squat, hang-pull, swing, or max farmer on squat day.",
         patterns: ["push-h", "crawl", "cyclical"],
         byWeek: {
           1: {
             nm: "Push / Crawl / March", fmt: "10-minute AMRAP", effort: "80%",
             items: ["Push-ups × 8–12", "Bear crawl × 8–10 steps", "March or easy cyclical × 40 sec"],
-            adj: "Establish the family. Same anti-echo: no squat, hang-pull, swing, or max farmer.",
+            adj: "Establish the family. Push, crawl, march. Same anti-echo: no squat, hang-pull, swing, or max farmer.",
             patterns: ["push-h", "crawl", "cyclical"]
           },
           2: {
@@ -170,8 +169,7 @@ window.PROGRAM = {
           "Bike or row",
           "Easy walk, nasal breathing"
         ],
-        adj: "Dense upper + carry day. Hinge / crawl / cyclical — not a second press or farmer.",
-        achilles: "If Achilles is cranky, swap burpees for extra walk or step-overs. Prefer bike or row over jump-dense alts.",
+        adj: "Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.",
         patterns: ["hinge", "crawl", "elastic", "cyclical"],
         byWeek: {
           1: {
@@ -215,7 +213,7 @@ window.PROGRAM = {
             patterns: ["hinge", "crawl", "elastic", "cyclical"]
           },
           4: {
-            nm: "Row / Squat / Lunge Ladder", fmt: "8-9-min ascending ladder · row start 2 (+1, cap 6)", effort: "85–90%",
+            nm: "Row / Squat / Lunge Ladder", fmt: "8–9 min ascending ladder · row start 2 (+1, cap 6)", effort: "85–90%",
             items: [
               "Inverted or ring row start 2, +1 / round, cap 6",
               "Air squats start 2, +2 / round",
@@ -223,7 +221,7 @@ window.PROGRAM = {
               "Mountain climbers start 2, +2 / round"
             ],
             adj: "Kjael ladder A remap. Rows, not pull-ups. 8–9 min cap.",
-            patterns: ["pull-h", "squat", "core"]
+            patterns: ["pull-h", "squat", "lunge", "core"]
           },
           5: {
             nm: "Owned Menu A", fmt: "40 sec work / 20 sec transition × 10 min", effort: "85–90%",
@@ -329,7 +327,7 @@ window.PROGRAM = {
             2: { nm: "Pogo bounds", rx: "3 × 8–10 pogos", note: "B. Pogo bounds. Quiet feet. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip." },
             3: { nm: "Med-ball slam", rx: "3 × 8–10 slams", note: "C. Med-ball slam. Athletic, not a max. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip." },
             4: { nm: "Broad jump", rx: "3 × 3–5 jumps", note: "A again. Broad jump. Crisp landings. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
-            5: { nm: "Broad jumps, pogo bounds, or med-ball slam", rx: "3 × 3–5 jumps or 3 × 8–10 pogos", note: "Owned choice. Stay on the elastic you already own. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
+            5: { nm: "Broad jumps, pogo bounds, or med-ball slam", rx: "3 × 3–5 jumps or 3 × 8–10 pogos or 3 × 8–10 slams", note: "Owned choice. Stay on the elastic you already own. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
             6: { nm: "Easy med-ball slam or skip", rx: "2 × 6–8 easy slams", note: "C easy or skip. Deload. No max landings." }
           }
         },
@@ -341,7 +339,6 @@ window.PROGRAM = {
         nm: "Light Squat + Horizontal Push", fmt: "10-minute AMRAP", hard: true, effort: "90–95%",
         items: ["Goblet squat × 8–10", "Push-ups × 10–12", "Burpees or bar step-overs × 5"],
         adj: "Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.",
-        achilles: "If Achilles is cranky, drop burpees for step-overs or a short march.",
         patterns: ["squat", "push-h", "elastic"],
         byWeek: {
           1: {
@@ -388,17 +385,18 @@ window.PROGRAM = {
       n: 5, heat: "moderate", tag: "Moderate", weekday: "Friday",
       theme: "Full Body Light Reset", sub: "Chassis · durability · pump",
       restTitle: "Three controlled rounds — not for time · RPE 7",
+      restTitleByWeek: { 6: "Three controlled rounds — not for time · easy walk · RPE 5–6" },
       mobNote: "Elastaboy opener for chassis. Stay on Level 1–2. Day 5 does not climb to Level 3.",
       tissue: {
         dose: "3–5 min",
         goal: "Chassis texture for goblet, floor press, row, and the Copenhagen.",
         items: [
-          { a: "Front thighs", for: "goblet squat", tool: "Roller", d: "45–60 sec / side", cue: "Smooth passes so the goblet can sit." },
-          { a: "Chest", for: "DB floor press", tool: "Ball against wall", d: "60 sec / side", cue: "Broad chest work before pressing." },
-          { a: "Lats / rib-side", for: "one-arm DB row", tool: "Ball or roller", d: "45–60 sec / side", cue: "Side-back and rib-side so the row can pull." },
-          { a: "Inner thighs", for: "Copenhagen plank", tool: "Roller", d: "45 sec / side", cue: "Gentle adductor pressure before the Copenhagen." },
-          { a: "Glutes / side glutes", for: "goblet squat", optional: true, tool: "Ball", d: "60 sec / side", cue: "Work the big glute and the side-glute pocket. Optional overflow." },
-          { a: "Calves", for: "wall-sit calf raises", optional: true, tool: "Roller", d: "45 sec / side", cue: "Light maintenance only." }
+          { a: "Front thighs", for: "goblet squat", forId: "goblet", tool: "Roller", d: "45–60 sec / side", cue: "Smooth passes so the goblet can sit." },
+          { a: "Chest", for: "DB floor press", forId: "floor", tool: "Ball against wall", d: "60 sec / side", cue: "Broad chest work before pressing." },
+          { a: "Lats / rib-side", for: "one-arm DB row", forId: "oarow", tool: "Ball or roller", d: "45–60 sec / side", cue: "Side-back and rib-side so the row can pull." },
+          { a: "Inner thighs", for: "Copenhagen plank", forId: "copen", tool: "Roller", d: "45 sec / side", cue: "Gentle adductor pressure before the Copenhagen." },
+          { a: "Glutes / side glutes", for: "goblet squat", forId: "goblet", optional: true, tool: "Ball", d: "60 sec / side", cue: "Work the big glute and the side-glute pocket. Optional overflow." },
+          { a: "Calves", for: "wall-sit calf raises", forId: "wallcalf", optional: true, tool: "Roller", d: "45 sec / side", cue: "Light maintenance only." }
         ],
         note: "Priority: front thigh, chest, lats/rib-side, plus inner thigh for the Copenhagen. Outer quad drops. Texture, not excavation."
       },
@@ -448,7 +446,7 @@ window.PROGRAM = {
           "Nasal incline walk or easy bike — continuous",
           "OR light DB complex: goblet × 8 → DB floor/press × 8 → one-arm row × 8 × 2–3 rounds, nasal, unbroken"
         ],
-        adj: "Optional aerobic pump ~RPE 7 — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.",
+        adj: "Optional aerobic pump — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.",
         menu: [
           {
             id: "ccs",

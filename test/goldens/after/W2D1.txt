@@ -34,7 +34,7 @@ note: Skip on Amber/Red or any flag. Then run the existing mob ladder. This is n
 
 == MOBILITY ==
 mobNote: Elastaboy opener for squat depth and knee-over-toe. Same drills. Own today's level before you climb.
-weekMob: Own today's level before you climb. Do not skip.
+weekMob: Earn the next level only when today's level is clean. Do not skip.
 - Knee-to-toe ankle rockers — Dorsiflexion, knee-over-toe comfort.
   levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
 - Straight-leg calf raisers — Gastroc and Achilles.
@@ -89,9 +89,10 @@ patterns: push-h, crawl, cyclical
 - Push-ups start 2, +2 / round
 - Bear crawl steps start 2, +2 / round
 - March 40 sec between rungs if you need it
-antiEcho: No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.
+antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
 weekNote: Ladder novelty. Start at 2, add 2 each rung. Same family, different clock.
-achilles: If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay. No swings on squat day.
+achilles: If Achilles is cranky, keep strength, shorten the crawl, and prefer easy march or push-ups. No swings on squat day.
+achillesReady: Achilles: keep strength, shorten the crawl, prefer easy march or push-ups, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

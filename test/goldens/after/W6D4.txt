@@ -31,7 +31,7 @@ gatedOnAmberRedOrFlag: yes
 note: Skip on Amber/Red or any flag. No loaded KB deadlift and no pogo here.
 
 == MOBILITY ==
-mobNote: Elastaboy opener for the hinge and the front rack. Same drills. Own today's level before you climb.
+mobNote: Elastaboy opener for the hinge and the front rack. Same drills.
 weekMob: Drop one level or unload.
 - Bent-knee calf raisers — Soleus and Achilles prep.
   levels: Two-leg, shallow bend. | Deeper bend. | Single-leg on a ledge.
@@ -95,7 +95,8 @@ patterns: cyclical, push-h, elastic
 - Step-overs
 antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
 weekNote: Deload. Easy bike + push-ups + step-overs. No redline.
-achilles: If Achilles is cranky, drop burpees for step-overs or a short march.
+achilles: If Achilles is cranky, keep strength, and prefer bike, step-overs, or push-ups.
+achillesReady: Achilles: keep strength, prefer bike, step-overs, or push-ups.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

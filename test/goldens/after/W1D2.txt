@@ -102,9 +102,10 @@ patterns: hinge, crawl, elastic, cyclical
 - Burpees or sprawls
 - Bike or row
 - Easy walk, nasal breathing
-antiEcho: Dense upper + carry day. Hinge / crawl / cyclical — not a second press or farmer.
+antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
 weekNote: Establish Menu A. Stations 4 and 9 are bike or row — not air squat.
-achilles: If Achilles is cranky, swap burpees for extra walk or step-overs. Prefer bike or row over jump-dense alts.
+achilles: If Achilles is cranky, keep strength, swap burpees for a low-impact station, shorten the crawl, and prefer bike, walk, slow taps, easy row, or easy swings.
+achillesReady: Achilles: keep strength, swap burpees for a low-impact station, shorten the crawl, prefer bike, walk, slow taps, easy row, or easy swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.
