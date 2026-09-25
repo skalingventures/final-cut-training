@@ -52,9 +52,9 @@ note: Heavy but clean. No grinders. Straight sets, never supersetted.
 
 id: elastic
 job: Elastic / land
-nm: Easy med-ball slam or skip
-rx: 2 × 6–8 easy slams
-note: C easy or skip. Deload. No max landings.
+nm: Easy low box jumps or skip
+rx: 2 × 3 low box jumps, step down — or skip
+note: Easy box jumps or skip. Deload. Step down. No max landings.
 
 id: pp
 job: Athletic overhead
@@ -81,22 +81,20 @@ cousins: Single-arm KB carry · Offset rack carry
 accWave: Easy cousins — drop 30–40%, stay on the implement you own
 
 == BURNOUT ==
-nm: Easy Bike + Push + Step-over
-fmt: 8-min easy · no redline
-chip: 8-min
-effort: RPE 6–7
+nm: Ground Flow
+fmt: 7-min easy · no redline
+chip: 7-min
+effort: RPE 5–6
 optional: no
 benchmark: no
 hard: yes
 zoneCue: none
-patterns: cyclical, push-h, elastic
-- Easy bike
-- Push-ups
-- Step-overs
+patterns: ground, crawl, push-h
+- 7 minutes continuous and nasal, moving slowly through: crab reach (from crab, reach one arm overhead and lift the hips), lateral ape travel, technical stand-up, 2 slow ring push-ups, and repeat.
 antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
-weekNote: Deload. Easy bike + push-ups + step-overs. No redline.
-achilles: If Achilles is cranky, keep strength, and prefer bike, step-overs, or push-ups.
-achillesReady: Achilles: keep strength, prefer bike, step-overs, or push-ups.
+weekNote: Deload. No redline. Lateral ape travel is this week's easy preview.
+achilles: If Achilles is cranky, keep strength, and prefer push-ups.
+achillesReady: Achilles: keep strength, prefer push-ups.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

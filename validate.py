@@ -258,6 +258,9 @@ PATTERN_ALIASES = {
     "slam": "slam",
     "core": "core",
     "iso": "iso",
+    "rotation": "rotation",
+    "sprint": "sprint",
+    "ground": "ground",
 }
 
 # Prefer deriving tags from movement names. Order: more specific first.
@@ -266,7 +269,11 @@ MOVEMENT_PATTERNS = [
     (re.compile(r"burpee|sprawl", re.I), "elastic"),
     (re.compile(r"pogo|broad jump|\bjump|bound", re.I), "elastic"),
     (re.compile(r"step-over|step over", re.I), "elastic"),
-    (re.compile(r"wall[- ]?ball|goblet|air squat", re.I), "squat"),
+    (re.compile(r"get-to-stand|get to stand|technical stand-up|crab|ape travel|\bape\b", re.I), "ground"),
+    (re.compile(r"landmine|pallof|rotation", re.I), "rotation"),
+    (re.compile(r"uphill sprint|hill sprint|hill stride|\bsprint", re.I), "sprint"),
+    (re.compile(r"lateral shuffle|carioca|shuffle", re.I), "sprint"),
+    (re.compile(r"wall[- ]?ball|goblet squat|air squat", re.I), "squat"),
     (re.compile(r"\blunge", re.I), "lunge"),
     (re.compile(r"push-up|push up|pushup", re.I), "push-h"),
     (re.compile(r"push press|overhead press|\bohp\b|(?<!floor/)(?<!floor )\bpress\b", re.I), "push-v"),
@@ -276,16 +283,27 @@ MOVEMENT_PATTERNS = [
     (re.compile(r"swing|deadlift|\brdl\b|good morning|\bhinge\b", re.I), "hinge"),
     (re.compile(r"bear crawl|\bcrawl", re.I), "crawl"),
     (re.compile(r"med-ball slam|med ball slam|\bslam", re.I), "slam"),
-    (re.compile(r"bike or row|easy row|assault bike|\bbike\b|\bmarch\b|\bwalk\b", re.I), "cyclical"),
+    (re.compile(r"bike or row|easy row|assault bike|\bbike\b|\bmarch\b|\bwalk\b|\brower\b", re.I), "cyclical"),
     (re.compile(r"mountain climber|plank|shoulder tap", re.I), "core"),
 ]
 
 
-def tags_from_items(items: list) -> set[str]:
+def burn_station_blob(resolved: dict) -> str:
+    """Stations plus the visible score / fallback / scale lines."""
+    parts = [str(x) for x in (resolved.get("items") or [])]
+    for key in ("score", "fallback", "scale"):
+        if resolved.get(key):
+            parts.append(str(resolved[key]))
+    return " ".join(parts)
+
+
+def tags_from_items(items: list, extra: str = "") -> set[str]:
     """Derive pattern tags from the written stations. Do not trust hand-written tags alone."""
     tags: set[str] = set()
-    for raw in items or []:
-        text = str(raw)
+    chunks = [str(raw) for raw in (items or [])]
+    if extra:
+        chunks.append(extra)
+    for text in chunks:
         if re.search(r"squat thrust", text, re.I):
             tags.add("elastic")
             text = re.sub(r"squat thrusts?", "", text, flags=re.I)
@@ -353,6 +371,49 @@ def for_matches_lift(for_line: str, day: dict) -> bool:
     return False
 
 
+# Primary stations only — fallbacks are weather / flag swaps, not the programmed card.
+W46_MOVES = [
+    ("air-bike", re.compile(r"\bbike\b", re.I)),
+    ("rower", re.compile(r"\brow(?:er|ing)?\b|power stroke", re.I)),
+    ("landmine rotation", re.compile(r"landmine", re.I)),
+    ("pallof", re.compile(r"pallof", re.I)),
+    ("hill sprint", re.compile(r"uphill sprint|hill sprint", re.I)),
+    ("hill stride", re.compile(r"stride", re.I)),
+    ("lateral shuffle", re.compile(r"shuffle", re.I)),
+    ("carioca", re.compile(r"carioca", re.I)),
+    ("box jump", re.compile(r"box jump", re.I)),
+    ("heavy swing", re.compile(r"\bswing", re.I)),
+    ("crab", re.compile(r"\bcrab\b", re.I)),
+    ("ape", re.compile(r"\bape\b", re.I)),
+    ("technical stand-up", re.compile(r"technical stand", re.I)),
+    ("get-to-stand", re.compile(r"get-to-stand|get to stand", re.I)),
+    ("ring push-up", re.compile(r"ring push", re.I)),
+    ("hug carry", re.compile(r"bear-hug|hug style", re.I)),
+    ("overhead carry", re.compile(r"overhead", re.I)),
+    ("backward walk", re.compile(r"backward", re.I)),
+]
+
+
+def check_w46_reuse(days: dict) -> None:
+    """No movement on more than 3 of the 12 W4–W6 cards, or on two days in one week."""
+    cards: list[tuple[int, int, str]] = []
+    for week in (4, 5, 6):
+        for n in (1, 2, 4, 5):
+            resolved = resolve_burn(days.get(n) or {}, week) or {}
+            blob = " ".join(str(x) for x in (resolved.get("items") or []))
+            cards.append((week, n, blob))
+    for name, rx in W46_MOVES:
+        hits = [(week, n) for week, n, blob in cards if rx.search(blob)]
+        if len(hits) > 3:
+            err(f"W4–W6 max-reuse: {name} appears on {len(hits)} cards {hits}")
+        by_week: dict[int, list[int]] = {}
+        for week, n in hits:
+            by_week.setdefault(week, []).append(n)
+        for week, ns in by_week.items():
+            if len(set(ns)) > 1:
+                err(f"W{week} max-reuse: {name} appears on days {sorted(set(ns))}")
+
+
 def check_midblock_content(p: dict) -> None:
     """Block 01 mid-block musts — optional fields become required on the days that use them."""
     days = {d["n"]: d for d in p.get("days", [])}
@@ -389,6 +450,14 @@ def check_midblock_content(p: dict) -> None:
         keys = {str(k) for k in elastic["byWeek"]}
         if not {"1", "2", "3", "4", "5", "6"} <= keys:
             err("day 4 elastic byWeek must have weeks 1–6")
+        w5e = elastic["byWeek"].get(5) or elastic["byWeek"].get("5") or {}
+        if re.search(r"slam", str(w5e), re.I):
+            err("day 4 W5 elastic must swap slams for box jump with step-down")
+        if not re.search(r"5'11|71", str(w5e)):
+            err("day 4 W5 elastic must note the 5'11\" (71 in) broad-jump standard")
+        w6e = elastic["byWeek"].get(6) or elastic["byWeek"].get("6") or {}
+        if re.search(r"slam", f"{w6e.get('nm', '')} {w6e.get('rx', '')}", re.I):
+            err("day 4 W6 elastic must not use med-ball slams")
 
     d5_lifts = {l.get("id"): l for l in (days.get(5) or {}).get("lifts") or []}
     if "chest-supported" not in str((d5_lifts.get("oarow") or {}).get("byWeek") or {}).lower():
@@ -453,7 +522,8 @@ def check_midblock_content(p: dict) -> None:
                 err(f"day {n} week {week} burn must differ from week {week - 1}")
             prev = blob
             handwritten = {PATTERN_ALIASES.get(str(tag), str(tag)) for tag in (resolved.get("patterns") or [])}
-            derived = tags_from_items(resolved.get("items") or [])
+            extra = " ".join(str(resolved.get(k) or "") for k in ("score", "fallback", "scale"))
+            derived = tags_from_items(resolved.get("items") or [], extra)
             tags = derived | handwritten
             if not derived:
                 err(f"day {n} week {week} burn: could not derive pattern tags from items")
@@ -461,7 +531,7 @@ def check_midblock_content(p: dict) -> None:
             hit = tags & banned
             if hit:
                 err(f"day {n} week {week} burn has banned pattern(s) {sorted(hit)}")
-            blob = " ".join(resolved.get("items") or [])
+            blob = burn_station_blob(resolved)
             note = " ".join([
                 resolved.get("adj") or "",
                 resolved.get("achilles") or "",
@@ -496,19 +566,34 @@ def check_midblock_content(p: dict) -> None:
     if len(formats) < 4:
         err(f"need ≥4 burnout formats across D1/D2/D4, got {sorted(formats)}")
 
-    d1_all = " ".join(
-        " ".join((resolve_burn(days.get(1) or {}, w) or {}).get("items") or [])
-        for w in range(1, 7)
-    ).lower()
-    if "squat thrust" not in d1_all or "push-up" not in d1_all or "slam" not in d1_all:
-        err("Kjael ladder B remap (push-ups / squat thrusts / slams) must appear on Day 1")
+    d1w4 = burn_station_blob(resolve_burn(days.get(1) or {}, 4) or {}).lower()
+    if "air bike" not in d1w4 or "landmine" not in d1w4:
+        err("Day 1 Week 4 must be Sprint Ten + Twist (air bike + landmine rotation)")
+    d2w4 = burn_station_blob(resolve_burn(days.get(2) or {}, 4) or {}).lower()
+    if "uphill sprint" not in d2w4 or "shuffle" not in d2w4 or "box jump" not in d2w4:
+        err("Day 2 Week 4 must be Hill Eights with the Box & Bell fallback visible")
+    d4w5 = resolve_burn(days.get(4) or {}, 5) or {}
+    if not re.search(r"get-to-stand|get to stand", burn_station_blob(d4w5), re.I):
+        err("Day 4 Week 5 benchmark must be the KB chest-hug get-to-stand")
+    if re.search(r"burpee|goblet squat", burn_station_blob(d4w5), re.I):
+        err("Day 4 Week 5 must retire the goblet / push-up / burpee test")
 
-    d2_all = " ".join(
-        " ".join((resolve_burn(days.get(2) or {}, w) or {}).get("items") or [])
-        for w in range(1, 7)
-    ).lower()
-    if not re.search(r"inverted|ring row", d2_all) or "air squat" not in d2_all or "lunge" not in d2_all or "mountain climber" not in d2_all:
-        err("Kjael ladder A remap (row / air squat / lunge / climber) must appear on Day 2")
+    retired = re.compile(
+        r"burpee|sprawl|squat thrust|mountain climber|step-over|bear crawl|shoulder tap|"
+        r"goblet squat|air squat|walking lunge|med-ball slam|med ball slam",
+        re.I,
+    )
+    floor_push = re.compile(r"(?<!ring )push-ups?", re.I)
+    for n in (1, 2, 4, 5):
+        for week in (4, 5, 6):
+            blob = burn_station_blob(resolve_burn(days.get(n) or {}, week) or {})
+            hit = retired.search(blob)
+            if hit:
+                err(f"day {n} week {week} still uses retired burnout movement {hit.group(0)!r}")
+            if n != 4 and floor_push.search(blob):
+                err(f"day {n} week {week} still uses floor push-ups; ring push-ups are D4 only")
+
+    check_w46_reuse(days)
 
     d2w3 = " ".join((resolve_burn(days.get(2) or {}, 3) or {}).get("items") or []).lower()
     d2w1 = " ".join((resolve_burn(days.get(2) or {}, 1) or {}).get("items") or []).lower()
@@ -527,8 +612,8 @@ def check_midblock_content(p: dict) -> None:
     ccs = next((m for m in menu if isinstance(m, dict) and re.search(r"carry|ccs|swing", str(m.get("nm", "") + m.get("label", "")), re.I)), None)
     if not ccs:
         err("day 5 should keep CCS as a green option in burn.menu")
-    elif set(ccs.get("weeks") or []) != {1, 2, 3, 4}:
-        err("day 5 CCS green option must be offered W1–W4 only")
+    elif set(ccs.get("weeks") or []) != {1, 2, 3}:
+        err("day 5 CCS green option must be offered W1–W3 only — W4 is the Carry Walk Medley")
     elif not ccs.get("items"):
         err("day 5 CCS green option must list its stations")
 
@@ -614,9 +699,9 @@ def check_app_js() -> None:
     for needle in [
         "FinalCutCore", "saveNow", "pagehide", "setupDone", "SESSIONS",
         "SKIP_WAITING", "resolveBurn", "resolveLift", "prepPump", "prepPumpGated",
-        "burnEffort", "burnItemText", "fc-job", "fc-cousins", "fc-for",
+        "burnEffort", "burnHeaderDose", "burnItemText", "fc-job", "fc-cousins", "fc-for",
         "achillesReadiness", "resolveTissue", "resolveMobNote",
-        "burnGreenTitle",
+        "burnGreenTitle", "burn.score", "burn.fallback", "burn.scale",
     ]:
         if needle not in js:
             err(f"app.js missing {needle!r}")

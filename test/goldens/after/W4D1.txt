@@ -77,22 +77,25 @@ cousins: DB RDL · Good morning · Single-leg RDL
 accWave: Cousin variety — slightly reduced volume; keep the job, pick the cleanest cousin
 
 == BURNOUT ==
-nm: Push / Squat-Thrust / Slam Ladder
-fmt: 9-min ascending ladder · start 2, +2/round
-chip: 9-min
-effort: 85–90%
+nm: Sprint Ten + Twist
+fmt: EMOM × 10 min
+chip: EMOM
+effort: Sprints all-out · session RPE 7–8
 optional: no
 benchmark: no
 hard: yes
-zoneCue: Z4 by minute 4–6
-patterns: push-h, elastic, slam
-- Push-ups start 2, +2 / round
-- Squat thrusts start 2, +2 / round
-- Med-ball slams start 2, +2 / round
+zoneCue: none
+patterns: cyclical, core, sprint, rotation
+- Minutes 1–8: from a rolling start, 8 seconds all-out on the air bike, then spin easy for the rest of the minute.
+- Minutes 9–10: rack-corner landmine rotations with the empty bar, 2 × 6 per side, smooth and controlled.
+- Each sprint is 100% effort. The session should feel like RPE 7–8, not a blow-up.
+score: Peak RPM or watts on your best sprint, and sprint 8 as a percentage of your best. Standard: sprint 8 at ≥90% of your best. Write it down — beat it next week.
+fallback: Achilles flag: no change. Rower is the alternate implement — 8-second power strokes instead of the bike.
+scale: 6 sprints, and a band Pallof press instead of the landmine. Amber: 5 sprints at ~90%.
 antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
-weekNote: Kjael ladder B remap, kettlebell-free. Hip thrust dropped — it echoes the RDL. 9-min cap.
-achilles: If Achilles is cranky, keep strength, ease slams, slow the squat thrusts, and prefer push-ups. No swings on squat day.
-achillesReady: Achilles: keep strength, ease slams, slow the squat thrusts, prefer push-ups, no swings.
+weekNote: Wheels & Twist. Alactic bike sprints plus rotation. No squat, hang-pull, swing, or farmer.
+achilles: If Achilles is cranky, keep strength, and prefer bike or easy row. No swings on squat day.
+achillesReady: Achilles: keep strength, prefer bike or easy row, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

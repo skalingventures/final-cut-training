@@ -122,6 +122,9 @@ function dumpDay(program, week, dayN) {
     (burn.items || []).forEach(function (item) {
       out.push("- " + Core.burnItemText(item));
     });
+    if (burn.score) out.push("score: " + burn.score);
+    if (burn.fallback) out.push("fallback: " + burn.fallback);
+    if (burn.scale) out.push("scale: " + burn.scale);
     if (burn.baseAdj) out.push("antiEcho: " + burn.baseAdj);
     if (burn.weekNote) out.push("weekNote: " + burn.weekNote);
     out.push("achilles: " + Core.achillesLine(day, burn));
