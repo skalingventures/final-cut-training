@@ -83,7 +83,7 @@ cousins: Trap-bar carry · Front-rack carry · Sandbag carry
 accWave: Owned only — no new cousins, no new levels
 
 == BURNOUT ==
-nm: Owned Menu B
+nm: Owned Menu A
 fmt: 40 sec work / 20 sec transition × 10 min
 chip: 40/20
 effort: 85–90%
@@ -91,21 +91,21 @@ optional: no
 benchmark: no
 hard: yes
 zoneCue: Z4 by minute 4–6
-patterns: cyclical, elastic, lunge, core
-- Row (erg) or bike
-- Squat thrusts
-- Walking lunges
-- Mountain climbers
+patterns: hinge, crawl, elastic, cyclical
+- Kettlebell swings
+- Bear crawl or plank shoulder taps
+- Burpees or sprawls
+- Bike or row
 - Easy walk, nasal breathing
-- Row (erg) or bike
-- Squat thrusts
-- Walking lunges
-- Mountain climbers
+- Kettlebell swings
+- Bear crawl or plank shoulder taps
+- Burpees or sprawls
+- Bike or row
 - Easy walk, nasal breathing
 antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
-weekNote: Re-expresses the Week 4 movements on the owned 40/20 clock. Still not the chaotic expression — that is Day 4.
-achilles: If Achilles is cranky, keep strength, slow the squat thrusts, and prefer bike, walk, or easy row.
-achillesReady: Achilles: keep strength, slow the squat thrusts, prefer bike, walk, or easy row.
+weekNote: Owned Menu A. Not the chaotic expression — that is Day 4 this week.
+achilles: If Achilles is cranky, keep strength, swap burpees for a low-impact station, shorten the crawl, and prefer bike, walk, slow taps, easy row, or easy swings.
+achillesReady: Achilles: keep strength, swap burpees for a low-impact station, shorten the crawl, prefer bike, walk, slow taps, easy row, or easy swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

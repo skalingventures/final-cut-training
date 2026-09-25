@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.2.3";
+  const APP_VERSION = "2.2.2";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -324,7 +324,7 @@
       jump: has(/\bjump|pogo|bound/),
       stepover: has(/step-over|step over/),
       tap: has(/\btap/),
-      row: has(/inverted|ring row|bike or row|easy row|assault bike|row \(erg\)/),
+      row: has(/inverted|ring row|bike or row|easy row|assault bike/),
       carry: has(/\bcarry|farmer/),
       squatThrust: has(/squat thrust/),
       climber: has(/climber/)

@@ -156,7 +156,7 @@ Main bench (unpaired). Accessories: horizontal pull, strict vertical push, secon
 | --- | --- |
 | `push-h` / `push-v` as a working press, `carry` (farmer echo) | `hinge`, `crawl`, sprawl / `core`, `cyclical`, light `squat` |
 
-Lived: 40/20 Menu A — swing / crawl / sprawl / **bike or row at stations 4 and 9**. Week 2 rotates to a swing-crawl ladder. Week 3 is Menu A again but must visibly differ from Week 1 (assault bike / easy row wording + week note). Week 4 is Kjael ladder A remapped: inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers, 8–9 min. Week 5 is Owned Menu B: Week 4 movements re-expressed on the owned 40/20 clock (row/bike, squat thrusts, walking lunges, mountain climbers, nasal walk ×2) — still not the chaotic expression (Day 4). Week 6 easy 30/30. Another press or farmer is not legal.
+Lived: 40/20 Menu A — swing / crawl / sprawl / **bike or row at stations 4 and 9**. Week 2 rotates to a swing-crawl ladder. Week 3 is Menu A again but must visibly differ from Week 1 (assault bike / easy row wording + week note). Week 4 is Kjael ladder A remapped: inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers, 8–9 min. Week 5 owned Menu A. Week 6 easy 30/30. Another press or farmer is not legal.
 
 ### Day 4 — athletic full body
 
@@ -197,10 +197,9 @@ No burnout. Do not sneak one in.
 
 ### D2 menus
 
-- **Menu A (W1, W3):** swing / crawl / sprawl / bike or row / nasal walk, twice through. W3 wording is assault bike / easy row so the card is not a W1 copy.
+- **Menu A (W1, W3, W5):** swing / crawl / sprawl / bike or row / nasal walk, twice through. W3 wording is assault bike / easy row so the card is not a W1 copy.
 - **Ladder week (W2):** swing-crawl ascending ladder on the same family.
 - **Ladder A remap (W4):** inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers. Rows, not pull-ups.
-- **Owned Menu B (W5):** Week 4 movements on the owned 40/20 clock — row (erg) or bike / squat thrusts / walking lunges / mountain climbers / nasal walk, twice through. Still not the chaotic expression (that is Day 4).
 - **Soft (W6):** easy 30/30.
 
 ### D4 alternates

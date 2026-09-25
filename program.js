@@ -224,21 +224,21 @@ window.PROGRAM = {
             patterns: ["pull-h", "squat", "lunge", "core"]
           },
           5: {
-            nm: "Owned Menu B", fmt: "40 sec work / 20 sec transition × 10 min", effort: "85–90%",
+            nm: "Owned Menu A", fmt: "40 sec work / 20 sec transition × 10 min", effort: "85–90%",
             items: [
-              "Row (erg) or bike",
-              "Squat thrusts",
-              "Walking lunges",
-              "Mountain climbers",
+              "Kettlebell swings",
+              "Bear crawl or plank shoulder taps",
+              "Burpees or sprawls",
+              "Bike or row",
               "Easy walk, nasal breathing",
-              "Row (erg) or bike",
-              "Squat thrusts",
-              "Walking lunges",
-              "Mountain climbers",
+              "Kettlebell swings",
+              "Bear crawl or plank shoulder taps",
+              "Burpees or sprawls",
+              "Bike or row",
               "Easy walk, nasal breathing"
             ],
-            adj: "Re-expresses the Week 4 movements on the owned 40/20 clock. Still not the chaotic expression — that is Day 4.",
-            patterns: ["cyclical", "elastic", "lunge", "core"]
+            adj: "Owned Menu A. Not the chaotic expression — that is Day 4 this week.",
+            patterns: ["hinge", "crawl", "elastic", "cyclical"]
           },
           6: {
             nm: "Easy 30/30", fmt: "30 sec work / 30 sec easy × 8 min", effort: "RPE 6–7",
