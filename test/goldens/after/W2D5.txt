@@ -8,13 +8,13 @@ restTitle: Three controlled rounds — not for time · RPE 7
 
 == TISSUE ==
 dose: 3–5 min
-goal: Chassis texture for goblet, floor press, row, and the Copenhagen.
+goal: Chassis texture for goblet, floor press, chest-supported row, and the Copenhagen.
 1. Front thighs · for Goblet squat · Roller · 45–60 sec / side
    cue: Smooth passes so the goblet can sit.
 2. Chest · for DB floor press or incline press · Ball against wall · 60 sec / side
    cue: Broad chest work before pressing.
 3. Lats / rib-side · for Chest-supported row · Ball or roller · 45–60 sec / side
-   cue: Side-back and rib-side so the row can pull.
+   cue: Side-back and rib-side so the chest-supported row can pull.
 4. Inner thighs · for Copenhagen plank or side plank · Roller · 45 sec / side
    cue: Gentle adductor pressure before the Copenhagen.
 5. Glutes / side glutes · for Goblet squat · optional · Ball · 60 sec / side
@@ -92,7 +92,7 @@ antiEcho: Optional aerobic pump — leave better, not cooked. Carry / Crawl / Sw
 weekNote: Aerobic pump. Carry / Crawl / Swing remains a green option.
 achilles: If Achilles is cranky, keep strength, and prefer bike or walk.
 achillesReady: Achilles: keep strength, prefer bike or walk.
-greenOption: Carry / Crawl / Swing (green)
+greenOption: Carry / Crawl / Swing
   - Farmer carry or march — 40 sec
   - Kettlebell swings × 12
   - Bear crawl × 20 steps

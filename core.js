@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.2.2";
+  const APP_VERSION = "2.2.3";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -209,6 +209,17 @@
     }
     const resolved = Object.assign({}, raw, overlay || {});
     resolved.baseAdj = raw.adj || "";
+    const menuThisWeek = Array.isArray(raw.menu) && raw.menu.some(function (m) {
+      if (!m) return false;
+      if (!Array.isArray(m.weeks) || !m.weeks.length) return true;
+      return m.weeks.indexOf(w) >= 0;
+    });
+    if (!menuThisWeek && resolved.baseAdj) {
+      resolved.baseAdj = resolved.baseAdj
+        .replace(/(?:^|\s)[^.]*\bgreen option\b[^.]*\./gi, "")
+        .replace(/\s{2,}/g, " ")
+        .trim();
+    }
     if (overlay && overlay.adj && overlay.adj !== raw.adj) {
       resolved.weekNote = overlay.adj;
     } else {
@@ -220,6 +231,14 @@
     delete resolved.label;
     delete resolved.weeks;
     return resolved;
+  };
+
+  /* Green-option label. The renderer already says "Green option ·";
+     strip a second "(green)" / "(green alt)" / "(alt)" on the name. */
+  Core.burnGreenTitle = function burnGreenTitle(row) {
+    return String((row && (row.label || row.nm)) || "")
+      .replace(/\s*\((?:green(?:\s+alt)?|alt)\)\s*/gi, "")
+      .trim();
   };
 
   /* Week-aware lift / accessory. Overlay lift.byWeek[week] on the base
@@ -400,18 +419,81 @@
     return day.restTitle || "";
   };
 
+  function escapeRe(s) {
+    return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function compactName(s) {
+    return String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  }
+
+  function tissueNamesRelated(baseFor, liftNm) {
+    const a = compactName(baseFor);
+    const b = compactName(liftNm);
+    if (!a || !b) return false;
+    return a === b || b.indexOf(a) >= 0 || a.indexOf(b) >= 0;
+  }
+
+  function tissueGoalLabel(liftNm) {
+    const nm = String(liftNm || "");
+    if (/front-foot elevated split squat/i.test(nm)) return "front-foot elevated split squat";
+    if (/chest-supported row/i.test(nm)) return "chest-supported row";
+    if (/incline press/i.test(nm) && !/floor press/i.test(nm)) return "incline press";
+    if (/goblet/i.test(nm)) return "goblet";
+    if (/floor press/i.test(nm)) return "floor press";
+    if (/\brow\b/i.test(nm)) return "row";
+    return nm;
+  }
+
+  function tissueNameBits(baseFor) {
+    const raw = String(baseFor || "").trim();
+    if (!raw) return [];
+    const words = raw.split(/\s+/);
+    const bits = [raw];
+    if (words.length >= 2) bits.push(words.slice(-2).join(" "));
+    const first = words[0];
+    if (first && first.length > 3) bits.push(first);
+    const last = words[words.length - 1];
+    if (last && /^(squat|press|row|lunge)$/i.test(last)) bits.push(last);
+    bits.sort(function (a, b) { return b.length - a.length; });
+    return bits.filter(function (b, i, arr) { return b && arr.indexOf(b) === i; });
+  }
+
+  function replaceFirstBit(text, bits, label) {
+    if (!text) return text;
+    for (let i = 0; i < bits.length; i++) {
+      const rx = new RegExp("\\b" + escapeRe(bits[i]) + "\\b", "i");
+      if (rx.test(text)) return text.replace(rx, label);
+    }
+    return text;
+  }
+
   Core.resolveTissue = function resolveTissue(day, week) {
     const tissue = day && day.tissue;
     if (!tissue) return null;
     const byId = {};
     Core.resolveLifts(day, week).forEach(function (l) { byId[l.id] = l; });
+    let goal = tissue.goal || "";
+    const goalDone = {};
     const items = (tissue.items || []).map(function (it) {
       const out = Object.assign({}, it);
       const lift = it.forId ? byId[it.forId] : null;
-      if (lift && lift.nm) out.for = lift.nm;
+      const baseFor = it.for || "";
+      if (lift && lift.nm) {
+        out.for = lift.nm;
+        if (!tissueNamesRelated(baseFor, lift.nm)) {
+          const label = tissueGoalLabel(lift.nm);
+          const bits = tissueNameBits(baseFor);
+          out.cue = replaceFirstBit(out.cue, bits, label);
+          if (!goalDone[it.forId]) {
+            goal = replaceFirstBit(goal, bits, label);
+            goalDone[it.forId] = true;
+          }
+        }
+      }
       return out;
     });
-    return Object.assign({}, tissue, { items: items });
+    return Object.assign({}, tissue, { items: items, goal: goal });
   };
 
   /* Short burnout header chip. First-word split is fine for

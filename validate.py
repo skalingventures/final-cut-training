@@ -540,6 +540,10 @@ def check_midblock_content(p: dict) -> None:
         if re.search(r"z4|redline|chaos", (resolved.get("nm") or "") + " " + (resolved.get("fmt") or "") + " " + (resolved.get("adj") or ""), re.I):
             if "no redline" not in (resolved.get("adj") or "").lower():
                 err(f"day 5 week {week} must stay soft / skip")
+    for week in (5, 6):
+        overlay_adj = ((d5.get("byWeek") or {}).get(week) or (d5.get("byWeek") or {}).get(str(week)) or {}).get("adj") or ""
+        if re.search(r"green option in Weeks?\s*1", overlay_adj, re.I):
+            err(f"day 5 week {week} must not advertise CCS as a green option")
     d5w6 = resolve_burn(days.get(5) or {}, 6) or {}
     d5w6_effort = (d5w6.get("effort") or "").strip()
     if re.fullmatch(r"RPE\s*~?\s*7", d5w6_effort):
@@ -615,6 +619,7 @@ def check_app_js() -> None:
         "SKIP_WAITING", "resolveBurn", "resolveLift", "prepPump", "prepPumpGated",
         "burnEffort", "burnItemText", "fc-job", "fc-cousins", "fc-for",
         "achillesReadiness", "resolveTissue", "resolveMobNote",
+        "burnGreenTitle",
     ]:
         if needle not in js:
             err(f"app.js missing {needle!r}")

@@ -173,13 +173,14 @@ input, textarea, select {
   font-size: var(--sv-text-base);
   line-height: var(--sv-leading-snug);
   color: var(--sv-text-strong);
+  overflow-wrap: break-word;
 }
 .fc-row-meta {
   font-family: var(--sv-font-mono);
   font-size: var(--sv-text-xs);
   letter-spacing: var(--sv-tracking-label);
   color: var(--sv-text-muted);
-  white-space: nowrap;
+  white-space: normal;
 }
 .fc-row-cue {
   margin: var(--sv-space-1) 0 0;
