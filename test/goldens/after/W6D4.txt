@@ -1,0 +1,105 @@
+WEEK 6 DAY 4
+intent: Deload / absorb
+weekday: Thursday
+theme: Ankles & Posterior Chain
+sub: Athletic full body
+heat: hardest
+
+== TISSUE ==
+dose: 3–5 min
+goal: Prep the deadlift hinge, landing, and the push-press rack.
+1. Glute fold / high hamstring · for deadlift · Ball · 45 sec / side
+   cue: Sit near the crease where glute meets hamstring. Controlled pressure, not aggressive digging.
+2. Calves · for deadlift · Roller · 60 sec / side
+   cue: Slow passes, especially the lower calf and soleus.
+3. T-spine / lats · for push press · Roller · 60 sec
+   cue: Upper back and lat line so the front rack and push-press can sit.
+4. Hamstrings · for deadlift · optional · Roller · 45–60 sec / side
+   cue: Roll the back of the thigh before hinging. Optional if the glute fold already opened the line.
+5. Inner thighs · for deadlift · optional · Roller · 45 sec / side
+   cue: Helps before adductor rock-backs and the athletic slot.
+note: Priority: glute fold/high hamstring, calves, then T-spine/lats for the push-press. Front thigh drops. Hamstrings and inner thigh are optional overflow.
+
+== PREP PUMP ==
+dose: 2–4 min
+goal: Light hinge/ankle pump before mobility. RPE ≤6.
+gatedOnAmberRedOrFlag: yes
+1. Bodyweight hinge reach · Bodyweight · 8–10
+   cue: Pattern only — not a loaded hinge before the deadlift.
+2. Easy calf raises · Bodyweight · 10–12
+   cue: Short dose; full calf ladder is in mobility.
+note: Skip on Amber/Red or any flag. No loaded KB deadlift and no pogo here.
+
+== MOBILITY ==
+mobNote: Elastaboy opener for the hinge and the front rack. Same drills. Own today's level before you climb.
+weekMob: Drop one level or unload.
+- Bent-knee calf raisers — Soleus and Achilles prep.
+  levels: Two-leg, shallow bend. | Deeper bend. | Single-leg on a ledge.
+- Knee-to-toe ankle rockers — Dorsiflexion.
+  levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
+- Good mornings — Hinge pattern.
+  levels: Bodyweight, hands on hips. | Wide stance, hands on head. | Single-leg. Dumbbells optional.
+- Adductor rock-backs — Inner-thigh and hip control.
+  levels: One side, press the straight-leg foot down. | Elevate the straight leg. | Frog rock-backs.
+- Long split lunge — Hip extension, unilateral control.
+  levels: Front foot elevated, hold for balance. Hamstring covers the calf. | Lower the box, less hand support. | Floor. Dumbbells only if the calf-cover standard is met.
+
+== LIFTS ==
+id: dead
+nm: Deadlift
+main: 3 × 5 · RPE 6–7
+note: Heavy but clean. No grinders. Straight sets, never supersetted.
+
+id: elastic
+job: Elastic / land
+nm: Easy med-ball slam or skip
+rx: 2 × 6–8 easy slams
+note: C easy or skip. Deload. No max landings.
+
+id: pp
+job: Athletic overhead
+nm: Push press
+rx: 4 × 4–6
+note: Athletic overhead power.
+cousins: DB push press · KB push press · Landmine push press
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+id: chin
+job: Vertical pull
+nm: Chin-ups
+rx: 4 × 5–8
+note: Clean reps. Add weight only if crisp.
+cousins: Neutral-grip pull-up · Band-assisted chin-up · Weighted chin-up
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+id: suit
+job: Anti-rotation carry
+nm: Suitcase carry
+rx: 3 × 40 sec / side
+note: Anti-rotation and chassis work.
+cousins: Single-arm KB carry · Offset rack carry
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+== BURNOUT ==
+nm: Easy Bike + Push + Step-over
+fmt: 8-min easy · no redline
+chip: 8-min
+effort: RPE 6–7
+optional: no
+benchmark: no
+hard: yes
+zoneCue: none
+patterns: cyclical, push-h, elastic
+- Easy bike
+- Push-ups
+- Step-overs
+antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
+weekNote: Deload. Easy bike + push-ups + step-overs. No redline.
+achilles: If Achilles is cranky, drop burpees for step-overs or a short march.
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 27
+phases: tissue 5 · prep 2 · mobility 5 · work 13 · burnout 1 · downshift 1

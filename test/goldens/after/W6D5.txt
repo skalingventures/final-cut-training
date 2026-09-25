@@ -1,0 +1,99 @@
+WEEK 6 DAY 5
+intent: Deload / absorb
+weekday: Friday
+theme: Full Body Light Reset
+sub: Chassis · durability · pump
+heat: moderate
+restTitle: Three controlled rounds — not for time · RPE 7
+
+== TISSUE ==
+dose: 3–5 min
+goal: Chassis texture for goblet, floor press, row, and the Copenhagen.
+1. Front thighs · for goblet squat · Roller · 45–60 sec / side
+   cue: Smooth passes so the goblet can sit.
+2. Chest · for DB floor press · Ball against wall · 60 sec / side
+   cue: Broad chest work before pressing.
+3. Lats / rib-side · for one-arm DB row · Ball or roller · 45–60 sec / side
+   cue: Side-back and rib-side so the row can pull.
+4. Inner thighs · for Copenhagen plank · Roller · 45 sec / side
+   cue: Gentle adductor pressure before the Copenhagen.
+5. Glutes / side glutes · for goblet squat · optional · Ball · 60 sec / side
+   cue: Work the big glute and the side-glute pocket. Optional overflow.
+6. Calves · for wall-sit calf raises · optional · Roller · 45 sec / side
+   cue: Light maintenance only.
+note: Priority: front thigh, chest, lats/rib-side, plus inner thigh for the Copenhagen. Outer quad drops. Texture, not excavation.
+
+== MOBILITY ==
+mobNote: Elastaboy opener for chassis. Stay on Level 1–2. Day 5 does not climb to Level 3.
+weekMob: Drop one level or unload.
+- Standing side bends — Lateral spine.
+  levels: Fingertips toward the knees. | Wide stance, hands on head. | Feet together, dumbbell in one hand, no twist.
+- Cobra press-ups — Spinal extension and chest opening.
+  levels: Forearm sphinx. | Full hand lockout. | Shins to the wall.
+- Prone scap W + reach — Upper-back activation.
+  levels: On a bench. | On the floor. | Light dumbbells or plates.
+- Hammer grip wrist rockers — Wrist prep.
+  levels: Seated, gentle. | More range and pressure.
+- Laying neck controlled rotations — Neck mobility.
+  levels: Head lift, look side to side. | Slightly more range, or a light plate on the forehead.
+- Laying neck double chins — Deep neck flexors.
+  levels: Floor chin tuck. | Head off a bench plus a light plate.
+
+== LIFTS ==
+id: goblet
+job: Chassis squat
+nm: Goblet squat
+rx: 10–12
+note: Owned and easy. Drop 30–40% if you take it.
+
+id: floor
+job: Horizontal press
+nm: DB floor press or incline press
+rx: 10–12
+note: Owned and easy. Drop 30–40% if you take it.
+
+id: oarow
+job: Horizontal pull
+nm: One-arm DB row
+rx: 10–12 / side
+note: Owned and easy. Drop 30–40% if you take it.
+
+id: wallcalf
+job: Soleus / Achilles
+nm: Wall-sit calf raises
+rx: 2 × 15–20
+note: Soleus and Achilles capacity. Keep modest.
+guard: This is the only place extra calf work belongs — keep volume modest.
+
+id: copen
+job: Adductor / trunk
+nm: Copenhagen plank or side plank
+rx: 20–30 sec / side
+note: Trunk and adductors.
+
+id: hang
+job: Grip / decompression
+nm: Dead hang
+rx: 30–45 sec
+note: Grip and shoulder decompression.
+
+== BURNOUT ==
+nm: Walk or skip
+fmt: Easy walk · or skip
+chip: Easy
+effort: RPE 5–6
+optional: yes
+benchmark: no
+hard: no
+zoneCue: none
+- Nasal walk
+- Or skip
+antiEcho: Optional aerobic pump ~RPE 7 — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.
+weekNote: Deload. Walk or skip. No redline. No Carry / Crawl / Swing.
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 26
+phases: tissue 6 · prep 0 · mobility 6 · work 12 · burnout 1 · downshift 1

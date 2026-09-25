@@ -1,0 +1,98 @@
+WEEK 3 DAY 1
+intent: Build hard
+weekday: Monday
+theme: Ankles & Knees
+sub: Squat strength + pull
+heat: hard
+
+== TISSUE ==
+dose: 3–5 min
+goal: Prep squatting, knee travel, ankle range.
+1. Calves · Roller · 60 sec / side
+   cue: Roll from the Achilles up toward the back of the knee. Pause on dense spots.
+2. Front thigh / hip-flexor quad · Roller or ball · 45–60 sec / side
+   cue: Work the upper front thigh, especially where the quad meets the hip.
+3. Outer thigh / outer quad · Roller · 30–45 sec / side
+   cue: Moderate pressure along the outside of the thigh. Don't smash the side of the knee.
+4. Glutes · Hard medicine ball · 60 sec / side
+   cue: Sit on the ball and search the big glute and side-glute pocket.
+5. Inner thighs · Roller · 45 sec / side
+   cue: Gentle pressure before squats and Petersons.
+note: Priority order for squat day: calves and front thigh first, then outer quad and glute. Skip the last item if time is short. Don't smash the IT band — work outer quad, hip, and glute instead.
+
+== PREP PUMP ==
+dose: 4–6 min
+goal: Prime squat and knee-over-toe without stealing the main.
+gatedOnAmberRedOrFlag: yes
+1. Goblet squat pulse · Light KB · 2 × 8
+   cue: Heels down, knees track, no bounce.
+2. Split-stance lean · 6 / side
+   cue: Front knee over the toe, heel stays.
+note: Warm the pattern. This is not a working set.
+
+== MOBILITY ==
+mobNote: Elastaboy ladder. Start at Level 1. Earn Level 2, then Level 3 only when today's level is clean. Do not skip.
+weekMob: Earn the next level only when today's level is clean. Do not skip.
+- Knee-to-toe ankle rockers — Dorsiflexion, knee-over-toe comfort.
+  levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
+- Straight-leg calf raisers — Gastroc and Achilles.
+  levels: Two-leg, slight lean. | More lean. | Single-leg.
+- Bent-knee calf raisers — Soleus capacity.
+  levels: Two-leg, shallow bend. | Deeper bend. | Single-leg on a ledge.
+- Tib raisers — Ankle balance, front-of-shin strength.
+  levels: Back to wall, feet close. | Feet farther from the wall. | Slant-board.
+- Slant-board squats — Knee confidence, squat tolerance.
+  levels: Bodyweight, no bounce. | Light load. | Hindu / self-elevated heels only if Level 2 is owned.
+
+== LIFTS ==
+id: squat
+nm: Back squat or front squat
+main: 5 × 5 · RPE 8
+note: Main lower-body strength lift. Straight sets, full rest, never supersetted.
+
+id: pullup
+job: Vertical pull
+nm: Pull-ups or weighted pull-ups
+rx: 4 × 4–8
+note: Upper pull. Pick a cousin you can own for 4–8 clean reps. Add weight if 8 strict are easy.
+cousins: Chin-up · Lat pulldown · Band-assisted pull-up
+accWave: Cousin variety — stay on the job; swap the cousin if the first pick is stale
+
+id: peterson
+job: Knee-over-toe
+nm: Peterson step-ups
+rx: 2–3 × 6–8 / side
+note: Controlled knee-over-toe strength. Low volume — mobility already covers slant-board squats.
+cousins: Heels-elevated goblet squat · Slant-board step-down
+accWave: Cousin variety — stay on the job; swap the cousin if the first pick is stale
+
+id: rdl
+job: Hinge accessory
+nm: Romanian deadlift
+rx: 3 × 6–8
+note: Separate from the squat — not a superset. Use straps if grip would fail first.
+cousins: DB RDL · Good morning · Single-leg RDL
+accWave: Cousin variety — stay on the job; swap the cousin if the first pick is stale
+
+== BURNOUT ==
+nm: Slam / Crawl / Bike
+fmt: 10-minute AMRAP
+chip: 10-min
+effort: 90%
+optional: no
+benchmark: no
+hard: yes
+zoneCue: Z4 by minute 4–6
+- Med-ball slam × 8
+- Bear crawl × 8 steps
+- Easy bike or march × 40 sec
+antiEcho: No squat, hang-pull, swing, or max farmer on squat day. Push, crawl, march.
+weekNote: Build-hard week. Slams stay athletic, not a max.
+achilles: If Achilles is cranky, keep the march easy and shorten the crawl. Push-ups stay.
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 29
+phases: tissue 5 · prep 2 · mobility 5 · work 15 · burnout 1 · downshift 1

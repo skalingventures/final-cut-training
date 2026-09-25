@@ -146,7 +146,7 @@ Main squat (unpaired). Accessories: vertical pull, knee-over-toe, hinge.
 | --- | --- |
 | `squat`, `pull-v`, `hinge` (including swings), max `carry` | `push-h`, `crawl`, `slam`, `cyclical`, march |
 
-Lived: AMRAP Push / Crawl / March. Week 2 rotates to an ascending push-crawl ladder. Week 3 can lean hybrid (slam / crawl / bike). Never a hang-pull or farmer engine on this day.
+Lived: AMRAP Push / Crawl / March. Week 2 is an ascending push-crawl ladder **start 2, +2**. Week 3 is a cyclical hybrid: bike 40 s → push-ups ×8 → med-ball slam ×8, march as breaker. Week 4 is Kjael ladder B remapped, kettlebell-free: push-ups / squat thrusts / med-ball slams, start 2, +2, 9-min cap (hip thrust dropped — it echoes the RDL). Week 5 is owned Slam / Crawl / March — not a benchmark. Week 6 is soft: plank shoulder taps 30 s + easy bike 60 s, ×4. Never a hang-pull or farmer engine on this day. `squat thrust` is tagged `elastic`, not `squat`.
 
 ### Day 2 — upper strength + carries
 
@@ -156,7 +156,7 @@ Main bench (unpaired). Accessories: horizontal pull, strict vertical push, secon
 | --- | --- |
 | `push-h` / `push-v` as a working press, `carry` (farmer echo) | `hinge`, `crawl`, sprawl / `core`, `cyclical`, light `squat` |
 
-Lived: 40/20 Swing / Crawl / Sprawl. Week 2 rotates to a swing-crawl ladder. Air squats and step-overs are legal here; another press or farmer is not.
+Lived: 40/20 Menu A — swing / crawl / sprawl / **bike or row at stations 4 and 9**. Week 2 rotates to a swing-crawl ladder. Week 3 is Menu A again but must visibly differ from Week 1 (assault bike / easy row wording + week note). Week 4 is Kjael ladder A remapped: inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers, 8–9 min. Week 5 owned Menu A. Week 6 easy 30/30. Another press or farmer is not legal.
 
 ### Day 4 — athletic full body
 
@@ -166,7 +166,7 @@ Main deadlift (unpaired). Elastic slot after the deadlift. Accessories: athletic
 | --- | --- |
 | `hinge`, `push-v`, `pull-v`, suitcase `carry` | light `squat`, `push-h`, burpee / step-over (`elastic` + `core`) |
 
-Lived: AMRAP goblet + push-up + burpee or bar step-over. Week 5 is the sole chaotic benchmark. Achilles swaps burpees for step-overs or a short march — still no hinge finish.
+Lived: W1/W2 keep the light-squat + horizontal-push couplet. Week 3 is Alt B: wall-ball (or goblet-to-target) / push-ups / burpee step-overs. Week 4 is an alternating EMOM, 9 min — min 1 bike 30 s; min 2 goblet squat ×8; min 3 push-ups ×8 + mountain climbers ×12. Week 5 is Alt A, the sole chaotic benchmark. Week 6 is easy bike + push-ups + step-overs, no redline. Effort W1–W4 displays 90–95%. Achilles swaps burpees for step-overs or a short march — still no hinge finish.
 
 ### Day 5 — chassis
 
@@ -186,12 +186,43 @@ No burnout. Do not sneak one in.
 
 | Week | Intent | Finisher rule |
 | --- | --- | --- |
-| 1 | Establish | Base format. Teach the family. |
-| 2 | Build | Rotate the *format* on the same family (ladder novelty). |
-| 3 | Build hard | Same family, honest density. Hybrid or EMOM is fine. |
-| 4 | Intensify | Slightly reduced clock or dose. Quality over chaos. |
-| 5 | Peak | Owned only — except **Day 4**, the block's **sole chaotic benchmark**. Other Week 5 burns stay 85–90% and are not benchmarks. |
-| 6 | Deload | No redline. 60–70%. Shorter clock. Iso / pulse or easy cyclical is correct. |
+| 1 | Establish | Base format. Teach the family. D2 Menu A already uses bike/row at 4/9. D4 effort 90–95%. |
+| 2 | Build | Rotate the *format* on the same family (ladder novelty). D1 ladder starts at 2, +2. |
+| 3 | Build hard | D1 cyclical hybrid. D2 Menu A (must differ from W1). D4 Alt B wall-ball package. One new format this week (hybrid). |
+| 4 | Intensify | D1 Kjael ladder B remap. D2 Kjael ladder A remap. D4 alternating EMOM. One new format this week (EMOM). Ladders at most 1–2× per mid-block per day family. |
+| 5 | Peak | Owned only — except **Day 4**, the block's **sole chaotic benchmark**. Other Week 5 burns stay 85–90% and are not benchmarks. D5 is soft aerobic. |
+| 6 | Deload | No redline anywhere. D1 soft tap + bike. D2 easy 30/30. D4 easy bike + push + step-over. D5 walk or skip. Show RPE, not a week percent. |
+
+**Frequency rules (encode, do not wink at):** ladders at most 1–2× per mid-block per day family; at most one new format per week; W5 uses owned clocks except the D4 benchmark; W6 is absorb-mode.
+
+### D2 menus
+
+- **Menu A (W1, W3, W5):** swing / crawl / sprawl / bike or row / nasal walk, twice through. W3 wording is assault bike / easy row so the card is not a W1 copy.
+- **Ladder week (W2):** swing-crawl ascending ladder on the same family.
+- **Ladder A remap (W4):** inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers. Rows, not pull-ups.
+- **Soft (W6):** easy 30/30.
+
+### D4 alternates
+
+- **Alt A (W1 identity, W5 benchmark):** goblet / push-ups / burpees over bar.
+- **Alt B (W3):** wall-ball or goblet-to-target / push-ups / burpee step-overs.
+- **EMOM (W4):** 9 min rotating bike / goblet / push-up + climber.
+- **Soft (W6):** easy bike + push-ups + step-overs.
+
+### Ladder remaps (Kjael inspiration, original clocks)
+
+| Inspiration | Lived remap | Day / week |
+| --- | --- | --- |
+| B — push / squat-thrust / hip-thrust | push-ups / squat thrusts / med-ball slams, start 2, +2, 9-min cap. Hip thrust dropped (RDL echo). | D1 W4 |
+| A — pull-up / push-up / squat / lunge / climber | inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers, 8–9 min. Rows, not pull-ups. | D2 W4 |
+
+### Modifiers
+
+- Achilles: bike, march, step-over, plank taps first; drop jump-burpee density.
+- Grip: no max farmer after D1 pull-ups + RDL; no farmer on D2; no suitcase echo on D4.
+- W6 / optional: RPE, no Z4-by-minute-4–6 cue.
+
+Day 5 default is the 8-min aerobic pump at ~RPE 7 plus a light DB complex option. Carry / Crawl / Swing is a green option **W1–W4 only**, and its stations must render. W5 soft. W6 walk or skip.
 
 Three hard burnouts (D1, D2, D4) plus one optional moderate (D5). Red readiness cuts the hard burnout to a walk or a 60–70% easy version. That rule is older than this library and still wins.
 

@@ -1,0 +1,31 @@
+WEEK 3 DAY 7
+intent: Build hard
+weekday: Sunday
+theme: Rest
+sub: Protect the next block
+heat: off
+guardTop: No quick lift. Protect the next block of training.
+restTitle: Options
+
+== LIFTS ==
+id: r1
+nm: Full rest
+rx: —
+note: Best if the week was hard.
+
+id: r2
+nm: Easy mobility
+rx: —
+note: Fine if you feel stiff.
+
+id: r3
+nm: Walk with family
+rx: —
+note: Great if genuinely easy.
+
+== BURNOUT ==
+none
+
+== PROGRESS ==
+total: 1
+phases: tissue 0 · prep 0 · mobility 0 · work 1 · burnout 0 · downshift 0

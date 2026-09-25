@@ -1,0 +1,254 @@
+{
+  "3": {
+    "n": 3,
+    "heat": "easy",
+    "tag": "Easy",
+    "weekday": "Wednesday",
+    "theme": "Spine & Shoulders",
+    "sub": "Recovery · Zone 2 · tissue",
+    "restTitle": "Recovery session",
+    "guardTop": "No strength. No burnout. No heavy upper body — this day exists to make Day 4 better.",
+    "mobNote": "Recovery day. Default Level 1, Level 2 if owned. No Level 3 load.",
+    "tissue": {
+      "dose": "10–15 min",
+      "goal": "Restore spine, shoulders, ribs, and low-back tone.",
+      "items": [
+        {
+          "a": "Chest",
+          "tool": "Ball against wall",
+          "d": "60 sec / side",
+          "cue": "Broad chest work, especially if pressing and carrying left you tight."
+        },
+        {
+          "a": "Rib-side / upper side abs",
+          "tool": "Ball or roller",
+          "d": "45–60 sec / side",
+          "cue": "Side-rib area below the armpit. Breathe slowly into it."
+        },
+        {
+          "a": "Lats",
+          "tool": "Roller",
+          "d": "60 sec / side",
+          "cue": "Slow passes along the side-back line."
+        },
+        {
+          "a": "Low-back side wall",
+          "tool": "Ball, wall or floor",
+          "d": "45 sec / side",
+          "cue": "The muscular area between the bottom rib and the top of the pelvis. Gentle — don't jam the spine."
+        },
+        {
+          "a": "T-spine / upper back",
+          "tool": "Roller",
+          "d": "60–90 sec",
+          "cue": "Extend over the roller and breathe."
+        },
+        {
+          "a": "Glutes",
+          "tool": "Ball",
+          "d": "60 sec / side",
+          "cue": "Easy pressure, especially if the low back feels grippy."
+        }
+      ]
+    },
+    "mob": [
+      {
+        "nm": "Cat cow",
+        "why": "Spinal segmentation and downshift.",
+        "levels": [
+          "Short range.",
+          "Full range.",
+          "Add a slight circle / rotation."
+        ]
+      },
+      {
+        "nm": "Jefferson curl",
+        "why": "Controlled spinal flexion. Stay conservative.",
+        "levels": [
+          "Seated spinal rolls.",
+          "Standing bodyweight.",
+          "Light KB or DBs — skip on this recovery day."
+        ]
+      },
+      {
+        "nm": "Quadruped thoracic rotations",
+        "why": "T-spine rotation.",
+        "levels": [
+          "Small range, hips still.",
+          "Elbow to the ceiling.",
+          "Light DB — skip on this recovery day."
+        ]
+      },
+      {
+        "nm": "Shoulder CARs",
+        "why": "Shoulder control.",
+        "levels": [
+          "Standing, bodyweight.",
+          "Light DB — skip if the shoulder is pinchy.",
+          "Sidelying — skip if the shoulder is pinchy."
+        ]
+      },
+      {
+        "nm": "Shoulder dislocates",
+        "why": "Overhead range.",
+        "levels": [
+          "Wide grip.",
+          "Closer grip.",
+          "Add a rotation."
+        ]
+      },
+      {
+        "nm": "Scapular pull-ups",
+        "why": "Scap control and decompression.",
+        "levels": [
+          "Feet supported.",
+          "Hang, no feet.",
+          "Assisted single-arm — skip on this recovery day."
+        ]
+      }
+    ],
+    "lifts": [
+      {
+        "id": "z2",
+        "nm": "Zone 2 walk, incline walk, or easy ruck",
+        "rx": "30–45 min",
+        "sets": 1,
+        "note": "Conversational pace."
+      },
+      {
+        "id": "breath",
+        "nm": "Breath downshift",
+        "rx": "3–5 min",
+        "sets": 1,
+        "note": "Long exhales."
+      }
+    ],
+    "exclusive": false,
+    "burn": null,
+    "down": "Nothing further. Stop while you still feel good."
+  },
+  "6": {
+    "n": 6,
+    "heat": "easy",
+    "tag": "Easy",
+    "weekday": "Saturday",
+    "theme": "Follow-Me Flow",
+    "sub": "Walk · tissue · breath",
+    "restTitle": "Pick one",
+    "exclusive": true,
+    "mobNote": "Follow-me flow. Level 1 default. Level 2 if owned. No Level 3.",
+    "tissue": {
+      "dose": "10–15 min",
+      "goal": "Low-intensity restoration.",
+      "items": [
+        {
+          "a": "Low-back side wall",
+          "tool": "Ball against wall",
+          "d": "45 sec / side",
+          "cue": "Gentle pressure between the ribs and the pelvis."
+        },
+        {
+          "a": "Glutes",
+          "tool": "Ball",
+          "d": "60 sec / side",
+          "cue": "Easy, restorative pressure."
+        },
+        {
+          "a": "Rib-side / upper side abs",
+          "tool": "Roller or ball",
+          "d": "45 sec / side",
+          "cue": "Breathe slowly into the side ribs."
+        },
+        {
+          "a": "Chest",
+          "tool": "Ball",
+          "d": "45–60 sec / side",
+          "cue": "Light opening, not aggressive."
+        },
+        {
+          "a": "Calves or feet",
+          "tool": "Roller or ball",
+          "d": "60 sec / side",
+          "cue": "Optional if walking volume has been high."
+        }
+      ]
+    },
+    "mob": [
+      "Cat cow — spine reset",
+      "90/90 hip switches — hip rotation",
+      "Kneeling toe sits — feet, ankles, knees",
+      "Seated wall shoulder internal/external rotation",
+      "Laying knee-tucked windmills — lumbar and trunk rotation"
+    ],
+    "lifts": [
+      {
+        "id": "f1",
+        "nm": "Flow only",
+        "rx": "3 rounds × 60 sec",
+        "sets": 1,
+        "note": "Five drills. About 15 minutes. When you need true recovery."
+      },
+      {
+        "id": "f2",
+        "nm": "Flow + easy walk",
+        "rx": "30–60 min",
+        "sets": 1,
+        "note": "Best default. Flow is 3 rounds × 60 sec, then walk."
+      },
+      {
+        "id": "f3",
+        "nm": "Flow + tissue work",
+        "rx": "10 min",
+        "sets": 1,
+        "note": "If stiff from the week."
+      },
+      {
+        "id": "f4",
+        "nm": "Flow + breathwork",
+        "rx": "3–5 min",
+        "sets": 1,
+        "note": "If stressed or under-recovered."
+      }
+    ],
+    "burn": null,
+    "down": "No strength. No burnout."
+  },
+  "7": {
+    "n": 7,
+    "heat": "off",
+    "tag": "Off",
+    "weekday": "Sunday",
+    "theme": "Rest",
+    "sub": "Protect the next block",
+    "restTitle": "Options",
+    "exclusive": true,
+    "tissue": null,
+    "mob": [],
+    "lifts": [
+      {
+        "id": "r1",
+        "nm": "Full rest",
+        "rx": "—",
+        "sets": 1,
+        "note": "Best if the week was hard."
+      },
+      {
+        "id": "r2",
+        "nm": "Easy mobility",
+        "rx": "—",
+        "sets": 1,
+        "note": "Fine if you feel stiff."
+      },
+      {
+        "id": "r3",
+        "nm": "Walk with family",
+        "rx": "—",
+        "sets": 1,
+        "note": "Great if genuinely easy."
+      }
+    ],
+    "guardTop": "No quick lift. Protect the next block of training.",
+    "burn": null,
+    "down": null
+  }
+}

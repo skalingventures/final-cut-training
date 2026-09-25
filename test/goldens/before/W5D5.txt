@@ -1,0 +1,97 @@
+WEEK 5 DAY 5
+intent: Peak
+weekday: Friday
+theme: Full Body Light Reset
+sub: Chassis · durability · pump
+heat: moderate
+restTitle: Three controlled rounds — not for time · RPE 7
+
+== TISSUE ==
+dose: 3–5 min
+goal: Posture, tissue quality, joint-friendly durability.
+1. Front thighs · Roller · 45–60 sec / side
+   cue: Smooth passes, especially if squats and the athletic slot have accumulated.
+2. Outer thigh / outer quad · Roller · 30–45 sec / side
+   cue: Moderate pressure only. This should feel useful, not brutal.
+3. Glutes / side glutes · Ball · 60 sec / side
+   cue: Work the big glute and the side-glute pocket.
+4. Chest · Ball against wall · 60 sec / side
+   cue: Broad chest work before pressing.
+5. Rib-side / serratus · Ball or roller · 45 sec / side
+   cue: Just under the armpit and along the side ribs.
+6. Calves · Roller · 45 sec / side
+   cue: Light maintenance only.
+
+== MOBILITY ==
+mobNote: Elastaboy ladder. Chassis day. Start at Level 1; Level 3 only if you already own it.
+weekMob: Stay on a level you own. No new level.
+- Standing side bends — Lateral spine.
+  levels: Fingertips toward the knees. | Wide stance, hands on head. | Feet together, dumbbell in one hand, no twist.
+- Cobra press-ups — Spinal extension and chest opening.
+  levels: Forearm sphinx. | Full hand lockout. | Shins to the wall.
+- Prone scap W + reach — Upper-back activation.
+  levels: On a bench. | On the floor. | Light dumbbells or plates.
+- Hammer grip wrist rockers — Wrist prep.
+  levels: Seated, gentle. | More range and pressure.
+- Laying neck controlled rotations — Neck mobility.
+  levels: Head lift, look side to side. | Slightly more range, or a light plate on the forehead.
+- Laying neck double chins — Deep neck flexors.
+  levels: Floor chin tuck. | Head off a bench plus a light plate.
+
+== LIFTS ==
+id: goblet
+nm: Goblet squat
+rx: 10–12
+note: Moderate load, smooth range.
+
+id: floor
+nm: DB floor press or incline press
+rx: 10–12
+note: Controlled reps.
+
+id: oarow
+nm: One-arm DB row
+rx: 10–12 / side
+note: Pull the elbow toward the hip.
+
+id: wallcalf
+nm: Wall-sit calf raises
+rx: 2 × 15–20
+note: Soleus and Achilles capacity. Keep modest.
+guard: This is the only place extra calf work belongs — keep volume modest.
+
+id: copen
+nm: Copenhagen plank or side plank
+rx: 20–30 sec / side
+note: Trunk and adductors.
+
+id: hang
+nm: Dead hang
+rx: 30–45 sec
+note: Grip and shoulder decompression.
+
+== BURNOUT ==
+nm: Aerobic pump
+fmt: 10-minute easy cyclical
+chip: 10-min
+effort: RPE ~7
+optional: yes
+benchmark: no
+hard: no
+zoneCue: none
+- Bike, row, or incline walk — nasal, conversational
+- Stay about RPE 7
+- Stand up if you need; do not chase heart rate
+antiEcho: Day 5 should leave you better, not depleted. Default is an aerobic pump. Old CCS is a green-day alt only.
+greenOption: Carry / Crawl / Swing
+  - Farmer carry or march — 40 sec
+  - Kettlebell swings × 12
+  - Bear crawl × 20 steps
+  - Rest the remainder
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 31
+phases: tissue 6 · prep 0 · mobility 6 · work 17 · burnout 1 · downshift 1

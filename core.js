@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.1.0";
+  const APP_VERSION = "2.2.0";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -208,6 +208,12 @@
       }
     }
     const resolved = Object.assign({}, raw, overlay || {});
+    resolved.baseAdj = raw.adj || "";
+    if (overlay && overlay.adj && overlay.adj !== raw.adj) {
+      resolved.weekNote = overlay.adj;
+    } else {
+      resolved.weekNote = overlay && overlay.weekNote ? overlay.weekNote : "";
+    }
     delete resolved.byWeek;
     delete resolved.menu;
     delete resolved.id;
@@ -216,13 +222,93 @@
     return resolved;
   };
 
+  /* Week-aware lift / accessory. Overlay lift.byWeek[week] on the base
+     card so elastic rotations and chassis flips resolve the same way
+     burns do. Days without byWeek stay byte-identical. */
+  Core.resolveLift = function resolveLift(lift, week) {
+    if (!lift) return lift;
+    const w = +week;
+    const byWeek = lift.byWeek;
+    let overlay = null;
+    if (byWeek && typeof byWeek === "object" && !Array.isArray(byWeek)) {
+      overlay = byWeek[w] || byWeek[String(w)] || null;
+    }
+    const resolved = Object.assign({}, lift, overlay || {});
+    delete resolved.byWeek;
+    return resolved;
+  };
+
+  Core.resolveLifts = function resolveLifts(day, week) {
+    return ((day && day.lifts) || []).map(function (l) {
+      return Core.resolveLift(l, week);
+    });
+  };
+
+  /* Prep pump hides (and drops out of progress) on Amber/Red or any flag. */
+  Core.prepPumpGated = function prepPumpGated(sess) {
+    if (!sess) return false;
+    if (sess.ready === "red" || sess.ready === "amber") return true;
+    const flags = sess.flags || {};
+    return Object.keys(flags).some(function (k) { return !!flags[k]; });
+  };
+
+  /* Effort chip. Burn.effort wins. Optional and Week 6 never show a week
+     percent — they show RPE. Day 4 Weeks 1–4 restore 90–95% unless the
+     resolved card sets a different effort. */
+  Core.burnEffort = function burnEffort(burn, weekObj, dayN) {
+    if (!burn) return "";
+    if (burn.effort) return burn.effort;
+    const week = weekObj && weekObj.n != null ? +weekObj.n : null;
+    if (burn.optional || week === 6) return burn.rpe || "RPE ~7";
+    if (dayN === 5) return burn.rpe || "RPE ~7";
+    if (dayN === 4 && week != null && week <= 4) return "90–95%";
+    return (weekObj && weekObj.burn) || "";
+  };
+
+  Core.burnShowsZoneCue = function burnShowsZoneCue(burn, week) {
+    if (!burn) return false;
+    if (burn.optional) return false;
+    if (+week === 6) return false;
+    return true;
+  };
+
+  /* Manual "1 · " inside an <ol> doubles the number. Strip it. */
+  Core.burnItemText = function burnItemText(item) {
+    return String(item == null ? "" : item).replace(/^\s*\d+\s*[·.]\s*/, "");
+  };
+
+  Core.burnMenuRows = function burnMenuRows(day, week, resolved) {
+    const raw = day && day.burn;
+    if (!raw || !Array.isArray(raw.menu) || !raw.menu.length) return [];
+    const w = +week;
+    return raw.menu.filter(function (m) {
+      if (!m || !(m.nm || m.label)) return false;
+      if (Array.isArray(m.weeks) && m.weeks.length && m.weeks.indexOf(w) < 0) return false;
+      if (resolved && m.nm && resolved.nm && m.nm === resolved.nm) return false;
+      return true;
+    });
+  };
+
+  /* Day-aware Achilles line. D1 must not tell the athlete to emphasize swings. */
+  Core.achillesLine = function achillesLine(day, burn) {
+    if (burn && burn.achilles) return burn.achilles;
+    const n = day && day.n;
+    if (n === 1) return "If Achilles is cranky, keep strength, shorten crawls, and prefer march or bike. No swings on squat day.";
+    if (n === 2) return "If Achilles is cranky, keep strength, reduce burpees, and prefer bike, walk, or step-overs.";
+    if (n === 4) return "If Achilles is cranky, keep strength, reduce jumps and burpees, and prefer step-overs or bike.";
+    return "If Achilles is cranky, keep strength and reduce jumps and burpees.";
+  };
+
   /* Short burnout header chip. First-word split is fine for
      "10-minute AMRAP" but turns "40 sec / 20 sec × 10 min" into a
      lone "40" next to the 0/1 progress count. */
   Core.burnFmtChip = function burnFmtChip(fmt) {
-    const raw = String(fmt == null || fmt === "" ? "10 min" : fmt).trim();
+    if (fmt == null || String(fmt).trim() === "") return "10 min";
+    const raw = String(fmt).trim();
     const interval = raw.match(/(\d+)\s*s(?:ec(?:onds?)?)?\b[^/]*\/\s*(\d+)\s*s(?:ec(?:onds?)?)?/i);
     if (interval) return interval[1] + "/" + interval[2];
+    const minLead = raw.match(/^(\d+(?:[–-]\d+)?)\s+min\b/i);
+    if (minLead) return minLead[1] + "-min";
     const first = raw.split(/\s+/)[0];
     if (first && !/^\d+$/.test(first)) return first;
     return raw;
@@ -235,14 +321,14 @@
     const choice = log.choice[key] || "";
     const ready = sess.ready || "green";
     if (day.tissue) day.tissue.items.forEach(function (_, i) { items.push(["tissue", i]); });
-    if (day.prepPump && day.prepPump.items) {
+    if (day.prepPump && day.prepPump.items && !Core.prepPumpGated(sess)) {
       day.prepPump.items.forEach(function (_, i) { items.push(["preppump", i]); });
     }
     if (day.mob) day.mob.forEach(function (_, i) { items.push(["mob", i]); });
     if (day.exclusive) {
       items.push(["choice", 0]);
     } else {
-      (day.lifts || []).forEach(function (l) {
+      Core.resolveLifts(day, week).forEach(function (l) {
         const blocked = Core.liftBlocked(l, sess);
         if (blocked) return;
         const n = Core.nSets(l, week, program);
@@ -302,7 +388,7 @@
     let strength = false;
     if (day.exclusive) strength = !!pack.choice;
     else {
-      (day.lifts || []).forEach(function (l) {
+      Core.resolveLifts(day, week).forEach(function (l) {
         const n = Core.nSets(l, week, program);
         for (let i = 0; i < n; i++) if (Core.chk(log.checks, week, day.n, l.id, i)) strength = true;
       });

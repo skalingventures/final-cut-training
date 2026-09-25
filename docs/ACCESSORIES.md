@@ -44,7 +44,7 @@ Main stays unpaired.
 | Slot | Job | Default | Cousins |
 | --- | --- | --- | --- |
 | Main | Squat | Back squat or front squat | — (not a cousin slot) |
-| 2A | Vertical pull | Pull-ups or weighted pull-ups | Chin-up, lat pulldown, band-assisted pull-up |
+| 2A | Vertical pull | Pull-ups or weighted pull-ups | Neutral-grip pull-up, lat pulldown, band-assisted pull-up |
 | 2B | Knee-over-toe | Peterson step-ups | Heels-elevated goblet squat, slant-board step-down |
 | Separate | Hinge accessory | Romanian deadlift | DB RDL, good morning, single-leg RDL |
 
@@ -64,11 +64,34 @@ Main stays unpaired.
 
 Shoulder pinch skips dips; the cousin is a push-up or DB press plus scap work, not a heavier dip. Farmer cousins change the implement, not the job.
 
-## Other days
+## Day 4 slot map — athletic full body
 
-Day 4 accessories may wear a `job` (elastic / land, athletic overhead, vertical pull, anti-rotation carry) so the card reads like a session sheet. They do not need a D1/D2-style cousin list. The elastic slot stays right after the deadlift.
+Main stays unpaired. Elastic rotates by week. Push press, chin-up, and suitcase now carry cousins so the sheet is not a frozen trio.
 
-Day 5 is chassis, not a cousin playground. Day 3 and Day 6 have no accessory rotation.
+| Slot | Job | Default | Cousins / rotation |
+| --- | --- | --- | --- |
+| Main | Hinge | Deadlift | — (not a cousin slot) |
+| Elastic | Elastic / land | Broad jump (A) | W1 A · W2 pogo (B) · W3 med-ball slam (C) · W4 A · W5 owned choice · W6 C easy or skip |
+| 2A | Athletic overhead | Push press | DB push press, KB push press, landmine push press |
+| 2B | Vertical pull | Chin-ups | Neutral-grip pull-up, band-assisted chin-up, weighted chin-up |
+| Separate | Anti-rotation carry | Suitcase carry | Single-arm KB carry, offset rack carry |
+
+Day 1 already uses a neutral-grip pull-up cousin so this chin-up slot does not double supinated pulling.
+
+## Day 5 chassis — job headlines + one rotation per week
+
+Day 5 is still chassis, not a cousin playground. Each lift wears a job. One item flips each week; W5/W6 stay owned.
+
+| Week | Rotation |
+| --- | --- |
+| 2 | One-arm DB row → chest-supported row |
+| 3 | Goblet squat → front-foot elevated split squat |
+| 4 | Floor press → incline press |
+| 5–6 | Owned |
+
+Day 3 and Day 6 have no accessory rotation.
+
+The renderer prints a "cousin variety" week wave **only** when the lift actually has cousins. Job-only cards stay quiet.
 
 ## Encoder
 

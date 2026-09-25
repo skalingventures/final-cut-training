@@ -47,58 +47,66 @@ Dose on training days is 3–5 min. Recovery days may run longer because there i
 
 ## Per-day priority
 
-### Day 1 — squat + knee travel
+Tissue is lift-paired. Every priority item carries a `for` line naming the lift it preps. Mobility-theme order is wrong.
 
-**Why.** Ankle range, knee-over-toe comfort, squat tolerance.
+### Day 1 — squat + pull
 
-| Priority | Region | Why |
+**Goal.** Prep squat ankle/knee travel and the pull-up hang.
+
+| Priority | Region | For |
 | --- | --- | --- |
-| 1 | Calves | Achilles-to-knee line so the heel can stay |
-| 2 | Front thigh / hip-flexor quad | Upper front thigh so the squat can sit down |
-| 3 | Outer thigh / outer quad | Moderate only; do not smash the side of the knee |
-| Overflow | Glutes, inner thighs | Side-glute pocket and adductors before Petersons |
+| 1 | Calves | squat |
+| 2 | Front thigh / hip-flexor quad | Peterson step-ups |
+| 3 | Lats / rib-side | pull-ups |
+| Overflow | Outer thigh, glutes, inner thighs | optional |
 
-Skip from the bottom if time is short.
+### Day 2 — press + overhead + row
 
-### Day 2 — press + brace + carry
+**Goal.** Prep pressing, overhead, and the row.
 
-**Why.** Hips and chest so the press can brace, not shrug.
-
-| Priority | Region | Why |
+| Priority | Region | For |
 | --- | --- | --- |
-| 1 | Glutes / side glutes | Hip that can extend and stay quiet under a brace |
-| 2 | Hip crease / front of hip | Front pocket so the ribcage can stack |
-| 3 | Chest | Broad chest so the press is a press |
-| Overflow | Rib-side, lats | Overhead position and breathing |
+| 1 | Chest | bench press |
+| 2 | Rib-side / under armpit | Standing DB overhead press |
+| 3 | Lats / side back | barbell row |
+| Overflow | Glutes, hip crease | farmer carry (optional brace) |
 
 ### Day 3 — restore for Day 4
 
-**Why.** Spine, shoulders, ribs. This day exists to make Thursday better. No strength after, so the list may be longer — still unlocked regions only, still no excavation.
+**Why.** Restore after press and carry so Day 4 can rack and hinge. Chest, rib-side, T-spine — gentle, no excavation.
 
-Priority: chest → rib-side → lats → low-back side wall → T-spine → glutes. Gentle. Breathe into it.
+Priority stays: chest → rib-side → lats → low-back side wall → T-spine → glutes.
 
-### Day 4 — hinge + land
+### Day 4 — hinge + rack
 
-**Why.** Posterior chain and a quiet ankle before the deadlift and the elastic slot.
+**Goal.** Prep the deadlift hinge, landing, and the push-press rack.
 
-| Priority | Region | Why |
+| Priority | Region | For |
 | --- | --- | --- |
-| 1 | Calves | Soleus / lower calf before a hinge and a landing |
-| 2 | Glute fold / high hamstring | Crease where glute meets hamstring — controlled |
-| 3 | Hamstrings | Back of the thigh before the pull |
-| Overflow | Inner thighs, front thigh, T-spine | Adductor rock-backs, hip, front rack |
+| 1 | Glute fold / high hamstring | deadlift |
+| 2 | Calves | deadlift |
+| 3 | T-spine / lats | push press |
+| Overflow | Hamstrings, inner thighs | optional |
 
-Save the jump dose for after the deadlift. Tissue does not become the athletic slot.
+Front thigh drops. Save the jump dose for after the deadlift.
 
-### Day 5 — chassis maintenance
+### Day 5 — chassis
 
-**Why.** Posture and joint-friendly durability, not a pre-max.
+**Goal.** Chassis texture for goblet, floor press, row, and the Copenhagen.
 
-Priority: front thighs → outer quad (moderate) → glutes → chest → rib-side → light calves. Useful, not brutal.
+| Priority | Region | For |
+| --- | --- | --- |
+| 1 | Front thighs | goblet squat |
+| 2 | Chest | DB floor press |
+| 3 | Lats / rib-side | one-arm DB row |
+| 4 | Inner thighs | Copenhagen plank |
+| Overflow | Glutes, calves | optional |
+
+Outer quad drops.
 
 ### Day 6 — easy restore
 
-Low-back side wall, glutes, rib-side, chest, optional calves or feet. Restorative pressure only.
+Restorative pressure after the week — low-back side wall, glutes, rib-side. Easy only. Makes next Monday possible.
 
 ### Day 7
 
@@ -106,4 +114,4 @@ None.
 
 ## Encoder
 
-`day.tissue` keeps `{ dose, goal, items[{a, tool, d, cue}], note }`. The note is the why and the priority. If time is short, the athlete reads the note and does the first items. Do not hide the why in a comment the renderer never paints.
+`day.tissue` keeps `{ dose, goal, items[{a, tool, d, cue, for, optional}], note }`. The renderer paints `for` as its own line. Overflow items set `optional: true`. If time is short, do the first items. Do not hide the why in a comment the renderer never paints.
