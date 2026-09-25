@@ -284,6 +284,16 @@
     return (weekObj && weekObj.burn) || "";
   };
 
+  /* Header dose. A bare percent or RPE still gets "at". Prose chips
+     already name the sprint vs the session — do not prefix them. */
+  Core.burnHeaderDose = function burnHeaderDose(effort, amber) {
+    if (amber) return "moderate / scaled";
+    const e = String(effort || "").trim();
+    if (!e) return "";
+    if (/^(?:\d+(?:[–-]\d+)?%|RPE\s*~?\s*\d+(?:[–-]\d+)?)$/i.test(e)) return "at " + e;
+    return e;
+  };
+
   Core.burnShowsZoneCue = function burnShowsZoneCue(burn, week) {
     if (!burn) return false;
     if (burn.zoneCue === false) return false;

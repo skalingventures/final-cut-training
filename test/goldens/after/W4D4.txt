@@ -84,7 +84,7 @@ accWave: Cousin variety — slightly reduced volume; keep the job, pick the clea
 nm: Ground School
 fmt: 40 sec work / 20 sec transition × 8
 chip: 40/20
-effort: 90–95%
+effort: RPE 7 · crisp
 optional: no
 benchmark: no
 hard: yes

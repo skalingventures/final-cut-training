@@ -84,7 +84,7 @@ accWave: Owned only — no new cousins, no new levels
 nm: Ground-to-Stand Test
 fmt: 6-minute AMRAP
 chip: 6-minute
-effort: 85–90%
+effort: Test · max honest reps
 optional: no
 benchmark: yes
 hard: yes

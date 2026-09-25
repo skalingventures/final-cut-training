@@ -86,7 +86,7 @@ accWave: Cousin variety — slightly reduced volume; keep the job, pick the clea
 nm: Hill Eights
 fmt: 8–10 min hill sprints
 chip: 8–10-min
-effort: 85–90%
+effort: Sprints 90–95%
 optional: no
 benchmark: no
 hard: yes

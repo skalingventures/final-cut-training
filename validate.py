@@ -699,7 +699,7 @@ def check_app_js() -> None:
     for needle in [
         "FinalCutCore", "saveNow", "pagehide", "setupDone", "SESSIONS",
         "SKIP_WAITING", "resolveBurn", "resolveLift", "prepPump", "prepPumpGated",
-        "burnEffort", "burnItemText", "fc-job", "fc-cousins", "fc-for",
+        "burnEffort", "burnHeaderDose", "burnItemText", "fc-job", "fc-cousins", "fc-for",
         "achillesReadiness", "resolveTissue", "resolveMobNote",
         "burnGreenTitle", "burn.score", "burn.fallback", "burn.scale",
     ]:

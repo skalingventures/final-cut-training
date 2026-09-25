@@ -629,7 +629,7 @@
       } else {
         const b = LOG.burn[C.wd(S.week, S.day)] || {};
         const effort = C.burnEffort(burn, W, D.n);
-        const pct = amber ? "moderate / scaled" : `at ${effort}`;
+        const pct = C.burnHeaderDose(effort, amber);
         const benchDup = /benchmark/i.test(burn.adj || "") || /benchmark/i.test(burn.weekNote || "") || /benchmark/i.test(burn.nm || "");
         const bench = W.n === 5 && burn.benchmark && !benchDup ? `<div class="guard"><span>Week 5 benchmark. Log rounds honestly.</span></div>` : "";
         const achillesNote = se.flags.achilles ? `<div class="guard"><span>${esc(C.achillesLine(D, burn))}</span></div>` : "";

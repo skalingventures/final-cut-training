@@ -528,8 +528,8 @@ input, textarea, select {
 [data-sec="burnout"] .svd-meta {
   white-space: normal;
   text-align: right;
-  max-width: 48%;
-  overflow-wrap: anywhere;
+  max-width: 58%;
+  overflow-wrap: break-word;
 }
 .burn-stack li::before {
   content: counter(burn, decimal-leading-zero);

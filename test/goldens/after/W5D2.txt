@@ -86,7 +86,7 @@ accWave: Owned only — no new cousins, no new levels
 nm: Beat the Mark
 fmt: 8–10 min hill sprints
 chip: 8–10-min
-effort: 85–90%
+effort: Sprints ~90%
 optional: no
 benchmark: no
 hard: yes

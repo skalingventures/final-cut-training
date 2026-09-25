@@ -80,7 +80,7 @@ accWave: Owned only — no new cousins, no new levels
 nm: Row-Bike Relay
 fmt: 9–10 min relay
 chip: 9–10-min
-effort: 85–90%
+effort: Hard rows · RPE 8
 optional: no
 benchmark: no
 hard: yes

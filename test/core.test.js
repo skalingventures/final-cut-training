@@ -370,6 +370,12 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   assert.strictEqual(C.burnEffort({ hard: true }, week4, 4), "90–95%", "D4 W1–4 restore 90–95%");
   assert.strictEqual(C.burnEffort({ optional: true }, week4, 5), "RPE ~7");
   assert.strictEqual(C.burnEffort({ hard: true }, week6, 1), "RPE ~7", "W6 never shows a week percent");
+  assert.strictEqual(C.burnHeaderDose("85–90%", false), "at 85–90%");
+  assert.strictEqual(C.burnHeaderDose("RPE 5–6", false), "at RPE 5–6");
+  assert.strictEqual(C.burnHeaderDose("Sprints all-out · session RPE 7–8", false), "Sprints all-out · session RPE 7–8");
+  assert.strictEqual(C.burnHeaderDose("Test · max honest reps", false), "Test · max honest reps");
+  assert.strictEqual(C.burnHeaderDose("RPE 7 · crisp", false), "RPE 7 · crisp");
+  assert.strictEqual(C.burnHeaderDose("85–90%", true), "moderate / scaled");
   assert.strictEqual(C.burnShowsZoneCue({ hard: true }, 3), true);
   assert.strictEqual(C.burnShowsZoneCue({ optional: true }, 3), false);
   assert.strictEqual(C.burnShowsZoneCue({ hard: true }, 6), false);
@@ -442,6 +448,12 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   assert.ok(/air bike/i.test((d1w4.items || []).join(" ")));
   assert.ok(/landmine/i.test((d1w4.items || []).join(" ")));
   assert.ok(d1w4.score, "W4 D1 must carry a score to beat");
+  assert.strictEqual(C.burnEffort(d1w4, P.weeks[3], 1), "Sprints all-out · session RPE 7–8");
+  assert.strictEqual(C.burnEffort(C.resolveBurn(P.days[1], 4), P.weeks[3], 2), "Sprints 90–95%");
+  assert.strictEqual(C.burnEffort(C.resolveBurn(P.days[0], 5), P.weeks[4], 1), "Hard rows · RPE 8");
+  assert.strictEqual(C.burnEffort(C.resolveBurn(P.days[1], 5), P.weeks[4], 2), "Sprints ~90%");
+  assert.strictEqual(C.burnEffort(C.resolveBurn(P.days[3], 4), P.weeks[3], 4), "RPE 7 · crisp");
+  assert.strictEqual(C.burnEffort(C.resolveBurn(P.days[3], 5), P.weeks[4], 4), "Test · max honest reps");
   const d2w4 = C.resolveBurn(P.days[1], 4);
   assert.ok(/uphill sprint/i.test((d2w4.items || []).join(" ")));
   assert.ok(/box jump/i.test(d2w4.fallback || ""), "W4 D2 Box & Bell fallback must stay visible");

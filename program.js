@@ -95,7 +95,7 @@ window.PROGRAM = {
             patterns: ["cyclical", "push-h", "slam"]
           },
           4: {
-            nm: "Sprint Ten + Twist", fmt: "EMOM × 10 min", effort: "85–90%", zoneCue: false,
+            nm: "Sprint Ten + Twist", fmt: "EMOM × 10 min", effort: "Sprints all-out · session RPE 7–8", zoneCue: false,
             items: [
               "Minutes 1–8: from a rolling start, 8 seconds all-out on the air bike, then spin easy for the rest of the minute.",
               "Minutes 9–10: rack-corner landmine rotations with the empty bar, 2 × 6 per side, smooth and controlled.",
@@ -108,7 +108,7 @@ window.PROGRAM = {
             patterns: ["cyclical", "core", "sprint", "rotation"]
           },
           5: {
-            nm: "Row-Bike Relay", fmt: "9–10 min relay", effort: "85–90%", zoneCue: false,
+            nm: "Row-Bike Relay", fmt: "9–10 min relay", effort: "Hard rows · RPE 8", zoneCue: false,
             items: [
               "Four rounds: 250 m row hard (the pace you could just barely hold for 500 m), straight into 15 seconds max on the air bike, then 75 seconds walking.",
               "About 9–10 minutes.",
@@ -230,7 +230,7 @@ window.PROGRAM = {
             patterns: ["hinge", "crawl", "elastic", "cyclical"]
           },
           4: {
-            nm: "Hill Eights", fmt: "8–10 min hill sprints", effort: "85–90%", zoneCue: false,
+            nm: "Hill Eights", fmt: "8–10 min hill sprints", effort: "Sprints 90–95%", zoneCue: false,
             items: [
               "Walk to the hill as the warm-up. Gentle sidewalk incline, about 4 city blocks of concrete — plenty of distance for 8–10 second efforts.",
               "2 build-up strides uphill at about 70% and 80%.",
@@ -245,7 +245,7 @@ window.PROGRAM = {
             patterns: ["sprint", "elastic", "cyclical", "hinge"]
           },
           5: {
-            nm: "Beat the Mark", fmt: "8–10 min hill sprints", effort: "85–90%", zoneCue: false,
+            nm: "Beat the Mark", fmt: "8–10 min hill sprints", effort: "Sprints ~90%", zoneCue: false,
             items: [
               "Walk to the hill as the warm-up. Same gentle sidewalk incline.",
               "2 build-up strides uphill at about 70% and 80%.",
@@ -382,7 +382,7 @@ window.PROGRAM = {
             patterns: ["squat", "push-h", "elastic"]
           },
           4: {
-            nm: "Ground School", fmt: "40 sec work / 20 sec transition × 8", effort: "90–95%", zoneCue: false,
+            nm: "Ground School", fmt: "40 sec work / 20 sec transition × 8", effort: "RPE 7 · crisp", zoneCue: false,
             items: [
               "Crab travel forward 4 steps, back 4 steps, hips high.",
               "Technical stand-ups, alternating sides.",
@@ -396,7 +396,7 @@ window.PROGRAM = {
             patterns: ["ground", "crawl", "push-h"]
           },
           5: {
-            nm: "Ground-to-Stand Test", fmt: "6-minute AMRAP", benchmark: true, effort: "85–90%",
+            nm: "Ground-to-Stand Test", fmt: "6-minute AMRAP", benchmark: true, effort: "Test · max honest reps",
             items: [
               "35 lb KB chest-hug get-to-stand.",
               "Both shoulder blades touch the floor. Stand fully — hips and knees locked. Bell never leaves the chest."
