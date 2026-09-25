@@ -185,7 +185,7 @@
     const others = C.burnMenuRows(day, week, resolved);
     if (!others.length) return "";
     return others.map(m => {
-      const title = String(m.label || m.nm || "").replace(/\s*\((?:green\s+)?alt\)\s*/i, "").trim();
+      const title = C.burnGreenTitle(m);
       const items = (m.items || []).map(item => `<li>${esc(C.burnItemText(item))}</li>`).join("");
       return `<div class="note">Green option · ${esc(title)}</div>${items ? `<ol class="burn-stack">${items}</ol>` : ""}`;
     }).join("");

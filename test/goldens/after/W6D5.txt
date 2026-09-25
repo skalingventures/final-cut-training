@@ -88,7 +88,7 @@ hard: no
 zoneCue: none
 - Nasal walk
 - Or skip
-antiEcho: Optional aerobic pump — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.
+antiEcho: Optional aerobic pump — leave better, not cooked.
 weekNote: Deload. Walk or skip. No redline. No Carry / Crawl / Swing.
 achilles: If Achilles is cranky, keep strength, and prefer walk.
 achillesReady: Achilles: keep strength, prefer walk.

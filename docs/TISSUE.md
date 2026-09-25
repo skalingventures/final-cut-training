@@ -92,7 +92,7 @@ Front thigh drops. Save the jump dose for after the deadlift.
 
 ### Day 5 — chassis
 
-**Goal.** Chassis texture for goblet, floor press, row, and the Copenhagen.
+**Goal.** Chassis texture for the week's squat, press, row, and the Copenhagen. `resolveTissue` fills those names from the week's lifts (W2 chest-supported row, W3 FFE split squat, W4 incline press) the same way `for` lines already do.
 
 | Priority | Region | For |
 | --- | --- | --- |
@@ -114,4 +114,4 @@ None.
 
 ## Encoder
 
-`day.tissue` keeps `{ dose, goal, items[{a, tool, d, cue, for, optional}], note }`. The renderer paints `for` as its own line. Overflow items set `optional: true`. If time is short, do the first items. Do not hide the why in a comment the renderer never paints.
+`day.tissue` keeps `{ dose, goal, items[{a, tool, d, cue, for, forId, optional}], note }`. `Core.resolveTissue` overlays `for` (and matching goal/cue mentions) from the week's `forId` lift. The renderer paints `for` as its own line. Overflow items set `optional: true`. If time is short, do the first items. Do not hide the why in a comment the renderer never paints.

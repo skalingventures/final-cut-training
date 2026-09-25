@@ -450,7 +450,7 @@ window.PROGRAM = {
         menu: [
           {
             id: "ccs",
-            label: "Carry / Crawl / Swing (green)",
+            label: "Carry / Crawl / Swing",
             weeks: [1, 2, 3, 4],
             nm: "Carry / Crawl / Swing",
             fmt: "Every 2 min for 10 min — 5 rounds",

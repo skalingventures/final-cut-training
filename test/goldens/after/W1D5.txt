@@ -92,7 +92,7 @@ antiEcho: Optional aerobic pump — leave better, not cooked. Carry / Crawl / Sw
 weekNote: Establish the aerobic pump. Carry / Crawl / Swing is a green option only.
 achilles: If Achilles is cranky, keep strength, and prefer bike or walk.
 achillesReady: Achilles: keep strength, prefer bike or walk.
-greenOption: Carry / Crawl / Swing (green)
+greenOption: Carry / Crawl / Swing
   - Farmer carry or march — 40 sec
   - Kettlebell swings × 12
   - Bear crawl × 20 steps

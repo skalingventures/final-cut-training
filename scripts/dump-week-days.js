@@ -130,7 +130,7 @@ function dumpDay(program, week, dayN) {
       out.push("adj: " + burn.adj);
     }
     menu.forEach(function (m) {
-      const title = (m.label || m.nm || "").replace(/\s*\(green alt\)\s*/i, "").trim();
+      const title = Core.burnGreenTitle(m);
       out.push("greenOption: " + title);
       (m.items || []).forEach(function (item) {
         out.push("  - " + Core.burnItemText(item));

@@ -87,7 +87,7 @@ benchmark: no
 hard: no
 zoneCue: none
 - Easy nasal walk or easy bike — continuous
-antiEcho: Optional aerobic pump — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.
+antiEcho: Optional aerobic pump — leave better, not cooked.
 weekNote: Peak week. Soft only. Protect Day 4. No Carry / Crawl / Swing.
 achilles: If Achilles is cranky, keep strength, and prefer bike or walk.
 achillesReady: Achilles: keep strength, prefer bike or walk.
