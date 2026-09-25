@@ -516,6 +516,9 @@ def check_midblock_content(p: dict) -> None:
         err("Day 2 Menu A must use bike or row at stations 4/9, not air squat")
     if d2w1 == d2w3:
         err("Day 2 Week 3 must visibly differ from Week 1")
+    d2w5 = " ".join((resolve_burn(days.get(2) or {}, 5) or {}).get("items") or []).lower()
+    if d2w5 == d2w1 or d2w5 == d2w3:
+        err("Day 2 Week 5 must differ from Week 1 and Week 3 Menu A")
 
     d5 = days.get(5, {}).get("burn") or {}
     r5 = resolve_burn(days.get(5) or {}, 1) or {}

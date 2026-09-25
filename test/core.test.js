@@ -421,8 +421,15 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   });
   const d2w1 = C.resolveBurn(P.days[1], 1);
   const d2w3 = C.resolveBurn(P.days[1], 3);
+  const d2w5 = C.resolveBurn(P.days[1], 5);
   assert.ok(JSON.stringify(d2w1.items) !== JSON.stringify(d2w3.items) || d2w1.nm !== d2w3.nm,
     "D2 W3 must differ from W1");
+  assert.strictEqual(d2w5.nm, "Owned Menu B");
+  assert.ok(JSON.stringify(d2w5.items) !== JSON.stringify(d2w3.items),
+    "D2 W5 must differ from W3");
+  assert.ok(/row \(erg\) or bike/i.test((d2w5.items || []).join(" ")));
+  assert.ok(/squat thrust/i.test((d2w5.items || []).join(" ")));
+  assert.ok(!/kettlebell swing|burpee|bear crawl/i.test((d2w5.items || []).join(" ")));
   assert.ok(!/air squat/i.test((d2w1.items || []).join(" ")));
   assert.ok(/bike|row/i.test((d2w1.items || []).join(" ")));
   let benches = 0;
