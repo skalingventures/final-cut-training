@@ -248,6 +248,14 @@ input, textarea, select {
   line-height: var(--sv-leading-normal);
   color: var(--sv-text-muted);
 }
+.fc-for {
+  margin: var(--sv-space-1) 0 0;
+  font-family: var(--sv-font-mono);
+  font-size: var(--sv-text-xs);
+  letter-spacing: var(--sv-tracking-label);
+  text-transform: uppercase;
+  color: var(--sv-text-muted);
+}
 .fc-choice-row .fc-job { display: block; }
 .fc-choice-row .fc-cousins { display: block; }
 .fc-lift-blocked { opacity: 0.72; }

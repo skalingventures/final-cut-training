@@ -331,4 +331,147 @@ assert.strictEqual(C.rpeTarget(program.weeks[1]), 7.5, "week 2 RPE target is a n
   assert.strictEqual(w6.optional, 1);
 }
 
+// resolveLift overlays byWeek and leaves mains untouched
+{
+  const lift = {
+    id: "elastic", nm: "Broad jump", rx: "3 × 3–5 jumps",
+    byWeek: { 2: { nm: "Pogo bounds", rx: "3 × 8–10 pogos" }, 3: { nm: "Med-ball slam" } }
+  };
+  assert.strictEqual(C.resolveLift(lift, 1).nm, "Broad jump");
+  assert.strictEqual(C.resolveLift(lift, 2).nm, "Pogo bounds");
+  assert.strictEqual(C.resolveLift(lift, 2).rx, "3 × 8–10 pogos");
+  assert.ok(!("byWeek" in C.resolveLift(lift, 2)));
+  const squat = { id: "squat", nm: "Back squat or front squat", prog: true };
+  assert.deepStrictEqual(C.resolveLift(squat, 4), squat);
+}
+
+// prepPump gates on Amber/Red/any flag
+{
+  assert.strictEqual(C.prepPumpGated({ ready: "green", flags: {} }), false);
+  assert.strictEqual(C.prepPumpGated({ ready: "amber", flags: {} }), true);
+  assert.strictEqual(C.prepPumpGated({ ready: "red", flags: {} }), true);
+  assert.strictEqual(C.prepPumpGated({ ready: "green", flags: { achilles: true } }), true);
+  const day = {
+    n: 1, exclusive: false, tissue: { items: [{}] },
+    prepPump: { items: [{ a: "pulse" }, { a: "lean" }] },
+    mob: ["a"], lifts: [{ id: "squat", prog: true }], burn: { hard: true }, down: "x"
+  };
+  const amber = C.emptySession();
+  amber.ready = "amber";
+  const gated = C.progress(day, 1, amber, emptyLog(), program);
+  assert.deepStrictEqual(gated.byPhase.prep, { done: 0, total: 0 }, "gated prep pump drops out of progress");
+}
+
+// burnEffort / zone cue / item strip / menu weeks
+{
+  const week4 = { n: 4, burn: "85–90%" };
+  const week6 = { n: 6, burn: "60–70%" };
+  assert.strictEqual(C.burnEffort({ effort: "90–95%" }, week4, 4), "90–95%");
+  assert.strictEqual(C.burnEffort({ hard: true }, week4, 4), "90–95%", "D4 W1–4 restore 90–95%");
+  assert.strictEqual(C.burnEffort({ optional: true }, week4, 5), "RPE ~7");
+  assert.strictEqual(C.burnEffort({ hard: true }, week6, 1), "RPE ~7", "W6 never shows a week percent");
+  assert.strictEqual(C.burnShowsZoneCue({ hard: true }, 3), true);
+  assert.strictEqual(C.burnShowsZoneCue({ optional: true }, 3), false);
+  assert.strictEqual(C.burnShowsZoneCue({ hard: true }, 6), false);
+  assert.strictEqual(C.burnItemText("1 · Kettlebell swings"), "Kettlebell swings");
+  assert.strictEqual(C.burnItemText("10 · Easy walk"), "Easy walk");
+  assert.strictEqual(C.burnItemText("Min 1 · bike 30 s"), "Min 1 · bike 30 s");
+  const d5 = {
+    n: 5,
+    burn: {
+      optional: true, nm: "Aerobic Pump Closer",
+      menu: [{ id: "ccs", label: "Carry / Crawl / Swing (green alt)", weeks: [1, 2, 3, 4], nm: "Carry / Crawl / Swing", items: ["swings"] }]
+    }
+  };
+  assert.strictEqual(C.burnMenuRows(d5, 3, { nm: "Aerobic Pump Closer" }).length, 1);
+  assert.strictEqual(C.burnMenuRows(d5, 5, { nm: "Aerobic Pump Closer" }).length, 0);
+  const weekly = {
+    n: 1,
+    burn: {
+      nm: "Base", fmt: "10-minute AMRAP", items: ["base"], adj: "anti-echo",
+      byWeek: { 3: { nm: "Hybrid", adj: "week note" } }
+    }
+  };
+  const r3 = C.resolveBurn(weekly, 3);
+  assert.strictEqual(r3.baseAdj, "anti-echo");
+  assert.strictEqual(r3.weekNote, "week note");
+  assert.ok(/no swings on squat day/i.test(C.achillesLine({ n: 1 }, {})));
+  assert.ok(!/emphasize swings/i.test(C.achillesLine({ n: 1 }, {})), "D1 Achilles must not emphasize swings");
+  assert.ok(!/swing/i.test(C.achillesReadiness({ n: 1 }, {})) || /no swings/i.test(C.achillesReadiness({ n: 1 }, {})));
+  assert.ok(!/carry/i.test(C.achillesReadiness({ n: 4 }, { items: ["Goblet squat", "Push-ups", "Bike"] })));
+  assert.ok(!/swing/i.test(C.achillesLine({ n: 1 }, { items: ["Bike 40 s", "Push-ups × 8", "Med-ball slam × 8", "March as breaker"] })) || /no swings/i.test(C.achillesLine({ n: 1 }, { items: ["Bike 40 s", "Push-ups × 8", "Med-ball slam × 8", "March as breaker"] })));
+  assert.ok(!/crawl/i.test(C.achillesLine({ n: 1 }, { items: ["Bike 40 s", "Push-ups × 8", "Med-ball slam × 8", "March as breaker"] })));
+  assert.ok(!/burpee/i.test(C.achillesLine({ n: 2 }, { items: ["KB swings × 8", "Bear crawl × 6 steps"] })));
+  assert.ok(!/burpee/i.test(C.achillesLine({ n: 4 }, { items: ["Min 1 · bike 30 s", "Min 2 · goblet squat × 8", "Min 3 · push-ups × 8 + mountain climbers × 12"] })));
+}
+
+// Live program: W1–6 explicit, W3 D2 ≠ W1, only D4 W5 is a benchmark
+{
+  const fs = require("fs");
+  const path = require("path");
+  const vm = require("vm");
+  const ctx = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../program.js"), "utf8"), ctx);
+  const P = ctx.window.PROGRAM;
+  [1, 2, 4].forEach(function (n) {
+    const keys = Object.keys(P.days[n - 1].burn.byWeek).map(String);
+    ["1", "2", "3", "4", "5", "6"].forEach(function (k) {
+      assert.ok(keys.indexOf(k) >= 0, "D" + n + " missing byWeek " + k);
+    });
+  });
+  const d2w1 = C.resolveBurn(P.days[1], 1);
+  const d2w3 = C.resolveBurn(P.days[1], 3);
+  assert.ok(JSON.stringify(d2w1.items) !== JSON.stringify(d2w3.items) || d2w1.nm !== d2w3.nm,
+    "D2 W3 must differ from W1");
+  assert.ok(!/air squat/i.test((d2w1.items || []).join(" ")));
+  assert.ok(/bike|row/i.test((d2w1.items || []).join(" ")));
+  let benches = 0;
+  P.days.forEach(function (d) {
+    for (let w = 1; w <= 6; w++) {
+      const b = C.resolveBurn(d, w);
+      if (b && b.benchmark) {
+        benches++;
+        assert.strictEqual(d.n, 4);
+        assert.strictEqual(w, 5);
+      }
+    }
+  });
+  assert.strictEqual(benches, 1, "exactly one benchmark — D4 W5");
+  const d1w4 = C.resolveBurn(P.days[0], 4);
+  assert.ok(/squat thrust/i.test((d1w4.items || []).join(" ")));
+  const d2w4 = C.resolveBurn(P.days[1], 4);
+  assert.ok(/inverted|ring row/i.test((d2w4.items || []).join(" ")));
+  const d1w3 = C.resolveBurn(P.days[0], 3);
+  assert.ok(/bike/i.test((d1w3.items || []).join(" ")) && /push-up/i.test((d1w3.items || []).join(" ")) && /slam/i.test((d1w3.items || []).join(" ")));
+  assert.strictEqual(C.burnEffort(C.resolveBurn(P.days[3], 1), P.weeks[0], 4), "90–95%");
+  assert.ok(/^RPE/i.test(C.burnEffort(C.resolveBurn(P.days[4], 1), P.weeks[0], 5)));
+  assert.ok(/^RPE/i.test(C.burnEffort(C.resolveBurn(P.days[0], 6), P.weeks[5], 1)));
+  assert.ok(/2–4/.test(P.days[0].prepPump.dose));
+  assert.ok(/hinge reach/i.test(P.days[3].prepPump.items.map(function (i) { return i.a; }).join(" ")));
+  assert.ok(!/pogo|kb deadlift/i.test(P.days[3].prepPump.items.map(function (i) { return i.a; }).join(" ")));
+  assert.strictEqual(P.days[1].tissue.items[0].a.toLowerCase().indexOf("chest") >= 0, true);
+  assert.ok(/lat/i.test(P.days[0].tissue.items.slice(0, 3).map(function (i) { return i.a; }).join(" ")));
+  assert.ok(P.days[0].lifts.find(function (l) { return l.id === "pullup"; }).cousins.indexOf("Neutral-grip pull-up") >= 0);
+  assert.ok((P.days[3].lifts.find(function (l) { return l.id === "pp"; }).cousins || []).length >= 3);
+  const d5w3 = C.resolveTissue(P.days[4], 3);
+  assert.ok(/front-foot elevated split squat/i.test(d5w3.items[0].for), "W3 D5 tissue for follows FFE split squat");
+  const d5w4 = C.resolveTissue(P.days[4], 4);
+  assert.ok(/incline press/i.test(d5w4.items[1].for), "W4 D5 tissue for follows incline press");
+  const d5w2 = C.resolveTissue(P.days[4], 2);
+  assert.ok(/chest-supported row/i.test(d5w2.items[2].for), "W2 D5 tissue for follows chest-supported row");
+  const elasticW5 = C.resolveLift(P.days[3].lifts.find(function (l) { return l.id === "elastic"; }), 5);
+  assert.ok(/slam/i.test(elasticW5.rx), "W5 D4 elastic owned option includes slam dose");
+  assert.ok(!/climb/i.test(C.resolveMobNote(P.days[0], 5)));
+  assert.ok(!/climb/i.test(C.resolveMobNote(P.days[0], 6)));
+  assert.ok(/climb/i.test(C.resolveMobNote(P.days[0], 3)));
+  assert.ok(/easy walk/i.test(C.restTitle(P.days[4], 6)));
+  assert.ok(!/RPE 7/.test(C.restTitle(P.days[4], 6)));
+  assert.ok(/8–9 min/.test(C.resolveBurn(P.days[1], 4).fmt));
+  assert.ok(!/crawl/i.test(C.achillesLine(P.days[0], d1w3)));
+  assert.ok(!/Push, crawl, march/i.test(d1w3.baseAdj));
+  assert.ok(!/RPE ~?7/.test(C.burnEffort(C.resolveBurn(P.days[4], 6), P.weeks[5], 5)) || /5/.test(C.burnEffort(C.resolveBurn(P.days[4], 6), P.weeks[5], 5)));
+  assert.ok(/carry|swing/i.test(C.achillesReadiness({ n: 2 }, { items: ["Kettlebell swings", "Bike or row"] })) === false || /swing/i.test(C.achillesReadiness({ n: 2 }, { items: ["Kettlebell swings", "Bike or row"] })));
+  assert.ok(!/favor carries and swings/i.test(C.achillesReadiness(P.days[0], C.resolveBurn(P.days[0], 3))));
+}
+
 console.log("PASS core tests");

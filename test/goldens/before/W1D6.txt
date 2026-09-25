@@ -1,0 +1,61 @@
+WEEK 1 DAY 6
+intent: Establish
+weekday: Saturday
+theme: Follow-Me Flow
+sub: Walk · tissue · breath
+heat: easy
+restTitle: Pick one
+
+== TISSUE ==
+dose: 10–15 min
+goal: Low-intensity restoration.
+1. Low-back side wall · Ball against wall · 45 sec / side
+   cue: Gentle pressure between the ribs and the pelvis.
+2. Glutes · Ball · 60 sec / side
+   cue: Easy, restorative pressure.
+3. Rib-side / upper side abs · Roller or ball · 45 sec / side
+   cue: Breathe slowly into the side ribs.
+4. Chest · Ball · 45–60 sec / side
+   cue: Light opening, not aggressive.
+5. Calves or feet · Roller or ball · 60 sec / side
+   cue: Optional if walking volume has been high.
+
+== MOBILITY ==
+mobNote: Follow-me flow. Level 1 default. Level 2 if owned. No Level 3.
+weekMob: Start at the level you can control 100%. Default Level 1.
+- Cat cow — spine reset
+- 90/90 hip switches — hip rotation
+- Kneeling toe sits — feet, ankles, knees
+- Seated wall shoulder internal/external rotation
+- Laying knee-tucked windmills — lumbar and trunk rotation
+
+== LIFTS ==
+id: f1
+nm: Flow only
+rx: 3 rounds × 60 sec
+note: Five drills. About 15 minutes. When you need true recovery.
+
+id: f2
+nm: Flow + easy walk
+rx: 30–60 min
+note: Best default. Flow is 3 rounds × 60 sec, then walk.
+
+id: f3
+nm: Flow + tissue work
+rx: 10 min
+note: If stiff from the week.
+
+id: f4
+nm: Flow + breathwork
+rx: 3–5 min
+note: If stressed or under-recovered.
+
+== BURNOUT ==
+none
+
+== DOWNSHIFT ==
+No strength. No burnout.
+
+== PROGRESS ==
+total: 12
+phases: tissue 5 · prep 0 · mobility 5 · work 1 · burnout 0 · downshift 1

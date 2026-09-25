@@ -1,0 +1,108 @@
+WEEK 6 DAY 2
+intent: Deload / absorb
+weekday: Tuesday
+theme: Hips & Glutes
+sub: Upper strength + carries
+heat: hard
+
+== TISSUE ==
+dose: 3–5 min
+goal: Prep pressing, overhead, and the row
+1. Chest · for bench press · Hard ball against wall · 60 sec / side
+   cue: Work across the broad chest from the sternum side toward the shoulder.
+2. Rib-side / under armpit · for Standing DB overhead press · Ball or roller · 45–60 sec / side
+   cue: Just below the armpit and along the side ribs — helps overhead position and breathing.
+3. Lats / side back · for barbell row · Roller · 60 sec / side
+   cue: Roll from the armpit down the side of the back so the row can pull.
+4. Glutes / side glutes · for farmer carry · optional · Hard medicine ball · 60 sec / side
+   cue: Work the meaty back pocket and slightly toward the side hip — carry brace, optional.
+5. Hip crease / front of hip · for farmer carry · optional · Ball or roller · 45 sec / side
+   cue: Gentle pressure near the front pocket for carry bracing, not on sensitive structures.
+note: Priority: chest, rib-side, then lats for the row. Glutes and hip crease move to optional — they are for carry bracing, not the press.
+
+== PREP PUMP ==
+dose: 2–4 min
+goal: Light upper + brace pump before hip mobility. RPE ≤6.
+gatedOnAmberRedOrFlag: yes
+1. Dead-bug brace · 2 × 6 / side
+   cue: Ribs down, exhale, then reach.
+2. Scap push-up · 2 × 8
+   cue: Lock the elbows. Move the shoulder blades only.
+note: Skip on Amber/Red or any flag. Then run the existing mob ladder. This is not a working set.
+
+== MOBILITY ==
+mobNote: Elastaboy opener for hip rotation and a quiet press brace. Same drills.
+weekMob: Drop one level or unload.
+- 90/90 hip switches — Hip rotation.
+  levels: Hands for support. | No hands. | Light weight held in front.
+- Hip CARs — Active hip control.
+  levels: Tabletop. | Standing, hold for balance. | Kneeling, heel to bench.
+- Hip flexor lunge pulses — Hip extension.
+  levels: Standard lunge pulse. | Couch stretch. | Couch stretch with overhead load, knee to wall.
+- Glute bridge reps — Glute activation.
+  levels: Two-leg bodyweight, posterior tilt. | Single-leg. Load optional. | Feet elevated. Load optional.
+- Lateral band walks — Side-glute stability.
+  levels: Band above the knees. | Lower squat. | Band at the ankles, stay low.
+
+== LIFTS ==
+id: bench
+nm: Bench press
+main: 3 × 5 · RPE 6–7
+note: Floor press if no bench. Dips are the accessory, never the main. Straight sets, never supersetted.
+
+id: row
+job: Horizontal pull
+nm: Barbell row or chest-supported DB row
+rx: 4 × 6–10
+note: Horizontal pull. Heavy but controlled. Swap the cousin if last week's implement is stale.
+cousins: Chest-supported DB row · Seal row · Cable or band row
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+id: ohp
+job: Strict vertical push
+nm: Standing DB overhead press
+rx: 3–4 × 6–8
+note: Strict reps, ribs down. Pick a cousin you can own overhead.
+cousins: Landmine press · Half-kneeling DB press · Seated DB press
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+id: dips
+job: Secondary push
+nm: Dips or close-grip push-ups
+rx: 2–3 × 8–12
+note: Secondary push. Shoulder-dependent.
+cousins: Close-grip push-up · Bench dip · Decline push-up
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+id: farmer
+job: Loaded carry
+nm: Farmer carry
+rx: 4 × 40–60 sec
+note: Heavy, tall, braced. Cousin is a different implement, not a lighter farmer.
+cousins: Trap-bar carry · Front-rack carry · Sandbag carry
+accWave: Easy cousins — drop 30–40%, stay on the implement you own
+
+== BURNOUT ==
+nm: Easy 30/30
+fmt: 30 sec work / 30 sec easy × 8 min
+chip: 30/30
+effort: RPE 6–7
+optional: no
+benchmark: no
+hard: yes
+zoneCue: none
+patterns: hinge, core, cyclical
+- Easy KB swings
+- Plank shoulder taps
+- Easy walk
+antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
+weekNote: Deload. Easy 30/30. No redline.
+achilles: If Achilles is cranky, keep strength, and prefer walk, slow taps, or easy swings.
+achillesReady: Achilles: keep strength, prefer walk, slow taps, or easy swings.
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 28
+phases: tissue 5 · prep 2 · mobility 5 · work 14 · burnout 1 · downshift 1

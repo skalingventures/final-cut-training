@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.1.0";
+  const APP_VERSION = "2.2.1";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -208,6 +208,12 @@
       }
     }
     const resolved = Object.assign({}, raw, overlay || {});
+    resolved.baseAdj = raw.adj || "";
+    if (overlay && overlay.adj && overlay.adj !== raw.adj) {
+      resolved.weekNote = overlay.adj;
+    } else {
+      resolved.weekNote = overlay && overlay.weekNote ? overlay.weekNote : "";
+    }
     delete resolved.byWeek;
     delete resolved.menu;
     delete resolved.id;
@@ -216,13 +222,208 @@
     return resolved;
   };
 
+  /* Week-aware lift / accessory. Overlay lift.byWeek[week] on the base
+     card so elastic rotations and chassis flips resolve the same way
+     burns do. Days without byWeek stay byte-identical. */
+  Core.resolveLift = function resolveLift(lift, week) {
+    if (!lift) return lift;
+    const w = +week;
+    const byWeek = lift.byWeek;
+    let overlay = null;
+    if (byWeek && typeof byWeek === "object" && !Array.isArray(byWeek)) {
+      overlay = byWeek[w] || byWeek[String(w)] || null;
+    }
+    const resolved = Object.assign({}, lift, overlay || {});
+    delete resolved.byWeek;
+    return resolved;
+  };
+
+  Core.resolveLifts = function resolveLifts(day, week) {
+    return ((day && day.lifts) || []).map(function (l) {
+      return Core.resolveLift(l, week);
+    });
+  };
+
+  /* Prep pump hides (and drops out of progress) on Amber/Red or any flag. */
+  Core.prepPumpGated = function prepPumpGated(sess) {
+    if (!sess) return false;
+    if (sess.ready === "red" || sess.ready === "amber") return true;
+    const flags = sess.flags || {};
+    return Object.keys(flags).some(function (k) { return !!flags[k]; });
+  };
+
+  /* Effort chip. Burn.effort wins. Optional and Week 6 never show a week
+     percent — they show RPE. Day 4 Weeks 1–4 restore 90–95% unless the
+     resolved card sets a different effort. */
+  Core.burnEffort = function burnEffort(burn, weekObj, dayN) {
+    if (!burn) return "";
+    if (burn.effort) return burn.effort;
+    const week = weekObj && weekObj.n != null ? +weekObj.n : null;
+    if (burn.optional || week === 6) return burn.rpe || "RPE ~7";
+    if (dayN === 5) return burn.rpe || "RPE ~7";
+    if (dayN === 4 && week != null && week <= 4) return "90–95%";
+    return (weekObj && weekObj.burn) || "";
+  };
+
+  Core.burnShowsZoneCue = function burnShowsZoneCue(burn, week) {
+    if (!burn) return false;
+    if (burn.optional) return false;
+    if (+week === 6) return false;
+    return true;
+  };
+
+  /* Manual "1 · " inside an <ol> doubles the number. Strip it. */
+  Core.burnItemText = function burnItemText(item) {
+    return String(item == null ? "" : item).replace(/^\s*\d+\s*[·.]\s*/, "");
+  };
+
+  Core.burnMenuRows = function burnMenuRows(day, week, resolved) {
+    const raw = day && day.burn;
+    if (!raw || !Array.isArray(raw.menu) || !raw.menu.length) return [];
+    const w = +week;
+    return raw.menu.filter(function (m) {
+      if (!m || !(m.nm || m.label)) return false;
+      if (Array.isArray(m.weeks) && m.weeks.length && m.weeks.indexOf(w) < 0) return false;
+      if (resolved && m.nm && resolved.nm && m.nm === resolved.nm) return false;
+      return true;
+    });
+  };
+
+  /* Movements actually written on this week's resolved card. */
+  Core.cardMoves = function cardMoves(burn) {
+    const t = ((burn && burn.items) || []).map(Core.burnItemText).join(" ").toLowerCase();
+    function has(rx) { return rx.test(t); }
+    return {
+      crawl: has(/crawl/),
+      march: has(/\bmarch\b/),
+      bike: has(/\bbike\b/),
+      walk: has(/\bwalk\b/),
+      push: has(/push-up|push up|pushup/),
+      slam: has(/\bslam/),
+      swing: has(/\bswing/),
+      burpee: has(/burpee/),
+      jump: has(/\bjump|pogo|bound/),
+      stepover: has(/step-over|step over/),
+      tap: has(/\btap/),
+      row: has(/inverted|ring row|bike or row|easy row|assault bike/),
+      carry: has(/\bcarry|farmer/),
+      squatThrust: has(/squat thrust/),
+      climber: has(/climber/)
+    };
+  };
+
+  function oxford(arr) {
+    if (!arr.length) return "";
+    if (arr.length === 1) return arr[0];
+    if (arr.length === 2) return arr[0] + " or " + arr[1];
+    return arr.slice(0, -1).join(", ") + ", or " + arr[arr.length - 1];
+  }
+
+  function achillesDropsAndPrefers(day, burn) {
+    const n = day && day.n;
+    const m = Core.cardMoves(burn);
+    const hasCard = !!(burn && (burn.items || []).length);
+    const drops = [];
+    const prefer = [];
+    if (hasCard) {
+      if (m.jump) drops.push("drop jumps");
+      if (m.burpee) drops.push("swap burpees for a low-impact station");
+      if (m.crawl) drops.push("shorten the crawl");
+      if (m.slam) drops.push("ease slams");
+      if (m.squatThrust) drops.push("slow the squat thrusts");
+      if (m.march) prefer.push("easy march");
+      if (m.bike) prefer.push("bike");
+      if (m.walk) prefer.push("walk");
+      if (m.stepover) prefer.push("step-overs");
+      if (m.tap) prefer.push("slow taps");
+      if (m.push && n !== 2) prefer.push("push-ups");
+      if (m.row) prefer.push("easy row");
+      if (m.swing && n !== 1) prefer.push("easy swings");
+      if (m.carry && n !== 1 && n !== 4) prefer.push("easy carries");
+    } else {
+      if (n === 1) {
+        drops.push("drop jumps");
+        prefer.push("march or bike");
+      } else if (n === 2) {
+        drops.push("drop jumps/burpees");
+        prefer.push("bike or walk");
+      } else if (n === 4) {
+        drops.push("drop jumps/burpees");
+        prefer.push("step-overs or bike");
+      } else {
+        drops.push("drop jumps");
+        prefer.push("easy walk");
+      }
+    }
+    return { drops: drops, prefer: prefer, n: n };
+  }
+
+  /* Burnout Achilles note — only names movements on this week's card.
+     Never suggests swings on D1 or carries on D4. */
+  Core.achillesLine = function achillesLine(day, burn) {
+    const pack = achillesDropsAndPrefers(day, burn);
+    let s = "If Achilles is cranky, keep strength";
+    if (pack.drops.length) s += ", " + pack.drops.join(", ");
+    if (pack.prefer.length) s += ", and prefer " + oxford(pack.prefer);
+    s += ".";
+    if (pack.n === 1) s += " No swings on squat day.";
+    return s;
+  };
+
+  /* Readiness-card summary. Same movement rules as the burnout line. */
+  Core.achillesReadiness = function achillesReadiness(day, burn) {
+    const pack = achillesDropsAndPrefers(day, burn);
+    const bits = ["Achilles: keep strength"];
+    if (pack.drops.length) bits.push(pack.drops.join(", "));
+    if (pack.prefer.length) bits.push("prefer " + oxford(pack.prefer));
+    if (pack.n === 1) bits.push("no swings");
+    return bits.join(", ") + ".";
+  };
+
+  /* Strip climb language on W5/W6 so no view tells the athlete to climb. */
+  Core.resolveMobNote = function resolveMobNote(day, week) {
+    let note = (day && day.mobNote) || "";
+    if (+week >= 5) {
+      note = note.replace(/\s*Own today's level before you climb\.?/gi, "").trim();
+      note = note.replace(/\s*before you climb\.?/gi, "").trim();
+    }
+    return note;
+  };
+
+  Core.restTitle = function restTitle(day, week) {
+    if (!day) return "";
+    const by = day.restTitleByWeek;
+    if (by) {
+      const ov = by[+week] || by[String(week)];
+      if (ov) return ov;
+    }
+    return day.restTitle || "";
+  };
+
+  Core.resolveTissue = function resolveTissue(day, week) {
+    const tissue = day && day.tissue;
+    if (!tissue) return null;
+    const byId = {};
+    Core.resolveLifts(day, week).forEach(function (l) { byId[l.id] = l; });
+    const items = (tissue.items || []).map(function (it) {
+      const out = Object.assign({}, it);
+      const lift = it.forId ? byId[it.forId] : null;
+      if (lift && lift.nm) out.for = lift.nm;
+      return out;
+    });
+    return Object.assign({}, tissue, { items: items });
+  };
+
   /* Short burnout header chip. First-word split is fine for
      "10-minute AMRAP" but turns "40 sec / 20 sec × 10 min" into a
      lone "40" next to the 0/1 progress count. */
   Core.burnFmtChip = function burnFmtChip(fmt) {
-    const raw = String(fmt == null || fmt === "" ? "10 min" : fmt).trim();
+    if (fmt == null || String(fmt).trim() === "") return "10 min";
+    const raw = String(fmt).trim();
     const interval = raw.match(/(\d+)\s*s(?:ec(?:onds?)?)?\b[^/]*\/\s*(\d+)\s*s(?:ec(?:onds?)?)?/i);
     if (interval) return interval[1] + "/" + interval[2];
+    const minLead = raw.match(/^(\d+(?:[–-]\d+)?)\s+min\b/i);
+    if (minLead) return minLead[1] + "-min";
     const first = raw.split(/\s+/)[0];
     if (first && !/^\d+$/.test(first)) return first;
     return raw;
@@ -235,14 +436,14 @@
     const choice = log.choice[key] || "";
     const ready = sess.ready || "green";
     if (day.tissue) day.tissue.items.forEach(function (_, i) { items.push(["tissue", i]); });
-    if (day.prepPump && day.prepPump.items) {
+    if (day.prepPump && day.prepPump.items && !Core.prepPumpGated(sess)) {
       day.prepPump.items.forEach(function (_, i) { items.push(["preppump", i]); });
     }
     if (day.mob) day.mob.forEach(function (_, i) { items.push(["mob", i]); });
     if (day.exclusive) {
       items.push(["choice", 0]);
     } else {
-      (day.lifts || []).forEach(function (l) {
+      Core.resolveLifts(day, week).forEach(function (l) {
         const blocked = Core.liftBlocked(l, sess);
         if (blocked) return;
         const n = Core.nSets(l, week, program);
@@ -302,7 +503,7 @@
     let strength = false;
     if (day.exclusive) strength = !!pack.choice;
     else {
-      (day.lifts || []).forEach(function (l) {
+      Core.resolveLifts(day, week).forEach(function (l) {
         const n = Core.nSets(l, week, program);
         for (let i = 0; i < n; i++) if (Core.chk(log.checks, week, day.n, l.id, i)) strength = true;
       });

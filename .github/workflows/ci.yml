@@ -24,5 +24,6 @@ jobs:
         run: |
           node test/core.test.js
           node test/persist.test.js
+          node test/invariants.test.js
       - name: Static validate
         run: python3 validate.py

@@ -1,0 +1,62 @@
+WEEK 1 DAY 3
+intent: Establish
+weekday: Wednesday
+theme: Spine & Shoulders
+sub: Recovery · Zone 2 · tissue
+heat: easy
+guardTop: No strength. No burnout. No heavy upper body — this day exists to make Day 4 better.
+restTitle: Recovery session
+
+== TISSUE ==
+dose: 10–15 min
+goal: Restore spine, shoulders, ribs, and low-back tone.
+1. Chest · Ball against wall · 60 sec / side
+   cue: Broad chest work, especially if pressing and carrying left you tight.
+2. Rib-side / upper side abs · Ball or roller · 45–60 sec / side
+   cue: Side-rib area below the armpit. Breathe slowly into it.
+3. Lats · Roller · 60 sec / side
+   cue: Slow passes along the side-back line.
+4. Low-back side wall · Ball, wall or floor · 45 sec / side
+   cue: The muscular area between the bottom rib and the top of the pelvis. Gentle — don't jam the spine.
+5. T-spine / upper back · Roller · 60–90 sec
+   cue: Extend over the roller and breathe.
+6. Glutes · Ball · 60 sec / side
+   cue: Easy pressure, especially if the low back feels grippy.
+note: Restore after press and carry so Day 4 can rack and hinge. Chest, rib-side, T-spine — gentle, no excavation.
+
+== MOBILITY ==
+mobNote: Recovery day. Default Level 1, Level 2 if owned. No Level 3 load.
+weekMob: Start at the level you can control 100%. Default Level 1.
+- Cat cow — Spinal segmentation and downshift.
+  levels: Short range. | Full range. | Add a slight circle / rotation.
+- Jefferson curl — Controlled spinal flexion. Stay conservative.
+  levels: Seated spinal rolls. | Standing bodyweight. | Light KB or DBs — skip on this recovery day.
+- Quadruped thoracic rotations — T-spine rotation.
+  levels: Small range, hips still. | Elbow to the ceiling. | Light DB — skip on this recovery day.
+- Shoulder CARs — Shoulder control.
+  levels: Standing, bodyweight. | Light DB — skip if the shoulder is pinchy. | Sidelying — skip if the shoulder is pinchy.
+- Shoulder dislocates — Overhead range.
+  levels: Wide grip. | Closer grip. | Add a rotation.
+- Scapular pull-ups — Scap control and decompression.
+  levels: Feet supported. | Hang, no feet. | Assisted single-arm — skip on this recovery day.
+
+== LIFTS ==
+id: z2
+nm: Zone 2 walk, incline walk, or easy ruck
+rx: 30–45 min
+note: Conversational pace.
+
+id: breath
+nm: Breath downshift
+rx: 3–5 min
+note: Long exhales.
+
+== BURNOUT ==
+none
+
+== DOWNSHIFT ==
+Nothing further. Stop while you still feel good.
+
+== PROGRESS ==
+total: 15
+phases: tissue 6 · prep 0 · mobility 6 · work 2 · burnout 0 · downshift 1

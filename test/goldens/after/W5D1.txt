@@ -1,0 +1,102 @@
+WEEK 5 DAY 1
+intent: Peak
+weekday: Monday
+theme: Ankles & Knees
+sub: Squat strength + pull
+heat: hard
+
+== TISSUE ==
+dose: 3–5 min
+goal: Prep squat ankle/knee travel and the pull-up hang.
+1. Calves · for squat · Roller · 60 sec / side
+   cue: Roll from the Achilles up toward the back of the knee. Pause on dense spots.
+2. Front thigh / hip-flexor quad · for Peterson step-ups · Roller or ball · 45–60 sec / side
+   cue: Work the upper front thigh, especially where the quad meets the hip.
+3. Lats / rib-side · for pull-ups · Roller · 60 sec / side
+   cue: Roll from the armpit down the side-back and into the rib-side so the hang can sit.
+4. Outer thigh / outer quad · for squat · optional · Roller · 30–45 sec / side
+   cue: Moderate pressure along the outside of the thigh. Don't smash the side of the knee.
+5. Glutes · for Romanian deadlift · optional · Hard medicine ball · 60 sec / side
+   cue: Sit on the ball and search the big glute and side-glute pocket.
+6. Inner thighs · for Peterson step-ups · optional · Roller · 45 sec / side
+   cue: Gentle pressure before squats and Petersons.
+note: Priority: calves, front thigh/hip-flexor, then lats/rib-side for the pull-ups. Outer quad, glute, and inner thigh are optional overflow. Don't smash the IT band.
+
+== PREP PUMP ==
+dose: 2–4 min
+goal: Light ankle/knee pattern pump before mobility. RPE ≤6.
+gatedOnAmberRedOrFlag: yes
+1. Goblet squat pulse · Light KB · 2 × 8
+   cue: Heels down, knees track, no bounce.
+2. Split-stance lean · 6 / side
+   cue: Front knee over the toe, heel stays.
+note: Skip on Amber/Red or any flag. Then run the existing mob ladder. This is not a working set.
+
+== MOBILITY ==
+mobNote: Elastaboy opener for squat depth and knee-over-toe. Same drills.
+weekMob: Stay on a level you own. No new level.
+- Knee-to-toe ankle rockers — Dorsiflexion, knee-over-toe comfort.
+  levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
+- Straight-leg calf raisers — Gastroc and Achilles.
+  levels: Two-leg, slight lean. | More lean. | Single-leg.
+- Bent-knee calf raisers — Soleus capacity.
+  levels: Two-leg, shallow bend. | Deeper bend. | Single-leg on a ledge.
+- Tib raisers — Ankle balance, front-of-shin strength.
+  levels: Back to wall, feet close. | Feet farther from the wall. | Slant-board.
+- Slant-board squats — Knee confidence, squat tolerance.
+  levels: Bodyweight, no bounce. | Light load. | Hindu / self-elevated heels only if Level 2 is owned.
+
+== LIFTS ==
+id: squat
+nm: Back squat or front squat
+main: 5 × 3 · RPE 8.5–9
+note: Main lower-body strength lift. Straight sets, full rest, never supersetted.
+
+id: pullup
+job: Vertical pull
+nm: Pull-ups or weighted pull-ups
+rx: 4 × 4–8
+note: Upper pull. Pick a cousin you can own for 4–8 clean reps. Add weight if 8 strict are easy.
+cousins: Neutral-grip pull-up · Lat pulldown · Band-assisted pull-up
+accWave: Owned only — no new cousins, no new levels
+
+id: peterson
+job: Knee-over-toe
+nm: Peterson step-ups
+rx: 2–3 × 6–8 / side
+note: Controlled knee-over-toe strength. Low volume — mobility already covers slant-board squats.
+cousins: Heels-elevated goblet squat · Slant-board step-down
+accWave: Owned only — no new cousins, no new levels
+
+id: rdl
+job: Hinge accessory
+nm: Romanian deadlift
+rx: 3 × 6–8
+note: Separate from the squat — not a superset. Use straps if grip would fail first.
+cousins: DB RDL · Good morning · Single-leg RDL
+accWave: Owned only — no new cousins, no new levels
+
+== BURNOUT ==
+nm: Slam / Crawl / March
+fmt: 10-minute AMRAP
+chip: 10-minute
+effort: 85–90%
+optional: no
+benchmark: no
+hard: yes
+zoneCue: Z4 by minute 4–6
+patterns: slam, crawl, cyclical
+- Med-ball slam × 8
+- Bear crawl × 8–10 steps
+- March × 40 sec
+antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
+weekNote: Owned Slam / Crawl / March. Not a benchmark — that is Day 4 this week.
+achilles: If Achilles is cranky, keep strength, shorten the crawl, ease slams, and prefer easy march. No swings on squat day.
+achillesReady: Achilles: keep strength, shorten the crawl, ease slams, prefer easy march, no swings.
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 30
+phases: tissue 6 · prep 2 · mobility 5 · work 15 · burnout 1 · downshift 1

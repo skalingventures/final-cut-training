@@ -1,0 +1,100 @@
+WEEK 2 DAY 4
+intent: Build
+weekday: Thursday
+theme: Ankles & Posterior Chain
+sub: Athletic full body
+heat: hardest
+
+== TISSUE ==
+dose: 3–5 min
+goal: Prep the hinge, deadlift, and a small athletic landing dose.
+1. Calves · Roller · 60 sec / side
+   cue: Slow passes, especially the lower calf and soleus.
+2. Glute fold / high hamstring · Ball · 45 sec / side
+   cue: Sit near the crease where glute meets hamstring. Controlled pressure, not aggressive digging.
+3. Hamstrings · Roller · 45–60 sec / side
+   cue: Roll the back of the thigh before hinging.
+4. Inner thighs · Roller · 45 sec / side
+   cue: Helps before adductor rock-backs and the athletic slot.
+5. Front thigh / hip-flexor quad · Roller · 45 sec / side
+   cue: Keep it moderate — enough to open the front of the hip.
+6. T-spine / upper back · Roller · 60 sec
+   cue: Helps the front rack and push-press position.
+note: Priority for hinge and land: calves and glute-fold first, then hamstrings. T-spine last if time is short.
+
+== PREP PUMP ==
+dose: 4–6 min
+goal: Groove the hinge and a light landing before the deadlift.
+gatedOnAmberRedOrFlag: yes
+1. KB deadlift groove · Light KB · 2 × 5
+   cue: Wedge, brace, stand tall. Not a set.
+2. Pogo or step-over · 2 × 6
+   cue: Quiet feet. Skip jumps if Achilles is cranky.
+note: Prime the hinge and land. Save the jump dose for after the deadlift.
+
+== MOBILITY ==
+mobNote: Elastaboy ladder. Start at Level 1. Earn Level 2, then Level 3 only when today's level is clean. Do not skip.
+weekMob: Earn the next level only when today's level is clean. Do not skip.
+- Bent-knee calf raisers — Soleus and Achilles prep.
+  levels: Two-leg, shallow bend. | Deeper bend. | Single-leg on a ledge.
+- Knee-to-toe ankle rockers — Dorsiflexion.
+  levels: Hands-guided, heel down. | More knee travel. | Light load on the knee.
+- Good mornings — Hinge pattern.
+  levels: Bodyweight, hands on hips. | Wide stance, hands on head. | Single-leg. Dumbbells optional.
+- Adductor rock-backs — Inner-thigh and hip control.
+  levels: One side, press the straight-leg foot down. | Elevate the straight leg. | Frog rock-backs.
+- Long split lunge — Hip extension, unilateral control.
+  levels: Front foot elevated, hold for balance. Hamstring covers the calf. | Lower the box, less hand support. | Floor. Dumbbells only if the calf-cover standard is met.
+
+== LIFTS ==
+id: dead
+nm: Deadlift
+main: 4 × 6 · RPE 7.5
+note: Heavy but clean. No grinders. Straight sets, never supersetted.
+
+id: elastic
+job: Elastic / land
+nm: Broad jumps, pogo bounds, or med-ball slam
+rx: 3 × 3–5 jumps or 3 × 8–10 pogos
+note: Crisp landings, not a max-out. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps.
+
+id: pp
+job: Athletic overhead
+nm: Push press
+rx: 4 × 4–6
+note: Athletic overhead power.
+
+id: chin
+job: Vertical pull
+nm: Chin-ups
+rx: 4 × 5–8
+note: Clean reps. Add weight only if crisp.
+
+id: suit
+job: Anti-rotation carry
+nm: Suitcase carry
+rx: 3 × 40 sec / side
+note: Anti-rotation and chassis work.
+
+== BURNOUT ==
+nm: Goblet / Push-up / Step-over
+fmt: 10-minute AMRAP
+chip: 10-min
+effort: 90–95%
+optional: no
+benchmark: no
+hard: yes
+zoneCue: Z4 by minute 4–6
+- Goblet squat × 8
+- Push-ups × 10
+- Bar step-overs × 6
+antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, or suitcase here.
+weekNote: Same family. Step-overs if you want less sprawl.
+achilles: If Achilles is cranky, drop burpees for step-overs or a short march.
+
+== DOWNSHIFT ==
+2–5 min breathing or easy walk.
+
+== PROGRESS ==
+total: 33
+phases: tissue 6 · prep 2 · mobility 5 · work 18 · burnout 1 · downshift 1

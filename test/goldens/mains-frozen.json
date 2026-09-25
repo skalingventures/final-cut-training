@@ -1,0 +1,24 @@
+{
+  "1:squat": {
+    "id": "squat",
+    "nm": "Back squat or front squat",
+    "prog": true,
+    "note": "Main lower-body strength lift. Straight sets, full rest, never supersetted.",
+    "load": true
+  },
+  "2:bench": {
+    "id": "bench",
+    "nm": "Bench press",
+    "prog": true,
+    "note": "Floor press if no bench. Dips are the accessory, never the main. Straight sets, never supersetted.",
+    "load": true
+  },
+  "4:dead": {
+    "id": "dead",
+    "nm": "Deadlift",
+    "prog": true,
+    "note": "Heavy but clean. No grinders. Straight sets, never supersetted.",
+    "load": true,
+    "swapRed": "Swap for RDL or goblet work today."
+  }
+}
