@@ -78,19 +78,20 @@ rx: 30–45 sec
 note: Grip and shoulder decompression.
 
 == BURNOUT ==
-nm: Soft Aerobic Pump
-fmt: 8-min easy · RPE ~6–7
+nm: Soft Walk
+fmt: 8-min easy · RPE ~6
 chip: 8-min
-effort: RPE ~6–7
+effort: RPE ~6
 optional: yes
 benchmark: no
 hard: no
 zoneCue: none
-- Easy nasal walk or easy bike — continuous
+- 8 minutes alternating 60 seconds backward walk and 60 seconds easy forward nasal walk.
+- No loaded carries. Wheels stay on Monday.
 antiEcho: Optional aerobic pump — leave better, not cooked.
-weekNote: Peak week. Soft only. Protect Day 4. No Carry / Crawl / Swing.
-achilles: If Achilles is cranky, keep strength, and prefer bike or walk.
-achillesReady: Achilles: keep strength, prefer bike or walk.
+weekNote: Peak week. Soft only. Protect the weekend and Monday. No Carry / Crawl / Swing.
+achilles: If Achilles is cranky, keep strength, and prefer walk.
+achillesReady: Achilles: keep strength, prefer walk.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

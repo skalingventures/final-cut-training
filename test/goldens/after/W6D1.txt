@@ -77,22 +77,21 @@ cousins: DB RDL · Good morning · Single-leg RDL
 accWave: Easy cousins — drop 30–40%, stay on the implement you own
 
 == BURNOUT ==
-nm: Soft Tap + Bike
+nm: Easy Spin & Pallof
 fmt: Soft 4 rounds · no redline
 chip: Soft
-effort: RPE 6–7
+effort: RPE 5–6
 optional: no
 benchmark: no
 hard: yes
 zoneCue: none
-patterns: core, cyclical
-- Plank shoulder taps 30 s
-- Easy bike 60 s
-- × 4 rounds
+patterns: cyclical, core, rotation
+- Four rounds: 60 seconds easy bike with a 5-second smooth pickup at the end, then 60 seconds walking.
+- Finish with 2 × 8 per side band Pallof press.
 antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
-weekNote: Deload. No redline. Soft iso + easy bike.
-achilles: If Achilles is cranky, keep strength, and prefer bike or slow taps. No swings on squat day.
-achillesReady: Achilles: keep strength, prefer bike or slow taps, no swings.
+weekNote: Deload. No redline. Pallof press is this week's easy preview.
+achilles: If Achilles is cranky, keep strength, and prefer bike. No swings on squat day.
+achillesReady: Achilles: keep strength, prefer bike, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

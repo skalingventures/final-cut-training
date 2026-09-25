@@ -83,22 +83,22 @@ cousins: Trap-bar carry · Front-rack carry · Sandbag carry
 accWave: Easy cousins — drop 30–40%, stay on the implement you own
 
 == BURNOUT ==
-nm: Easy 30/30
-fmt: 30 sec work / 30 sec easy × 8 min
-chip: 30/30
-effort: RPE 6–7
+nm: Hill Strides
+fmt: Easy hill strides · no redline
+chip: Easy
+effort: RPE 5–6
 optional: no
 benchmark: no
 hard: yes
 zoneCue: none
-patterns: hinge, core, cyclical
-- Easy KB swings
-- Plank shoulder taps
-- Easy walk
+patterns: sprint, cyclical
+- 5 × 10-second relaxed strides uphill at about 70%, walking down.
+- Then 3 minutes of easy backward walking uphill.
+fallback: No hill or Achilles flag: 5 × 10-second easy walk-out strides on flat ground, then 3 minutes easy backward walk.
 antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
-weekNote: Deload. Easy 30/30. No redline.
-achilles: If Achilles is cranky, keep strength, and prefer walk, slow taps, or easy swings.
-achillesReady: Achilles: keep strength, prefer walk, slow taps, or easy swings.
+weekNote: Deload. No redline. Backward hill walk is this week's easy preview.
+achilles: If Achilles is cranky, keep strength, and prefer walk.
+achillesReady: Achilles: keep strength, prefer walk.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

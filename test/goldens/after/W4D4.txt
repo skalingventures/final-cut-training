@@ -81,22 +81,26 @@ cousins: Single-arm KB carry · Offset rack carry
 accWave: Cousin variety — slightly reduced volume; keep the job, pick the cleanest cousin
 
 == BURNOUT ==
-nm: Bike / Goblet / Push EMOM
-fmt: EMOM 9 min · alternating
-chip: EMOM
+nm: Ground School
+fmt: 40 sec work / 20 sec transition × 8
+chip: 40/20
 effort: 90–95%
 optional: no
 benchmark: no
 hard: yes
-zoneCue: Z4 by minute 4–6
-patterns: cyclical, squat, push-h, core
-- Min 1 · bike 30 s
-- Min 2 · goblet squat × 8
-- Min 3 · push-ups × 8 + mountain climbers × 12
+zoneCue: none
+patterns: ground, crawl, push-h
+- Crab travel forward 4 steps, back 4 steps, hips high.
+- Technical stand-ups, alternating sides.
+- Ring push-ups with the rings 10–20 cm off the floor.
+- KB chest-hug get-to-stand with a 35 lb bell: lie back until the shoulder blades touch the floor, then stand fully, however you like, with the bell glued to the chest.
+score: Total get-to-stands across both passes (two passes of the four stations). Write it down — this is next week's test movement at submax.
+fallback: Achilles flag: no change. No impact on this card.
+scale: Rings higher. Get-to-stand bodyweight only. Crab as a hip-lift hold. Wrists cranky: crab on fists or on DB handles.
 antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
-weekNote: Alternating EMOM, 9 min. Quality under a ceiling. Not a benchmark.
-achilles: If Achilles is cranky, keep strength, and prefer bike or push-ups.
-achillesReady: Achilles: keep strength, prefer bike or push-ups.
+weekNote: Ground & Grapple. Two passes of four stations. Crisp positions, not survival. No hinge, overhead, chin, suitcase, or lunge.
+achilles: If Achilles is cranky, keep strength, and prefer push-ups.
+achillesReady: Achilles: keep strength, prefer push-ups.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

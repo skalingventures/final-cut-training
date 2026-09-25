@@ -77,22 +77,25 @@ cousins: DB RDL · Good morning · Single-leg RDL
 accWave: Owned only — no new cousins, no new levels
 
 == BURNOUT ==
-nm: Slam / Crawl / March
-fmt: 10-minute AMRAP
-chip: 10-minute
+nm: Row-Bike Relay
+fmt: 9–10 min relay
+chip: 9–10-min
 effort: 85–90%
 optional: no
 benchmark: no
 hard: yes
-zoneCue: Z4 by minute 4–6
-patterns: slam, crawl, cyclical
-- Med-ball slam × 8
-- Bear crawl × 8–10 steps
-- March × 40 sec
+zoneCue: none
+patterns: cyclical, core, sprint, rotation
+- Four rounds: 250 m row hard (the pace you could just barely hold for 500 m), straight into 15 seconds max on the air bike, then 75 seconds walking.
+- About 9–10 minutes.
+- Finish with 1 × 6 per side landmine rotation, empty bar, smooth.
+score: Sum of the four row times plus total bike calories. Peak-week logbook number — write it down.
+fallback: Achilles flag: no change. Stay on the bike and rower.
+scale: 3 rounds, or 150 m rows.
 antiEcho: No squat, hang-pull, swing, or max farmer on squat day.
-weekNote: Owned Slam / Crawl / March. Not a benchmark — that is Day 4 this week.
-achilles: If Achilles is cranky, keep strength, shorten the crawl, ease slams, and prefer easy march. No swings on squat day.
-achillesReady: Achilles: keep strength, shorten the crawl, ease slams, prefer easy march, no swings.
+weekNote: Wheels & Twist. Peak week. No new movements. Not a benchmark — that is Day 4 this week.
+achilles: If Achilles is cranky, keep strength, and prefer bike or easy row. No swings on squat day.
+achillesReady: Achilles: keep strength, prefer bike or easy row, no swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

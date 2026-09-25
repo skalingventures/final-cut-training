@@ -8,16 +8,28 @@ Do not copy paid GBRS, Filly, Functional Patterns, or Elastaboy daily workouts i
 
 ## Thesis
 
-Variety comes from **format rotation + anti-echo**, not from an infinite cousin list of stations.
+**Keep familiar clocks. Change the movements and the kind of stimulus.**
 
-A week that swaps kettlebell swing for dumbbell swing is the same burnout. A week that keeps the same *family* and changes the *clock* — AMRAP to an ascending ladder, 40/20 to a couplet — is a different burnout. The athlete feels novelty. The strength signal stays clean.
+Rotating the format while keeping the same stations just reprints the same workout on a new score sheet. That is why Weeks 1–3 felt like an echo. From Week 4 on, the clock can stay one the athlete already knows (EMOM, 40/20, AMRAP, easy continuous). The movement surface and the energy system have to change.
 
-Pick the leftover patterns first. Then pick a format. Then, if the week needs a change, rotate the format before you rotate the movements.
+Each hard day owns one stimulus family, and no other day borrows it:
+
+| Day | Family | Stimulus |
+| --- | --- | --- |
+| D1 Mon | Wheels & Twist | Alactic air-bike / rower sprints plus rotation |
+| D2 Tue | Hill & Field | Short uphill speed plus lateral footwork |
+| D4 Thu | Ground & Grapple | Ground locomotion, get-to-stand, rings |
+| D5 Fri | Carry Walk | Loaded locomotion at RPE 6–7, optional |
+
+The per-day bans still sit on top of the family rule. D1: no squat, vertical pull, hinge, or heavy carry. D2: no press, no farmer. D4: no hinge, vertical push, vertical pull, carry, or lunge.
+
+This replaces the old house rule "rotate the format before you rotate the movements."
 
 ## How this maps to the app
 
 - Base `burn` is the default card (name, format, items, adj).
 - `burn.byWeek` overlays a week. Missing week keys fall back to the base. Prefer this.
+- Optional overlay fields `score`, `fallback`, and `scale` render under the station list. `zoneCue: false` hides the old Z4-by-minute-4–6 line on alactic / speed cards.
 - `burn.menu` holds green alts or week-tagged rows. A complete base is not stolen by an untagged menu item.
 - `Core.resolveBurn(day, week)` is the picker. Logging, skip, and red-day easy options stay on the resolved card.
 
@@ -36,9 +48,12 @@ Tag every station. The anti-echo picker below bans families, not brand names.
 | `pull-h` | Horizontal pull | Row, seal row |
 | `pull-v` | Vertical / hang pull | Pull-up, chin-up, dead hang |
 | `crawl` | Ground locomotion | Bear crawl, lizard, shoulder-tap plank |
+| `ground` | Ground-to-stand / animal travel | Crab, ape, technical stand-up, KB get-to-stand |
 | `carry` | Loaded locomotion | Farmer, suitcase, march, sandbag |
 | `cyclical` | Easy engine | Bike, row, incline walk, march |
-| `elastic` | Jump / land / rebound | Pogo, broad jump, step-over |
+| `sprint` | Alactic or max-speed effort | Air-bike sprint, hill sprint, hill stride |
+| `rotation` | Transverse / anti-rotation | Landmine rainbow, Pallof, band chop |
+| `elastic` | Jump / land / rebound | Pogo, broad jump, step-over, box jump |
 | `slam` | Ball or bag to the floor | Med-ball slam, sandbag throw-down |
 | `core` | Trunk that is not a carry | Dead bug, hollow, sprawl, sit-up |
 
@@ -146,7 +161,7 @@ Main squat (unpaired). Accessories: vertical pull, knee-over-toe, hinge.
 | --- | --- |
 | `squat`, `pull-v`, `hinge` (including swings), max `carry` | `push-h`, `crawl`, `slam`, `cyclical`, march |
 
-Lived: AMRAP Push / Crawl / March. Week 2 is an ascending push-crawl ladder **start 2, +2**. Week 3 is a cyclical hybrid: bike 40 s → push-ups ×8 → med-ball slam ×8, march as breaker. Week 4 is Kjael ladder B remapped, kettlebell-free: push-ups / squat thrusts / med-ball slams, start 2, +2, 9-min cap (hip thrust dropped — it echoes the RDL). Week 5 is owned Slam / Crawl / March — not a benchmark. Week 6 is soft: plank shoulder taps 30 s + easy bike 60 s, ×4. Never a hang-pull or farmer engine on this day. `squat thrust` is tagged `elastic`, not `squat`.
+Lived W1–W3: AMRAP Push / Crawl / March. Week 2 is an ascending push-crawl ladder **start 2, +2**. Week 3 is a cyclical hybrid: bike 40 s → push-ups ×8 → med-ball slam ×8, march as breaker. W4–W6 switch to **Wheels & Twist**: Sprint Ten + Twist (EMOM bike sprints + landmine), Row-Bike Relay, Easy Spin & Pallof. Never a hang-pull or farmer engine on this day. `squat thrust` (W1–W3 history) is tagged `elastic`, not `squat`.
 
 ### Day 2 — upper strength + carries
 
@@ -156,7 +171,7 @@ Main bench (unpaired). Accessories: horizontal pull, strict vertical push, secon
 | --- | --- |
 | `push-h` / `push-v` as a working press, `carry` (farmer echo) | `hinge`, `crawl`, sprawl / `core`, `cyclical`, light `squat` |
 
-Lived: 40/20 Menu A — swing / crawl / sprawl / **bike or row at stations 4 and 9**. Week 2 rotates to a swing-crawl ladder. Week 3 is Menu A again but must visibly differ from Week 1 (assault bike / easy row wording + week note). Week 4 is Kjael ladder A remapped: inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers, 8–9 min. Week 5 owned Menu A. Week 6 easy 30/30. Another press or farmer is not legal.
+Lived W1–W3: 40/20 Menu A — swing / crawl / sprawl / **bike or row at stations 4 and 9**. Week 2 rotates to a swing-crawl ladder. Week 3 is Menu A again but must visibly differ from Week 1 (assault bike / easy row wording + week note). W4–W6 switch to **Hill & Field**: Hill Eights, Beat the Mark, Hill Strides. Indoor fallback stays on the card: Box & Bell (box jump step-down + 80 lb swings), rower strokes if Achilles. Another press or farmer is not legal.
 
 ### Day 4 — athletic full body
 
@@ -166,7 +181,7 @@ Main deadlift (unpaired). Elastic slot after the deadlift. Accessories: athletic
 | --- | --- |
 | `hinge`, `push-v`, `pull-v`, suitcase `carry` | light `squat`, `push-h`, burpee / step-over (`elastic` + `core`) |
 
-Lived: W1/W2 keep the light-squat + horizontal-push couplet. Week 3 is Alt B: wall-ball (or goblet-to-target) / push-ups / burpee step-overs. Week 4 is an alternating EMOM, 9 min — min 1 bike 30 s; min 2 goblet squat ×8; min 3 push-ups ×8 + mountain climbers ×12. Week 5 is Alt A, the sole chaotic benchmark. Week 6 is easy bike + push-ups + step-overs, no redline. Effort W1–W4 displays 90–95%. Achilles swaps burpees for step-overs or a short march — still no hinge finish.
+Lived W1–W3: light-squat + horizontal-push couplet. Week 3 is Alt B: wall-ball (or goblet-to-target) / push-ups / burpee step-overs. W4–W6 switch to **Ground & Grapple**: Ground School (40/20), the Ground-to-Stand Test (sole chaotic benchmark), Ground Flow. Effort W1–W4 displays 90–95%. Still no hinge finish.
 
 ### Day 5 — chassis
 
@@ -176,7 +191,7 @@ No main. Submaximal pump. Durability, not a fourth hard day.
 | --- | --- |
 | Another hard strength dose, a second benchmark, any redline | Aerobic pump continuous ~RPE 7 |
 
-Green alt: Carry / Crawl / Swing on `burn.menu`. Skip is always legal.
+Green alt: Carry / Crawl / Swing on `burn.menu`, **W1–W3 only**. W4 is the Carry Walk Medley. Skip is always legal.
 
 ### Days 3, 6, 7
 
@@ -189,51 +204,68 @@ No burnout. Do not sneak one in.
 | 1 | Establish | Base format. Teach the family. D2 Menu A already uses bike/row at 4/9. D4 effort 90–95%. |
 | 2 | Build | Rotate the *format* on the same family (ladder novelty). D1 ladder starts at 2, +2. |
 | 3 | Build hard | D1 cyclical hybrid. D2 Menu A (must differ from W1). D4 Alt B wall-ball package. One new format this week (hybrid). |
-| 4 | Intensify | D1 Kjael ladder B remap. D2 Kjael ladder A remap. D4 alternating EMOM. One new format this week (EMOM). Ladders at most 1–2× per mid-block per day family. |
-| 5 | Peak | Owned only — except **Day 4**, the block's **sole chaotic benchmark**. Other Week 5 burns stay 85–90% and are not benchmarks. D5 is soft aerobic. |
-| 6 | Deload | No redline anywhere. D1 soft tap + bike. D2 easy 30/30. D4 easy bike + push + step-over. D5 walk or skip. Show RPE, not a week percent. |
+| 4 | Intensify | Day-owned families begin. D1 Sprint Ten + Twist. D2 Hill Eights. D4 Ground School. D5 Carry Walk Medley. Every hard card sets a number to beat next week. |
+| 5 | Peak | **No new movements.** D1 Row-Bike Relay. D2 Beat the Mark (vs the W4 hill mark). D4 Ground-to-Stand Test — the block's **sole chaotic benchmark**. D5 Soft Walk, no carries. Other Week 5 burns stay 85–90% and are not benchmarks. |
+| 6 | Deload | No redline anywhere. One easy preview movement per hard day: Pallof (D1), backward hill walk (D2), lateral ape (D4). D5 walk or skip. Show RPE, not a week percent. |
 
-**Frequency rules (encode, do not wink at):** ladders at most 1–2× per mid-block per day family; at most one new format per week; W5 uses owned clocks except the D4 benchmark; W6 is absorb-mode.
+### W4–W6 hard rules (encode, do not wink at)
+
+1. **Day-owned families.** D1 Wheels & Twist, D2 Hill & Field, D4 Ground & Grapple, D5 Carry Walk. No other day borrows the family.
+2. **Retired for W4–W6:** burpees, sprawls, squat thrusts, mountain climbers, bar step-overs, floor push-ups, bear crawls, plank shoulder taps, 35 lb conditioning swings, goblet squats and air squats as burnout stations, walking lunges, and bike/row/march used as a "breaker" or "easy engine" inside a hard card. The bike and rower return only as D1 sprint implements (or the D5 cooked-Friday walk). Swings return only as the heavy 80 lb power set on D2's no-hill fallback.
+3. **Max reuse.** No movement appears in more than 3 of the 12 W4–W6 cards, and no movement appears on two different days in the same week. Walking to recover is exempt.
+4. **Novelty cadence.** Every build week introduces at least one movement never seen in a burnout. The peak week introduces **zero** new movements — anything tested in W5 was exposed in W4. The deload introduces one easy skill movement as a preview.
+5. **Format is the constant, movement is the variable.** Keep clocks the athlete already understands. Change what fills them.
+6. **Every hard card carries a number** (watts, hill mark, get-up count), compared with the same day last week, never across days. Only W5 D4 is labelled a benchmark. The other numbers are private logbook marks.
+7. **Sprints and power stop when quality drops**, not when the clock runs out. Cap hill reps at 90–95% with build-up strides. Stop if a sprint drops below ~90% of the day's best, or if the hill mark is missed twice in a row.
+8. **Readiness still wins.** Red means the burnout is off. Amber cuts rep count by about a third and caps effort at ~85%. The Achilles flag swaps every hill or box item to the rower or bike version shown on that card.
+
+Hill cards assume a gentle sidewalk grade, about four city blocks of concrete — enough distance for 8–10 s efforts. The Box & Bell indoor fallback stays visible on the D2 cards.
 
 ### D2 menus
 
-- **Menu A (W1, W3, W5):** swing / crawl / sprawl / bike or row / nasal walk, twice through. W3 wording is assault bike / easy row so the card is not a W1 copy.
+- **Menu A (W1, W3):** swing / crawl / sprawl / bike or row / nasal walk, twice through. W3 wording is assault bike / easy row so the card is not a W1 copy.
 - **Ladder week (W2):** swing-crawl ascending ladder on the same family.
-- **Ladder A remap (W4):** inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers. Rows, not pull-ups.
-- **Soft (W6):** easy 30/30.
+- **Hill & Field (W4–W6):** Hill Eights → Beat the Mark → Hill Strides. Box & Bell fallback on the card.
 
 ### D4 alternates
 
-- **Alt A (W1 identity, W5 benchmark):** goblet / push-ups / burpees over bar.
+- **Alt A (W1 identity):** goblet / push-ups / burpees over bar. Retired as the W5 test.
 - **Alt B (W3):** wall-ball or goblet-to-target / push-ups / burpee step-overs.
-- **EMOM (W4):** 9 min rotating bike / goblet / push-up + climber.
-- **Soft (W6):** easy bike + push-ups + step-overs.
-
-### Ladder remaps (Kjael inspiration, original clocks)
-
-| Inspiration | Lived remap | Day / week |
-| --- | --- | --- |
-| B — push / squat-thrust / hip-thrust | push-ups / squat thrusts / med-ball slams, start 2, +2, 9-min cap. Hip thrust dropped (RDL echo). | D1 W4 |
-| A — pull-up / push-up / squat / lunge / climber | inverted/ring row start 2 (+1, cap 6) / air squats / walking lunges / mountain climbers, 8–9 min. Rows, not pull-ups. | D2 W4 |
+- **Ground & Grapple (W4–W6):** Ground School → Ground-to-Stand Test (benchmark) → Ground Flow.
 
 ### Modifiers
 
-- Achilles: bike, march, step-over, plank taps first; drop jump-burpee density.
-- Grip: no max farmer after D1 pull-ups + RDL; no farmer on D2; no suitcase echo on D4.
-- W6 / optional: RPE, no Z4-by-minute-4–6 cue.
+- Achilles: each card names its swap. Hill / box → rower power strokes or easy walk. D1 sprints do not need a change.
+- Grip: no max farmer after D1 pull-ups + RDL; no farmer on D2; no suitcase echo on D4. D5 hugs the 80 lb bell instead of crush-gripping it.
+- W6 / optional: RPE, no Z4-by-minute-4–6 cue. Alactic D1/D2 cards set `zoneCue: false`.
 
-Day 5 default is the 8-min aerobic pump at ~RPE 7 plus a light DB complex option. Carry / Crawl / Swing is a green option **W1–W4 only**, and its stations must render. W5 soft. W6 walk or skip.
+Day 5 default in W1–W3 is the 8-min aerobic pump at ~RPE 7 plus a light DB complex option. Carry / Crawl / Swing is a green option **W1–W3 only**, and its stations must render. W4 is the Carry Walk Medley (CCS dropped). W5 Soft Walk. W6 walk or skip.
 
 Three hard burnouts (D1, D2, D4) plus one optional moderate (D5). Red readiness cuts the hard burnout to a walk or a 60–70% easy version. That rule is older than this library and still wins.
 
 ## Writing a new card
 
 1. List today's main and heaviest accessories. Those families are banned.
-2. Pick 2–3 leftover families from Prefer.
-3. Pick a format from the cards above. Rotate format before you invent a new station.
-4. Write original items. Do not paste a paid daily.
-5. Encode the default on `burn`, week overlays on `burn.byWeek`, green alts on `burn.menu`.
+2. Stay inside the day's owned stimulus family. Do not borrow another day's family.
+3. Pick a familiar clock. Change the movements and the stimulus, not the score-sheet shape.
+4. Write original athlete-facing items: dose, rest, effort cap, and the number to beat. Do not paste a paid daily. Do not paste research prose or citations into the app.
+5. Encode the default on `burn`, week overlays on `burn.byWeek`, green alts on `burn.menu`. Put the mark on `score`, the indoor / Achilles swap on `fallback`, and amber / scale-down on `scale`.
 6. Keep Achilles and motivation notes on the base object so every week inherits them.
 7. If Week 5 Day 4 is not the day you are writing, do not set `benchmark: true`.
+8. Check the max-reuse rule across the twelve W4–W6 cards before you ship.
 
 Judge the card the same way [`CANON.md`](../CANON.md) judges every change: complementary, or it does not ship.
+
+## Principle-level attribution
+
+App cards stay session instructions. Sources live here only.
+
+- Concurrent training / modality: Wilson et al. 2012; later compatibility metas. Sprint-interval work shows little interference with strength.
+- Alactic dosing: Joel Jamieson, 6–10 s efforts with long rest.
+- Hill sprints for strength athletes: short reps, gentle grade, full walk-down rest; quality-over-clock stop rule (Haugen, Athletics Australia, ALTIS intensity model).
+- Ground-to-stand test principle: MTI sandbag get-up challenge (10-min AMRAP). The Block 01 test is original — 6 min, 35 lb chest-hug, not a copied workout.
+- Broad jump standard: GBRS Performance Standard, measured from the heel, reported vs body height (elite = height + 12 in). Athlete is 5'11" (71 in).
+- Carries: StrongFirst kettlebell-carry progressions (goblet / bear-hug, overhead). Backward walk as a low-cost concentric quad option.
+- Ground travel: Animal Flow / Original Strength as pattern families, not copied flows.
+
+Do not copy paid GBRS, Filly, Functional Patterns, or Elastaboy dailies into cards.

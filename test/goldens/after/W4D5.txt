@@ -78,25 +78,24 @@ rx: 30–45 sec
 note: Grip and shoulder decompression.
 
 == BURNOUT ==
-nm: Aerobic Pump Closer
-fmt: 8-min continuous · RPE ~7
+nm: Carry Walk Medley
+fmt: 8-min continuous · RPE 6–7
 chip: 8-min
-effort: RPE ~7
+effort: RPE 6–7
 optional: yes
 benchmark: no
 hard: no
 zoneCue: none
-- Nasal incline walk or easy bike — continuous
-- OR light DB complex: goblet × 8 → DB floor/press × 8 → one-arm row × 8 × 2–3 rounds, nasal, unbroken
-antiEcho: Optional aerobic pump — leave better, not cooked. Carry / Crawl / Swing is a green option in Weeks 1–4 only.
-weekNote: Aerobic pump. Last week the green Carry / Crawl / Swing option is offered.
-achilles: If Achilles is cranky, keep strength, and prefer bike or walk.
-achillesReady: Achilles: keep strength, prefer bike or walk.
-greenOption: Carry / Crawl / Swing
-  - Farmer carry or march — 40 sec
-  - Kettlebell swings × 12
-  - Bear crawl × 20 steps
-  - Rest the remainder
+- 8 minutes continuous at RPE 6–7, nasal breathing only.
+- 30 m carrying the 80 lb KB goblet / bear-hug style.
+- 20 m per side carrying one 35 lb KB overhead.
+- 30 m walking backward, then repeat.
+fallback: Cooked Friday: easy nasal incline walk. Do not add a second engine day. If the floor or driveway lets a plate slide, the backward leg can be a towel plate drag.
+scale: 35 lb goblet instead of the 80. Rack position instead of overhead. Skip if the week cooked you.
+antiEcho: Optional aerobic pump — leave better, not cooked.
+weekNote: Carry Walk. Optional loaded locomotion. Skip if the week cooked you.
+achilles: If Achilles is cranky, keep strength, and prefer walk or easy carries.
+achillesReady: Achilles: keep strength, prefer walk or easy carries.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

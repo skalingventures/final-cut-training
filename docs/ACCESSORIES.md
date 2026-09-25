@@ -71,7 +71,7 @@ Main stays unpaired. Elastic rotates by week. Push press, chin-up, and suitcase 
 | Slot | Job | Default | Cousins / rotation |
 | --- | --- | --- | --- |
 | Main | Hinge | Deadlift | — (not a cousin slot) |
-| Elastic | Elastic / land | Broad jump (A) | W1 A · W2 pogo (B) · W3 med-ball slam (C) · W4 A · W5 owned choice · W6 C easy or skip |
+| Elastic | Elastic / land | Broad jump (A) | W1 A · W2 pogo (B) · W3 med-ball slam (C, history) · W4 A · W5 owned choice (broad jump measured vs 5'11" / 71 in, pogo, or box jump with step-down — no slam) · W6 easy low box jumps or skip |
 | 2A | Athletic overhead | Push press | DB push press, KB push press, landmine push press |
 | 2B | Vertical pull | Chin-ups | Neutral-grip pull-up, band-assisted chin-up, weighted chin-up |
 | Separate | Anti-rotation carry | Suitcase carry | Single-arm KB carry, offset rack carry |

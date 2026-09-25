@@ -83,29 +83,26 @@ cousins: Trap-bar carry · Front-rack carry · Sandbag carry
 accWave: Owned only — no new cousins, no new levels
 
 == BURNOUT ==
-nm: Owned Menu A
-fmt: 40 sec work / 20 sec transition × 10 min
-chip: 40/20
+nm: Beat the Mark
+fmt: 8–10 min hill sprints
+chip: 8–10-min
 effort: 85–90%
 optional: no
 benchmark: no
 hard: yes
-zoneCue: Z4 by minute 4–6
-patterns: hinge, crawl, elastic, cyclical
-- Kettlebell swings
-- Bear crawl or plank shoulder taps
-- Burpees or sprawls
-- Bike or row
-- Easy walk, nasal breathing
-- Kettlebell swings
-- Bear crawl or plank shoulder taps
-- Burpees or sprawls
-- Bike or row
-- Easy walk, nasal breathing
+zoneCue: none
+patterns: sprint, elastic, cyclical, hinge
+- Walk to the hill as the warm-up. Same gentle sidewalk incline.
+- 2 build-up strides uphill at about 70% and 80%.
+- 8 × 10-second uphill sprints at about 90%. Keep your Week 4 mark in place. Run a little under max.
+- Then 2 × 15 m lateral shuffle each way.
+score: Reps that reach the Week 4 mark. Goal: at least 6 of 8. Stop early if two reps in a row fall short.
+fallback: No hill, snow, or Achilles flag — Box & Bell EMOM 10: odd minutes 3 box jumps at 20–24 in, stepping down; even minutes 5 heavy swings with the 80 lb KB. Achilles flag: drop the box jumps and do 8 × 8-second rower power strokes on the odd minutes.
+scale: 6 reps.
 antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
-weekNote: Owned Menu A. Not the chaotic expression — that is Day 4 this week.
-achilles: If Achilles is cranky, keep strength, swap burpees for a low-impact station, shorten the crawl, and prefer bike, walk, slow taps, easy row, or easy swings.
-achillesReady: Achilles: keep strength, swap burpees for a low-impact station, shorten the crawl, prefer bike, walk, slow taps, easy row, or easy swings.
+weekNote: Hill & Field. Peak week. Same family, a little under max. Not a benchmark — that is Day 4 this week.
+achilles: If Achilles is cranky, keep strength, drop jumps, and prefer walk, easy row, or easy swings.
+achillesReady: Achilles: keep strength, drop jumps, prefer walk, easy row, or easy swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

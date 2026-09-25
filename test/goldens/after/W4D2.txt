@@ -83,23 +83,27 @@ cousins: Trap-bar carry · Front-rack carry · Sandbag carry
 accWave: Cousin variety — slightly reduced volume; keep the job, pick the cleanest cousin
 
 == BURNOUT ==
-nm: Row / Squat / Lunge Ladder
-fmt: 8–9 min ascending ladder · row start 2 (+1, cap 6)
-chip: 8–9-min
+nm: Hill Eights
+fmt: 8–10 min hill sprints
+chip: 8–10-min
 effort: 85–90%
 optional: no
 benchmark: no
 hard: yes
-zoneCue: Z4 by minute 4–6
-patterns: pull-h, squat, lunge, core
-- Inverted or ring row start 2, +1 / round, cap 6
-- Air squats start 2, +2 / round
-- Walking lunges start 2, +2 / round
-- Mountain climbers start 2, +2 / round
+zoneCue: none
+patterns: sprint, elastic, cyclical, hinge
+- Walk to the hill as the warm-up. Gentle sidewalk incline, about 4 city blocks of concrete — plenty of distance for 8–10 second efforts.
+- 2 build-up strides uphill at about 70% and 80%.
+- 8 × 8-second uphill sprints at 90–95%. Walk all the way back down between reps — about 60–90 seconds, more at altitude if the next rep would be slower.
+- Put a rock or marker where rep 2 finishes.
+- After the last rep, on flat ground: 3 × 15 m lateral shuffle each direction, then 1 × 20 m carioca each direction.
+score: How many of the 8 reps reach the rep-2 mark. Standard: 6 of 8. Stop early if two reps in a row fall short. Write the mark down — beat it next week.
+fallback: No hill, snow, or Achilles flag — Box & Bell EMOM 10: odd minutes 3 box jumps at 20–24 in, stepping down; even minutes 5 heavy swings with the 80 lb KB. Achilles flag: drop the box jumps and do 8 × 8-second rower power strokes on the odd minutes.
+scale: 6 reps at 85–90%. Amber: 5 reps at ~85%.
 antiEcho: Dense upper + carry day. Hinge / cyclical family — not a second press or farmer.
-weekNote: Kjael ladder A remap. Rows, not pull-ups. 8–9 min cap.
-achilles: If Achilles is cranky, keep strength, and prefer easy row.
-achillesReady: Achilles: keep strength, prefer easy row.
+weekNote: Hill & Field. Short uphill sprints on a gentle concrete grade, then lateral footwork. No press or farmer.
+achilles: If Achilles is cranky, keep strength, drop jumps, and prefer walk, easy row, or easy swings.
+achillesReady: Achilles: keep strength, drop jumps, prefer walk, easy row, or easy swings.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

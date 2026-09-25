@@ -52,9 +52,9 @@ note: Heavy but clean. No grinders. Straight sets, never supersetted.
 
 id: elastic
 job: Elastic / land
-nm: Broad jumps, pogo bounds, or med-ball slam
-rx: 3 × 3–5 jumps or 3 × 8–10 pogos or 3 × 8–10 slams
-note: Owned choice. Stay on the elastic you already own. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps.
+nm: Broad jumps, pogo bounds, or box jump with step-down
+rx: 3 × 3–5 jumps or 3 × 8–10 pogos or 3 × 3 box jumps, step down
+note: Owned choice. Stay on the elastic you already own. If you take the broad jump, measure the best of three from the heel. Body-height standard is 5'11" (71 in); elite is 83 in (height + 12 in). Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps.
 
 id: pp
 job: Athletic overhead
@@ -81,22 +81,24 @@ cousins: Single-arm KB carry · Offset rack carry
 accWave: Owned only — no new cousins, no new levels
 
 == BURNOUT ==
-nm: Chaotic Light Squat Couplet
-fmt: 10-minute AMRAP
-chip: 10-minute
+nm: Ground-to-Stand Test
+fmt: 6-minute AMRAP
+chip: 6-minute
 effort: 85–90%
 optional: no
 benchmark: yes
 hard: yes
 zoneCue: Z4 by minute 4–6
-patterns: squat, push-h, elastic
-- Goblet squat × 10
-- Push-ups × 10–12
-- Burpees over bar × 5
+patterns: ground, crawl
+- 35 lb KB chest-hug get-to-stand.
+- Both shoulder blades touch the floor. Stand fully — hips and knees locked. Bell never leaves the chest.
+score: Total reps in 6 minutes. This is the block's sole benchmark. Your Week 4 Ground School get-to-stand total is a rough expectation.
+fallback: Achilles flag: no change. No impact on this card.
+scale: Bodyweight get-to-stands.
 antiEcho: Moderate goblet, not a strength set. Squat pattern after a hinge day; horizontal push after vertical press. No hinge, overhead press, chin, suitcase, or lunges here.
-weekNote: Week 5 sole chaotic benchmark. Log rounds honestly.
-achilles: If Achilles is cranky, keep strength, swap burpees for a low-impact station, and prefer push-ups.
-achillesReady: Achilles: keep strength, swap burpees for a low-impact station, prefer push-ups.
+weekNote: Week 5 sole chaotic benchmark. Log reps honestly.
+achilles: If Achilles is cranky, keep strength.
+achillesReady: Achilles: keep strength.
 
 == DOWNSHIFT ==
 2–5 min breathing or easy walk.

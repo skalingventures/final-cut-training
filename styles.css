@@ -510,10 +510,26 @@ input, textarea, select {
   counter-increment: burn;
   display: grid;
   grid-template-columns: 28px 1fr;
-  align-items: center;
+  align-items: start;
   min-height: 40px;
+  padding: 8px 0;
+  overflow-wrap: anywhere;
   border-bottom: 1px solid var(--sv-status-danger);
   color: var(--sv-text-body);
+}
+.burn-field {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.burn-meta span {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+[data-sec="burnout"] .svd-meta {
+  white-space: normal;
+  text-align: right;
+  max-width: 48%;
+  overflow-wrap: anywhere;
 }
 .burn-stack li::before {
   content: counter(burn, decimal-leading-zero);

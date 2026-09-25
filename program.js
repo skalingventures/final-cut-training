@@ -95,22 +95,39 @@ window.PROGRAM = {
             patterns: ["cyclical", "push-h", "slam"]
           },
           4: {
-            nm: "Push / Squat-Thrust / Slam Ladder", fmt: "9-min ascending ladder · start 2, +2/round", effort: "85–90%",
-            items: ["Push-ups start 2, +2 / round", "Squat thrusts start 2, +2 / round", "Med-ball slams start 2, +2 / round"],
-            adj: "Kjael ladder B remap, kettlebell-free. Hip thrust dropped — it echoes the RDL. 9-min cap.",
-            patterns: ["push-h", "elastic", "slam"]
+            nm: "Sprint Ten + Twist", fmt: "EMOM × 10 min", effort: "85–90%", zoneCue: false,
+            items: [
+              "Minutes 1–8: from a rolling start, 8 seconds all-out on the air bike, then spin easy for the rest of the minute.",
+              "Minutes 9–10: rack-corner landmine rotations with the empty bar, 2 × 6 per side, smooth and controlled.",
+              "Each sprint is 100% effort. The session should feel like RPE 7–8, not a blow-up."
+            ],
+            score: "Peak RPM or watts on your best sprint, and sprint 8 as a percentage of your best. Standard: sprint 8 at ≥90% of your best. Write it down — beat it next week.",
+            scale: "6 sprints, and a band Pallof press instead of the landmine. Amber: 5 sprints at ~90%.",
+            fallback: "Achilles flag: no change. Rower is the alternate implement — 8-second power strokes instead of the bike.",
+            adj: "Wheels & Twist. Alactic bike sprints plus rotation. No squat, hang-pull, swing, or farmer.",
+            patterns: ["cyclical", "core", "sprint", "rotation"]
           },
           5: {
-            nm: "Slam / Crawl / March", fmt: "10-minute AMRAP", effort: "85–90%",
-            items: ["Med-ball slam × 8", "Bear crawl × 8–10 steps", "March × 40 sec"],
-            adj: "Owned Slam / Crawl / March. Not a benchmark — that is Day 4 this week.",
-            patterns: ["slam", "crawl", "cyclical"]
+            nm: "Row-Bike Relay", fmt: "9–10 min relay", effort: "85–90%", zoneCue: false,
+            items: [
+              "Four rounds: 250 m row hard (the pace you could just barely hold for 500 m), straight into 15 seconds max on the air bike, then 75 seconds walking.",
+              "About 9–10 minutes.",
+              "Finish with 1 × 6 per side landmine rotation, empty bar, smooth."
+            ],
+            score: "Sum of the four row times plus total bike calories. Peak-week logbook number — write it down.",
+            scale: "3 rounds, or 150 m rows.",
+            fallback: "Achilles flag: no change. Stay on the bike and rower.",
+            adj: "Wheels & Twist. Peak week. No new movements. Not a benchmark — that is Day 4 this week.",
+            patterns: ["cyclical", "core", "sprint", "rotation"]
           },
           6: {
-            nm: "Soft Tap + Bike", fmt: "Soft 4 rounds · no redline", effort: "RPE 6–7",
-            items: ["Plank shoulder taps 30 s", "Easy bike 60 s", "× 4 rounds"],
-            adj: "Deload. No redline. Soft iso + easy bike.",
-            patterns: ["core", "cyclical"]
+            nm: "Easy Spin & Pallof", fmt: "Soft 4 rounds · no redline", effort: "RPE 5–6",
+            items: [
+              "Four rounds: 60 seconds easy bike with a 5-second smooth pickup at the end, then 60 seconds walking.",
+              "Finish with 2 × 8 per side band Pallof press."
+            ],
+            adj: "Deload. No redline. Pallof press is this week's easy preview.",
+            patterns: ["cyclical", "core", "rotation"]
           }
         }
       },
@@ -213,38 +230,43 @@ window.PROGRAM = {
             patterns: ["hinge", "crawl", "elastic", "cyclical"]
           },
           4: {
-            nm: "Row / Squat / Lunge Ladder", fmt: "8–9 min ascending ladder · row start 2 (+1, cap 6)", effort: "85–90%",
+            nm: "Hill Eights", fmt: "8–10 min hill sprints", effort: "85–90%", zoneCue: false,
             items: [
-              "Inverted or ring row start 2, +1 / round, cap 6",
-              "Air squats start 2, +2 / round",
-              "Walking lunges start 2, +2 / round",
-              "Mountain climbers start 2, +2 / round"
+              "Walk to the hill as the warm-up. Gentle sidewalk incline, about 4 city blocks of concrete — plenty of distance for 8–10 second efforts.",
+              "2 build-up strides uphill at about 70% and 80%.",
+              "8 × 8-second uphill sprints at 90–95%. Walk all the way back down between reps — about 60–90 seconds, more at altitude if the next rep would be slower.",
+              "Put a rock or marker where rep 2 finishes.",
+              "After the last rep, on flat ground: 3 × 15 m lateral shuffle each direction, then 1 × 20 m carioca each direction."
             ],
-            adj: "Kjael ladder A remap. Rows, not pull-ups. 8–9 min cap.",
-            patterns: ["pull-h", "squat", "lunge", "core"]
+            score: "How many of the 8 reps reach the rep-2 mark. Standard: 6 of 8. Stop early if two reps in a row fall short. Write the mark down — beat it next week.",
+            scale: "6 reps at 85–90%. Amber: 5 reps at ~85%.",
+            fallback: "No hill, snow, or Achilles flag — Box & Bell EMOM 10: odd minutes 3 box jumps at 20–24 in, stepping down; even minutes 5 heavy swings with the 80 lb KB. Achilles flag: drop the box jumps and do 8 × 8-second rower power strokes on the odd minutes.",
+            adj: "Hill & Field. Short uphill sprints on a gentle concrete grade, then lateral footwork. No press or farmer.",
+            patterns: ["sprint", "elastic", "cyclical", "hinge"]
           },
           5: {
-            nm: "Owned Menu A", fmt: "40 sec work / 20 sec transition × 10 min", effort: "85–90%",
+            nm: "Beat the Mark", fmt: "8–10 min hill sprints", effort: "85–90%", zoneCue: false,
             items: [
-              "Kettlebell swings",
-              "Bear crawl or plank shoulder taps",
-              "Burpees or sprawls",
-              "Bike or row",
-              "Easy walk, nasal breathing",
-              "Kettlebell swings",
-              "Bear crawl or plank shoulder taps",
-              "Burpees or sprawls",
-              "Bike or row",
-              "Easy walk, nasal breathing"
+              "Walk to the hill as the warm-up. Same gentle sidewalk incline.",
+              "2 build-up strides uphill at about 70% and 80%.",
+              "8 × 10-second uphill sprints at about 90%. Keep your Week 4 mark in place. Run a little under max.",
+              "Then 2 × 15 m lateral shuffle each way."
             ],
-            adj: "Owned Menu A. Not the chaotic expression — that is Day 4 this week.",
-            patterns: ["hinge", "crawl", "elastic", "cyclical"]
+            score: "Reps that reach the Week 4 mark. Goal: at least 6 of 8. Stop early if two reps in a row fall short.",
+            scale: "6 reps.",
+            fallback: "No hill, snow, or Achilles flag — Box & Bell EMOM 10: odd minutes 3 box jumps at 20–24 in, stepping down; even minutes 5 heavy swings with the 80 lb KB. Achilles flag: drop the box jumps and do 8 × 8-second rower power strokes on the odd minutes.",
+            adj: "Hill & Field. Peak week. Same family, a little under max. Not a benchmark — that is Day 4 this week.",
+            patterns: ["sprint", "elastic", "cyclical", "hinge"]
           },
           6: {
-            nm: "Easy 30/30", fmt: "30 sec work / 30 sec easy × 8 min", effort: "RPE 6–7",
-            items: ["Easy KB swings", "Plank shoulder taps", "Easy walk"],
-            adj: "Deload. Easy 30/30. No redline.",
-            patterns: ["hinge", "core", "cyclical"]
+            nm: "Hill Strides", fmt: "Easy hill strides · no redline", effort: "RPE 5–6",
+            items: [
+              "5 × 10-second relaxed strides uphill at about 70%, walking down.",
+              "Then 3 minutes of easy backward walking uphill."
+            ],
+            fallback: "No hill or Achilles flag: 5 × 10-second easy walk-out strides on flat ground, then 3 minutes easy backward walk.",
+            adj: "Deload. No redline. Backward hill walk is this week's easy preview.",
+            patterns: ["sprint", "cyclical"]
           }
         }
       },
@@ -327,8 +349,8 @@ window.PROGRAM = {
             2: { nm: "Pogo bounds", rx: "3 × 8–10 pogos", note: "B. Pogo bounds. Quiet feet. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip." },
             3: { nm: "Med-ball slam", rx: "3 × 8–10 slams", note: "C. Med-ball slam. Athletic, not a max. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip." },
             4: { nm: "Broad jump", rx: "3 × 3–5 jumps", note: "A again. Broad jump. Crisp landings. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
-            5: { nm: "Broad jumps, pogo bounds, or med-ball slam", rx: "3 × 3–5 jumps or 3 × 8–10 pogos or 3 × 8–10 slams", note: "Owned choice. Stay on the elastic you already own. Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
-            6: { nm: "Easy med-ball slam or skip", rx: "2 × 6–8 easy slams", note: "C easy or skip. Deload. No max landings." }
+            5: { nm: "Broad jumps, pogo bounds, or box jump with step-down", rx: "3 × 3–5 jumps or 3 × 8–10 pogos or 3 × 3 box jumps, step down", note: "Owned choice. Stay on the elastic you already own. If you take the broad jump, measure the best of three from the heel. Body-height standard is 5'11\" (71 in); elite is 83 in (height + 12 in). Right after the deadlift. If Achilles is cranky, swap for step-overs or skip jumps." },
+            6: { nm: "Easy low box jumps or skip", rx: "2 × 3 low box jumps, step down — or skip", note: "Easy box jumps or skip. Deload. Step down. No max landings." }
           }
         },
         { id: "pp", nm: "Push press", job: "Athletic overhead", cousins: ["DB push press", "KB push press", "Landmine push press"], rx: "4 × 4–6", sets: 4, pair: "2", slot: "A", note: "Athletic overhead power.", load: true },
@@ -360,22 +382,38 @@ window.PROGRAM = {
             patterns: ["squat", "push-h", "elastic"]
           },
           4: {
-            nm: "Bike / Goblet / Push EMOM", fmt: "EMOM 9 min · alternating", effort: "90–95%",
-            items: ["Min 1 · bike 30 s", "Min 2 · goblet squat × 8", "Min 3 · push-ups × 8 + mountain climbers × 12"],
-            adj: "Alternating EMOM, 9 min. Quality under a ceiling. Not a benchmark.",
-            patterns: ["cyclical", "squat", "push-h", "core"]
+            nm: "Ground School", fmt: "40 sec work / 20 sec transition × 8", effort: "90–95%", zoneCue: false,
+            items: [
+              "Crab travel forward 4 steps, back 4 steps, hips high.",
+              "Technical stand-ups, alternating sides.",
+              "Ring push-ups with the rings 10–20 cm off the floor.",
+              "KB chest-hug get-to-stand with a 35 lb bell: lie back until the shoulder blades touch the floor, then stand fully, however you like, with the bell glued to the chest."
+            ],
+            score: "Total get-to-stands across both passes (two passes of the four stations). Write it down — this is next week's test movement at submax.",
+            scale: "Rings higher. Get-to-stand bodyweight only. Crab as a hip-lift hold. Wrists cranky: crab on fists or on DB handles.",
+            fallback: "Achilles flag: no change. No impact on this card.",
+            adj: "Ground & Grapple. Two passes of four stations. Crisp positions, not survival. No hinge, overhead, chin, suitcase, or lunge.",
+            patterns: ["ground", "crawl", "push-h"]
           },
           5: {
-            nm: "Chaotic Light Squat Couplet", fmt: "10-minute AMRAP", benchmark: true, effort: "85–90%",
-            items: ["Goblet squat × 10", "Push-ups × 10–12", "Burpees over bar × 5"],
-            adj: "Week 5 sole chaotic benchmark. Log rounds honestly.",
-            patterns: ["squat", "push-h", "elastic"]
+            nm: "Ground-to-Stand Test", fmt: "6-minute AMRAP", benchmark: true, effort: "85–90%",
+            items: [
+              "35 lb KB chest-hug get-to-stand.",
+              "Both shoulder blades touch the floor. Stand fully — hips and knees locked. Bell never leaves the chest."
+            ],
+            score: "Total reps in 6 minutes. This is the block's sole benchmark. Your Week 4 Ground School get-to-stand total is a rough expectation.",
+            scale: "Bodyweight get-to-stands.",
+            fallback: "Achilles flag: no change. No impact on this card.",
+            adj: "Week 5 sole chaotic benchmark. Log reps honestly.",
+            patterns: ["ground", "crawl"]
           },
           6: {
-            nm: "Easy Bike + Push + Step-over", fmt: "8-min easy · no redline", effort: "RPE 6–7",
-            items: ["Easy bike", "Push-ups", "Step-overs"],
-            adj: "Deload. Easy bike + push-ups + step-overs. No redline.",
-            patterns: ["cyclical", "push-h", "elastic"]
+            nm: "Ground Flow", fmt: "7-min easy · no redline", effort: "RPE 5–6",
+            items: [
+              "7 minutes continuous and nasal, moving slowly through: crab reach (from crab, reach one arm overhead and lift the hips), lateral ape travel, technical stand-up, 2 slow ring push-ups, and repeat."
+            ],
+            adj: "Deload. No redline. Lateral ape travel is this week's easy preview.",
+            patterns: ["ground", "crawl", "push-h"]
           }
         }
       },
@@ -451,7 +489,7 @@ window.PROGRAM = {
           {
             id: "ccs",
             label: "Carry / Crawl / Swing",
-            weeks: [1, 2, 3, 4],
+            weeks: [1, 2, 3],
             nm: "Carry / Crawl / Swing",
             fmt: "Every 2 min for 10 min — 5 rounds",
             items: ["Farmer carry or march — 40 sec", "Kettlebell swings × 12", "Bear crawl × 20 steps", "Rest the remainder"],
@@ -484,17 +522,24 @@ window.PROGRAM = {
             adj: "Aerobic pump. Carry / Crawl / Swing remains a green option."
           },
           4: {
-            nm: "Aerobic Pump Closer", fmt: "8-min continuous · RPE ~7", effort: "RPE ~7",
+            nm: "Carry Walk Medley", fmt: "8-min continuous · RPE 6–7", effort: "RPE 6–7",
             items: [
-              "Nasal incline walk or easy bike — continuous",
-              "OR light DB complex: goblet × 8 → DB floor/press × 8 → one-arm row × 8 × 2–3 rounds, nasal, unbroken"
+              "8 minutes continuous at RPE 6–7, nasal breathing only.",
+              "30 m carrying the 80 lb KB goblet / bear-hug style.",
+              "20 m per side carrying one 35 lb KB overhead.",
+              "30 m walking backward, then repeat."
             ],
-            adj: "Aerobic pump. Last week the green Carry / Crawl / Swing option is offered."
+            scale: "35 lb goblet instead of the 80. Rack position instead of overhead. Skip if the week cooked you.",
+            fallback: "Cooked Friday: easy nasal incline walk. Do not add a second engine day. If the floor or driveway lets a plate slide, the backward leg can be a towel plate drag.",
+            adj: "Carry Walk. Optional loaded locomotion. Skip if the week cooked you."
           },
           5: {
-            nm: "Soft Aerobic Pump", fmt: "8-min easy · RPE ~6–7", effort: "RPE ~6–7",
-            items: ["Easy nasal walk or easy bike — continuous"],
-            adj: "Peak week. Soft only. Protect Day 4. No Carry / Crawl / Swing."
+            nm: "Soft Walk", fmt: "8-min easy · RPE ~6", effort: "RPE ~6",
+            items: [
+              "8 minutes alternating 60 seconds backward walk and 60 seconds easy forward nasal walk.",
+              "No loaded carries. Wheels stay on Monday."
+            ],
+            adj: "Peak week. Soft only. Protect the weekend and Monday. No Carry / Crawl / Swing."
           },
           6: {
             nm: "Walk or skip", fmt: "Easy walk · or skip", effort: "RPE 5–6",

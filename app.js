@@ -646,6 +646,9 @@
             <div class="burn-meta"><span>${esc(burn.fmt || "")}</span>${zoneCue}</div>
             <div class="nm">${esc(burn.nm || "")}</div>
             <ol class="burn-stack">${(burn.items || []).map(item => `<li>${esc(C.burnItemText(item))}</li>`).join("")}</ol>
+            ${burn.score ? `<div class="guard callout callout--coach burn-field"><span>Score · ${esc(burn.score)}</span></div>` : ""}
+            ${burn.fallback ? `<div class="guard callout callout--warn burn-field"><span>${esc(burn.fallback)}</span></div>` : ""}
+            ${burn.scale ? `<div class="guard callout callout--coach burn-field"><span>Scale · ${esc(burn.scale)}</span></div>` : ""}
             ${notes.join("")}
             ${burnAlts(D, S.week, burn)}
             ${achillesNote}${motNote}${bench}

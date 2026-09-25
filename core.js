@@ -4,7 +4,7 @@
   const KEY = "final-cut:v3";
   const SNAP_KEY = "final-cut:last-good";
   const VERSION = 3;
-  const APP_VERSION = "2.2.2";
+  const APP_VERSION = "2.3.0";
 
   Core.KEY = KEY;
   Core.SNAP_KEY = SNAP_KEY;
@@ -286,6 +286,7 @@
 
   Core.burnShowsZoneCue = function burnShowsZoneCue(burn, week) {
     if (!burn) return false;
+    if (burn.zoneCue === false) return false;
     if (burn.optional) return false;
     if (+week === 6) return false;
     return true;
@@ -310,7 +311,12 @@
 
   /* Movements actually written on this week's resolved card. */
   Core.cardMoves = function cardMoves(burn) {
-    const t = ((burn && burn.items) || []).map(Core.burnItemText).join(" ").toLowerCase();
+    const t = [
+      ...((burn && burn.items) || []).map(Core.burnItemText),
+      (burn && burn.fallback) || "",
+      (burn && burn.score) || "",
+      (burn && burn.scale) || ""
+    ].join(" ").toLowerCase();
     function has(rx) { return rx.test(t); }
     return {
       crawl: has(/crawl/),
@@ -324,7 +330,7 @@
       jump: has(/\bjump|pogo|bound/),
       stepover: has(/step-over|step over/),
       tap: has(/\btap/),
-      row: has(/inverted|ring row|bike or row|easy row|assault bike/),
+      row: has(/inverted|ring row|bike or row|easy row|assault bike|\brower\b/),
       carry: has(/\bcarry|farmer/),
       squatThrust: has(/squat thrust/),
       climber: has(/climber/)
