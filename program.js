@@ -396,7 +396,7 @@ window.PROGRAM = {
             patterns: ["ground", "crawl", "push-h"]
           },
           5: {
-            nm: "Ground-to-Stand Test", fmt: "6-minute AMRAP", benchmark: true, effort: "Test · max honest reps",
+            nm: "Ground-to-Stand Test", fmt: "6-minute AMRAP", benchmark: true, effort: "Test · max honest reps", zoneCue: false,
             items: [
               "35 lb KB chest-hug get-to-stand.",
               "Both shoulder blades touch the floor. Stand fully — hips and knees locked. Bell never leaves the chest."

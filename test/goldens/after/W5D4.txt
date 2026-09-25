@@ -88,7 +88,7 @@ effort: Test · max honest reps
 optional: no
 benchmark: yes
 hard: yes
-zoneCue: Z4 by minute 4–6
+zoneCue: none
 patterns: ground, crawl
 - 35 lb KB chest-hug get-to-stand.
 - Both shoulder blades touch the floor. Stand fully — hips and knees locked. Bell never leaves the chest.
